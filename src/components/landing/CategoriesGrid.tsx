@@ -2,13 +2,12 @@
 import Link from 'next/link'
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
-import {
-  Sparkles, Zap, Heart, Gamepad2, Users, TrendingUp, BookOpen, Code2,
-} from 'lucide-react'
+import { Sparkles, Zap, Heart, Gamepad2, Users, TrendingUp, BookOpen, Code2, type LucideIcon } from 'lucide-react'
 import { CATEGORY_CONFIG } from '@/lib/constants'
 import type { Category } from '@/lib/types'
+import TiltCard from '@/components/ui/TiltCard'
 
-const categoryIcons: Record<Category, React.ElementType> = {
+const categoryIcons: Record<Category, LucideIcon> = {
   AI: Sparkles,
   PRODUCTIVITY: Zap,
   HEALTH: Heart,
@@ -19,15 +18,9 @@ const categoryIcons: Record<Category, React.ElementType> = {
   DEVELOPER_TOOLS: Code2,
 }
 
-const categoryCounts: Record<Category, number> = {
-  AI: 312,
-  PRODUCTIVITY: 487,
-  HEALTH: 198,
-  GAMING: 256,
-  SOCIAL: 341,
-  FINTECH: 175,
-  EDUCATION: 219,
-  DEVELOPER_TOOLS: 403,
+const counts: Record<Category, number> = {
+  AI: 312, PRODUCTIVITY: 487, HEALTH: 198, GAMING: 256,
+  SOCIAL: 341, FINTECH: 175, EDUCATION: 219, DEVELOPER_TOOLS: 403,
 }
 
 const categories = Object.keys(CATEGORY_CONFIG) as Category[]
@@ -37,23 +30,26 @@ export default function CategoriesGrid() {
   const isInView = useInView(ref, { once: true, margin: '-100px' })
 
   return (
-    <section className="py-24" ref={ref}>
+    <section className="py-28" ref={ref}>
       <div className="max-w-7xl mx-auto px-6">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          className="text-center mb-12"
+          className="mb-12"
         >
-          <p className="text-[11px] font-grotesk font-bold uppercase tracking-widest text-brand-pink mb-3">
-            EXPLORE BY CATEGORY
-          </p>
-          <h2 className="font-grotesk font-extrabold text-4xl md:text-5xl uppercase text-white tracking-tight">
-            FIND YOUR{' '}
-            <span className="gradient-text-static">NICHE</span>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-4 h-px bg-fog" />
+            <span className="text-[10px] font-inter tracking-[0.25em] text-fog uppercase">
+              BROWSE
+            </span>
+          </div>
+          <h2 className="font-heading text-6xl md:text-7xl text-white uppercase leading-none">
+            FIND YOUR <span className="chrome-text">NICHE</span>
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {categories.map((cat, i) => {
             const config = CATEGORY_CONFIG[cat]
             const Icon = categoryIcons[cat]
@@ -61,45 +57,35 @@ export default function CategoriesGrid() {
             return (
               <motion.div
                 key={cat}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.4, delay: i * 0.05 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: i * 0.05 }}
               >
-                <Link href={`/marketplace?category=${cat}`} className="block group">
-                  <div
-                    className="relative rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover cursor-pointer overflow-hidden"
-                    style={{
-                      background: `${config.bg}`,
-                      border: `1px solid ${config.color}20`,
-                    }}
-                  >
-                    {/* Hover glow */}
+                <TiltCard glowColor={`${config.accent}10`} strength={8}>
+                  <Link href={`/marketplace?category=${cat}`} className="block group">
                     <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      style={{
-                        background: `radial-gradient(circle at center, ${config.glow} 0%, transparent 70%)`,
-                      }}
-                    />
-
-                    <div className="relative z-10">
+                      className="relative rounded-lg p-5 border border-white/6 hover:border-white/12 transition-all duration-300 bg-[#0D0D0D] overflow-hidden"
+                    >
+                      {/* Accent glow top */}
                       <div
-                        className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
-                        style={{ background: `${config.color}15`, border: `1px solid ${config.color}30` }}
-                      >
-                        <Icon size={20} style={{ color: config.color }} />
-                      </div>
+                        className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity"
+                        style={{ background: `linear-gradient(90deg, transparent, ${config.accent}, transparent)` }}
+                      />
+
+                      <Icon size={20} className="mb-4" style={{ color: config.color }} />
+
                       <h3
-                        className="font-grotesk font-bold text-sm uppercase tracking-wide mb-1"
+                        className="font-heading text-2xl uppercase leading-none mb-1"
                         style={{ color: config.color }}
                       >
                         {config.label}
                       </h3>
-                      <p className="text-white/30 text-xs font-grotesk">
-                        {categoryCounts[cat].toLocaleString()} ideas
+                      <p className="text-[11px] font-inter text-mist tracking-wider">
+                        {counts[cat].toLocaleString()} IDEAS
                       </p>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </TiltCard>
               </motion.div>
             )
           })}

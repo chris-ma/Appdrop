@@ -2,72 +2,80 @@
 import Link from 'next/link'
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { ArrowRight, Zap } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import MagneticButton from '@/components/ui/MagneticButton'
 
 export default function CtaBanner() {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
 
   return (
-    <section className="py-24 px-6" ref={ref}>
+    <section className="py-28 px-6" ref={ref}>
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6 }}
-        className="max-w-5xl mx-auto relative rounded-3xl overflow-hidden"
+        transition={{ duration: 0.7 }}
+        className="max-w-6xl mx-auto relative rounded-lg overflow-hidden border border-white/8"
+        style={{ background: '#0D0D0D', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}
       >
-        {/* Gradient background */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: 'linear-gradient(135deg, rgba(124,58,237,0.3) 0%, rgba(6,182,212,0.2) 50%, rgba(236,72,153,0.25) 100%)',
-          }}
-        />
-        <div className="absolute inset-0 glass" />
+        {/* Corner accent */}
+        <div className="absolute top-0 left-0 w-20 h-px bg-gradient-to-r from-electric to-transparent" />
+        <div className="absolute top-0 left-0 w-px h-20 bg-gradient-to-b from-electric to-transparent" />
+        <div className="absolute bottom-0 right-0 w-20 h-px bg-gradient-to-l from-neon to-transparent" />
+        <div className="absolute bottom-0 right-0 w-px h-20 bg-gradient-to-t from-neon to-transparent" />
 
-        {/* Animated orb */}
-        <div
-          className="absolute -right-20 -top-20 w-64 h-64 rounded-full animate-float"
-          style={{
-            background: 'radial-gradient(circle, rgba(124,58,237,0.3), transparent)',
-            filter: 'blur(40px)',
-          }}
-        />
+        {/* Background grid */}
+        <div className="absolute inset-0 grid-technical opacity-30" />
 
+        {/* Glow orbs */}
         <div
-          className="absolute -left-10 -bottom-10 w-48 h-48 rounded-full animate-float-slow"
-          style={{
-            background: 'radial-gradient(circle, rgba(6,182,212,0.25), transparent)',
-            filter: 'blur(40px)',
-          }}
+          className="absolute -left-20 top-1/2 -translate-y-1/2 w-64 h-64 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(0,212,255,0.08), transparent)', filter: 'blur(40px)' }}
+        />
+        <div
+          className="absolute -right-20 top-1/2 -translate-y-1/2 w-64 h-64 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(0,255,136,0.06), transparent)', filter: 'blur(40px)' }}
         />
 
-        <div className="relative z-10 text-center px-8 py-16">
-          <div className="inline-flex items-center gap-2 text-brand-cyan text-[11px] font-grotesk font-bold uppercase tracking-widest mb-4">
-            <Zap size={12} />
-            READY TO DROP?
+        <div className="relative z-10 px-10 py-16 md:py-20 text-center">
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="w-8 h-px bg-electric" />
+            <span className="text-[10px] font-inter tracking-[0.3em] text-electric uppercase">
+              READY TO DROP?
+            </span>
+            <div className="w-8 h-px bg-electric" />
           </div>
-          <h2 className="font-grotesk font-extrabold text-4xl md:text-6xl uppercase text-white leading-tight tracking-tight mb-4">
-            YOUR IDEA COULD BE{' '}
-            <span className="gradient-text">NEXT</span>
+
+          <h2 className="font-heading text-6xl md:text-8xl text-white uppercase leading-none mb-4">
+            YOUR IDEA
+            <br />
+            <span className="electric-text">COULD BE</span>
+            <br />
+            NEXT
           </h2>
-          <p className="text-white/50 text-lg max-w-xl mx-auto mb-10">
-            Join 28,000+ community members shaping the future of software.
-            Submit your idea today — it costs nothing but 5 minutes.
+
+          <p className="text-fog text-base font-inter max-w-lg mx-auto mb-10">
+            28,000+ community members are waiting to vote on the next big drop.
+            It costs nothing but 5 minutes.
           </p>
+
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/submit">
-              <Button variant="primary" size="lg">
-                SUBMIT YOUR DROP
-                <ArrowRight size={18} />
-              </Button>
-            </Link>
-            <Link href="/marketplace">
-              <Button variant="neon" size="lg">
-                BROWSE THE DROPS
-              </Button>
-            </Link>
+            <MagneticButton>
+              <Link href="/submit">
+                <Button variant="primary" size="lg" className="font-heading text-[16px]">
+                  SUBMIT YOUR DROP
+                  <ArrowRight size={18} />
+                </Button>
+              </Link>
+            </MagneticButton>
+            <MagneticButton>
+              <Link href="/marketplace">
+                <Button variant="electric" size="lg" className="font-heading text-[16px]">
+                  BROWSE THE DROPS
+                </Button>
+              </Link>
+            </MagneticButton>
           </div>
         </div>
       </motion.div>

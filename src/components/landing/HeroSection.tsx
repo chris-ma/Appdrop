@@ -1,142 +1,154 @@
 'use client'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
-import { ArrowRight, Zap } from 'lucide-react'
+import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import MagneticButton from '@/components/ui/MagneticButton'
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.12 } },
-}
+const HeroScene = dynamic(() => import('@/components/three/HeroScene'), {
+  ssr: false,
+  loading: () => <div className="w-full h-full" />,
+})
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+const textVariants = {
+  hidden: { opacity: 0 },
+  visible: (i: number) => ({
+    opacity: 1,
+    transition: { delay: i * 0.15 + 0.3, duration: 0.8 },
+  }),
 }
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Grid overlay */}
-      <div className="absolute inset-0 grid-overlay opacity-60" />
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-void">
+      {/* Technical grid */}
+      <div className="absolute inset-0 grid-technical opacity-100" />
 
-      {/* Animated gradient orbs */}
-      <div
-        className="absolute -top-40 -left-40 w-[700px] h-[700px] rounded-full animate-float"
-        style={{
-          background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)',
-          filter: 'blur(80px)',
-          willChange: 'transform',
-        }}
-      />
-      <div
-        className="absolute top-1/4 -right-40 w-[600px] h-[600px] rounded-full animate-float-slow"
-        style={{
-          background: 'radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 70%)',
-          filter: 'blur(80px)',
-          willChange: 'transform',
-        }}
-      />
-      <div
-        className="absolute -bottom-20 left-1/3 w-[500px] h-[500px] rounded-full animate-float-slower"
-        style={{
-          background: 'radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%)',
-          filter: 'blur(80px)',
-          willChange: 'transform',
-        }}
-      />
+      {/* 3D Scene — full bg */}
+      <div className="absolute inset-0 z-0">
+        <HeroScene />
+      </div>
+
+      {/* Vignette */}
+      <div className="absolute inset-0 bg-gradient-to-r from-void via-void/80 to-transparent z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-void via-transparent to-void/40 z-[1]" />
 
       {/* Noise */}
       <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: "url('/noise.svg')",
-          opacity: 0.03,
-          pointerEvents: 'none',
-        }}
+        className="absolute inset-0 z-[1]"
+        style={{ backgroundImage: "url('/noise.svg')", opacity: 0.02 }}
       />
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-20 text-center">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {/* Badge */}
-          <motion.div variants={itemVariants} className="flex justify-center mb-8">
-            <div className="inline-flex items-center gap-2 glass border border-brand-purple/30 rounded-full px-4 py-2 text-xs font-grotesk font-semibold uppercase tracking-widest text-brand-purple">
-              <span className="w-1.5 h-1.5 bg-brand-purple rounded-full animate-pulse" />
-              THE DROP IS LIVE
-              <ArrowRight size={12} />
-            </div>
+      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-28 pb-16 w-full">
+        <div className="max-w-3xl">
+          {/* Label */}
+          <motion.div
+            custom={0}
+            variants={textVariants}
+            initial="hidden"
+            animate="visible"
+            className="flex items-center gap-3 mb-6"
+          >
+            <div className="w-1 h-4 bg-electric" />
+            <span className="text-[11px] font-inter font-medium tracking-[0.25em] text-fog uppercase">
+              DEMAND-DRIVEN APP CULTURE
+            </span>
           </motion.div>
 
-          {/* Headline */}
-          <motion.h1
-            variants={itemVariants}
-            className="font-grotesk font-extrabold text-5xl sm:text-7xl md:text-8xl uppercase leading-[0.9] tracking-tight mb-6"
-          >
-            <span className="gradient-text">BUILD WHAT</span>
-            <br />
-            <span className="text-white">THE WORLD</span>
-            <br />
-            <span className="gradient-text">ACTUALLY WANTS</span>
-          </motion.h1>
+          {/* Main headline */}
+          <div className="overflow-hidden mb-2">
+            <motion.h1
+              custom={1}
+              variants={textVariants}
+              initial="hidden"
+              animate="visible"
+              className="font-heading text-[clamp(72px,12vw,160px)] leading-[0.88] text-white uppercase"
+            >
+              THE
+            </motion.h1>
+          </div>
+          <div className="overflow-hidden mb-2">
+            <motion.h1
+              custom={2}
+              variants={textVariants}
+              initial="hidden"
+              animate="visible"
+              className="font-heading text-[clamp(72px,12vw,160px)] leading-[0.88] uppercase electric-text"
+            >
+              DROP
+            </motion.h1>
+          </div>
+          <div className="overflow-hidden mb-8">
+            <motion.h1
+              custom={3}
+              variants={textVariants}
+              initial="hidden"
+              animate="visible"
+              className="font-heading text-[clamp(72px,12vw,160px)] leading-[0.88] text-white uppercase"
+            >
+              IS LIVE
+            </motion.h1>
+          </div>
 
-          {/* Subtext */}
+          {/* Sub */}
           <motion.p
-            variants={itemVariants}
-            className="max-w-2xl mx-auto text-white/50 text-lg md:text-xl leading-relaxed mb-10"
+            custom={4}
+            variants={textVariants}
+            initial="hidden"
+            animate="visible"
+            className="text-fog text-base font-inter max-w-md leading-relaxed mb-10"
           >
-            Submit an app idea, rally the community, fund the build.
-            Developers ship what the crowd demands — and everyone wins.
+            The platform where communities decide which apps get built.
+            Submit. Vote. Fund. Ship.
           </motion.p>
 
           {/* CTAs */}
           <motion.div
-            variants={itemVariants}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+            custom={5}
+            variants={textVariants}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-col sm:flex-row items-start gap-4"
           >
-            <Link href="/marketplace">
-              <Button variant="primary" size="lg" className="w-full sm:w-auto">
-                EXPLORE DROPS
-                <ArrowRight size={18} />
-              </Button>
-            </Link>
-            <Link href="/submit">
-              <Button variant="neon" size="lg" className="w-full sm:w-auto">
-                <Zap size={18} />
-                SUBMIT YOUR IDEA
-              </Button>
-            </Link>
-          </motion.div>
+            <MagneticButton>
+              <Link href="/marketplace">
+                <Button variant="primary" size="lg" className="font-heading text-[16px]">
+                  EXPLORE DROPS
+                  <ArrowRight size={18} />
+                </Button>
+              </Link>
+            </MagneticButton>
 
-          {/* Floating stat chips */}
-          <motion.div
-            variants={itemVariants}
-            className="flex flex-wrap items-center justify-center gap-3"
-          >
-            {[
-              { value: '28K+', label: 'Community Members' },
-              { value: '4.8K+', label: 'Ideas Submitted' },
-              { value: '$1.2M+', label: 'Total Funded' },
-              { value: '143', label: 'Apps Shipped' },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="glass border border-white/10 rounded-full px-4 py-2 flex items-center gap-2"
-              >
-                <span className="font-grotesk font-bold text-white text-sm">{stat.value}</span>
-                <span className="text-white/40 text-xs">{stat.label}</span>
-              </div>
-            ))}
+            <MagneticButton>
+              <Link href="/submit">
+                <Button variant="electric" size="lg" className="font-heading text-[16px]">
+                  SUBMIT YOUR IDEA
+                  <ArrowUpRight size={18} />
+                </Button>
+              </Link>
+            </MagneticButton>
           </motion.div>
+        </div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2, duration: 1 }}
+          className="absolute bottom-8 left-6 flex items-center gap-3"
+        >
+          <div className="flex flex-col gap-1">
+            <div className="w-4 h-px bg-white/20" />
+            <div className="w-6 h-px bg-electric" />
+            <div className="w-3 h-px bg-white/20" />
+          </div>
+          <span className="text-[10px] font-inter tracking-[0.2em] text-fog uppercase">
+            SCROLL TO EXPLORE
+          </span>
         </motion.div>
       </div>
-
-      {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0A0A0A] to-transparent" />
     </section>
   )
 }

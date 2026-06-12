@@ -2,99 +2,99 @@ import type { Category, ProjectStatus, SortTab } from './types'
 
 export const CATEGORY_CONFIG: Record<
   Category,
-  { label: string; color: string; bg: string; icon: string; glow: string }
+  { label: string; color: string; bg: string; icon: string; accent: string }
 > = {
   AI: {
     label: 'AI',
-    color: '#A78BFA',
-    bg: 'rgba(124,58,237,0.15)',
+    color: '#00D4FF',
+    bg: 'rgba(0,212,255,0.06)',
     icon: 'Sparkles',
-    glow: 'rgba(124,58,237,0.4)',
+    accent: '#00D4FF',
   },
   PRODUCTIVITY: {
     label: 'Productivity',
-    color: '#67E8F9',
-    bg: 'rgba(6,182,212,0.15)',
+    color: '#FFFFFF',
+    bg: 'rgba(255,255,255,0.04)',
     icon: 'Zap',
-    glow: 'rgba(6,182,212,0.4)',
+    accent: '#FFFFFF',
   },
   HEALTH: {
     label: 'Health',
-    color: '#F9A8D4',
-    bg: 'rgba(236,72,153,0.15)',
+    color: '#00FF88',
+    bg: 'rgba(0,255,136,0.06)',
     icon: 'Heart',
-    glow: 'rgba(236,72,153,0.4)',
+    accent: '#00FF88',
   },
   GAMING: {
     label: 'Gaming',
-    color: '#FED7AA',
-    bg: 'rgba(249,115,22,0.15)',
+    color: '#BF5AF2',
+    bg: 'rgba(191,90,242,0.06)',
     icon: 'Gamepad2',
-    glow: 'rgba(249,115,22,0.4)',
+    accent: '#BF5AF2',
   },
   SOCIAL: {
     label: 'Social',
-    color: '#F9A8D4',
-    bg: 'rgba(236,72,153,0.15)',
+    color: '#EAEAEA',
+    bg: 'rgba(255,255,255,0.04)',
     icon: 'Users',
-    glow: 'rgba(236,72,153,0.4)',
+    accent: '#EAEAEA',
   },
   FINTECH: {
     label: 'FinTech',
-    color: '#6EE7B7',
-    bg: 'rgba(16,185,129,0.15)',
+    color: '#00FF88',
+    bg: 'rgba(0,255,136,0.06)',
     icon: 'TrendingUp',
-    glow: 'rgba(16,185,129,0.4)',
+    accent: '#00FF88',
   },
   EDUCATION: {
     label: 'Education',
-    color: '#FDE68A',
-    bg: 'rgba(234,179,8,0.15)',
+    color: '#C8C8C8',
+    bg: 'rgba(200,200,200,0.06)',
     icon: 'BookOpen',
-    glow: 'rgba(234,179,8,0.4)',
+    accent: '#C8C8C8',
   },
   DEVELOPER_TOOLS: {
     label: 'Dev Tools',
-    color: '#67E8F9',
-    bg: 'rgba(6,182,212,0.15)',
+    color: '#00D4FF',
+    bg: 'rgba(0,212,255,0.06)',
     icon: 'Code2',
-    glow: 'rgba(6,182,212,0.4)',
+    accent: '#00D4FF',
   },
 }
 
 export const STATUS_CONFIG: Record<
   ProjectStatus,
-  { label: string; bg: string; border: string; text: string; dot?: string }
+  { label: string; bg: string; border: string; text: string }
 > = {
   VOTING: {
     label: 'VOTING',
-    bg: 'rgba(124,58,237,0.15)',
-    border: '#7C3AED',
-    text: '#A78BFA',
+    bg: 'rgba(0,212,255,0.08)',
+    border: 'rgba(0,212,255,0.35)',
+    text: '#00D4FF',
   },
   FUNDING: {
     label: 'FUNDING',
-    bg: 'rgba(6,182,212,0.15)',
-    border: '#06B6D4',
-    text: '#67E8F9',
+    bg: 'rgba(0,255,136,0.08)',
+    border: 'rgba(0,255,136,0.35)',
+    text: '#00FF88',
   },
   IN_DEV: {
     label: 'IN DEV',
-    bg: 'rgba(249,115,22,0.15)',
-    border: '#F97316',
-    text: '#FED7AA',
+    bg: 'rgba(200,200,200,0.06)',
+    border: 'rgba(200,200,200,0.25)',
+    text: '#C8C8C8',
   },
   BETA: {
     label: 'BETA',
-    bg: 'rgba(234,179,8,0.15)',
-    border: '#EAB308',
-    text: '#FDE68A',
+    bg: 'rgba(191,90,242,0.08)',
+    border: 'rgba(191,90,242,0.35)',
+    text: '#BF5AF2',
   },
   LIVE: {
-    label: '● LIVE',
-    bg: 'rgba(34,197,94,0.15)',
-    border: '#22C55E',
-    text: '#86EFAC',
+    label: 'LIVE',
+    bg: 'rgba(255,255,255,0.06)',
+    border: 'rgba(255,255,255,0.3)',
+    text: '#FFFFFF',
   },
 }
 
@@ -112,8 +112,8 @@ export const CATEGORIES: Category[] = [
 ]
 
 export const PLATFORM_STATS = [
-  { value: 28400, label: 'COMMUNITY MEMBERS', suffix: '+' },
-  { value: 4892, label: 'IDEAS SUBMITTED', suffix: '+' },
-  { value: 1200000, label: 'TOTAL FUNDED', suffix: '', prefix: '$', isCurrency: true },
-  { value: 143, label: 'APPS SHIPPED', suffix: '' },
+  { value: 28400, label: 'COMMUNITY MEMBERS', format: (n: number) => `${Math.round(n / 1000)}K` },
+  { value: 4892, label: 'IDEAS SUBMITTED', format: (n: number) => `${Math.round(n).toLocaleString()}` },
+  { value: 1200000, label: 'TOTAL FUNDED', format: (n: number) => `$${(n / 1000000).toFixed(1)}M` },
+  { value: 143, label: 'APPS SHIPPED', format: (n: number) => `${Math.round(n)}` },
 ]

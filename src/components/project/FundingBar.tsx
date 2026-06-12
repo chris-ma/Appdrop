@@ -7,6 +7,7 @@ interface FundingBarProps {
   goal: number
   backerCount: number
   showAmounts?: boolean
+  accentColor?: string
   className?: string
 }
 
@@ -15,6 +16,7 @@ export default function FundingBar({
   goal,
   backerCount,
   showAmounts = true,
+  accentColor = '#00D4FF',
   className,
 }: FundingBarProps) {
   const pct = fundingPercent(current, goal)
@@ -24,42 +26,39 @@ export default function FundingBar({
     <div className={className}>
       {showAmounts && (
         <div className="flex items-center justify-between mb-2">
+          <span className="font-heading text-white text-xl">
+            {formatCurrency(current)}
+          </span>
           <div className="flex items-center gap-2">
-            <span className="text-white font-grotesk font-bold text-sm">
-              {formatCurrency(current)}
-            </span>
             {isFull && (
-              <span className="text-[10px] font-grotesk font-bold uppercase tracking-wider text-brand-green bg-brand-green/10 border border-brand-green/30 px-2 py-0.5 rounded-full">
-                FULLY FUNDED
+              <span className="text-[9px] font-inter font-medium tracking-[0.2em] uppercase text-neon border border-neon/30 bg-neon/6 px-2 py-0.5 rounded-sm">
+                FUNDED
               </span>
             )}
+            <span className="text-fog text-[11px] font-inter tracking-wider">
+              {isFull ? '100%' : `${pct}% of ${formatCurrency(goal)}`}
+            </span>
           </div>
-          <span className="text-white/40 text-xs">
-            {isFull ? '100%' : `${pct}% of ${formatCurrency(goal)}`}
-          </span>
         </div>
       )}
 
-      <div className="relative h-1.5 rounded-full bg-white/10 overflow-hidden">
+      <div className="relative h-px bg-white/8 overflow-hidden">
         <motion.div
-          className="absolute left-0 top-0 h-full rounded-full"
+          className="absolute left-0 top-0 h-full"
           style={{
-            background: isFull
-              ? 'linear-gradient(90deg, #22C55E, #10B981)'
-              : 'linear-gradient(90deg, #7C3AED, #06B6D4)',
+            background: isFull ? '#00FF88' : accentColor,
+            boxShadow: `0 0 6px ${isFull ? '#00FF88' : accentColor}`,
           }}
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
-          transition={{ duration: 1.2, ease: 'easeOut', delay: 0.2 }}
+          transition={{ duration: 1.2, delay: 0.2 }}
         />
       </div>
 
       {showAmounts && (
-        <div className="flex items-center gap-1.5 mt-2">
-          <span className="text-white/40 text-xs font-grotesk">
-            {backerCount.toLocaleString()} backers
-          </span>
-        </div>
+        <p className="text-mist text-[11px] font-inter mt-2 tracking-wider">
+          {backerCount.toLocaleString()} BACKERS
+        </p>
       )}
     </div>
   )

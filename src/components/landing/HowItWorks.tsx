@@ -7,123 +7,113 @@ const steps = [
   {
     number: '01',
     icon: Lightbulb,
-    title: 'SUBMIT YOUR DROP',
-    description: 'Got an app idea? Write it up. Describe the problem, the solution, the features you want. Takes 5 minutes.',
-    color: '#A78BFA',
-    bg: 'rgba(124,58,237,0.12)',
-    border: 'rgba(124,58,237,0.25)',
+    title: 'SUBMIT',
+    sub: 'YOUR DROP',
+    description: 'Write up your app idea in 5 minutes. Problem, solution, features. No technical skills required.',
+    accent: '#00D4FF',
   },
   {
     number: '02',
     icon: Vote,
-    title: 'COMMUNITY VOTES',
-    description: 'The crowd decides what matters. Upvote the ideas you want built. Top ideas rise, weak ideas fall.',
-    color: '#67E8F9',
-    bg: 'rgba(6,182,212,0.12)',
-    border: 'rgba(6,182,212,0.25)',
+    title: 'COMMUNITY',
+    sub: 'VOTES',
+    description: 'The crowd decides what matters. Top ideas rise. Weak ideas fall. Pure signal, no noise.',
+    accent: '#FFFFFF',
   },
   {
     number: '03',
     icon: DollarSign,
-    title: 'FUND THE BUILD',
-    description: 'Hot ideas open a funding round. Back the projects you believe in. Funds held in escrow until milestones hit.',
-    color: '#6EE7B7',
-    bg: 'rgba(16,185,129,0.12)',
-    border: 'rgba(16,185,129,0.25)',
+    title: 'FUND',
+    sub: 'THE BUILD',
+    description: 'Back the ideas you believe in. Funds held in escrow and released when milestones are verified.',
+    accent: '#00FF88',
   },
   {
     number: '04',
     icon: Rocket,
-    title: 'DEV SHIPS IT',
-    description: 'Verified developers claim the project. Build to spec. Hit milestones. Get paid. Launch to your waiting fanbase.',
-    color: '#F9A8D4',
-    bg: 'rgba(236,72,153,0.12)',
-    border: 'rgba(236,72,153,0.25)',
+    title: 'DEV',
+    sub: 'SHIPS IT',
+    description: 'Verified builders claim the project, hit milestones, get paid. You get early access.',
+    accent: '#BF5AF2',
   },
 ]
-
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-}
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-}
 
 export default function HowItWorks() {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
 
   return (
-    <section id="how-it-works" className="py-24 relative" ref={ref}>
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="how-it-works" className="py-28 relative" ref={ref}>
+      {/* Background grid */}
+      <div className="absolute inset-0 grid-technical opacity-40" />
+
+      <div className="max-w-7xl mx-auto px-6 relative">
         {/* Header */}
-        <div className="text-center mb-16">
-          <p className="text-[11px] font-grotesk font-bold uppercase tracking-widest text-brand-purple mb-3">
-            THE PROCESS
-          </p>
-          <h2 className="font-grotesk font-extrabold text-4xl md:text-5xl text-white uppercase tracking-tight">
-            HOW THE{' '}
-            <span className="gradient-text-static">DROP</span>{' '}
-            WORKS
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          className="mb-16"
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-4 h-px bg-neon" />
+            <span className="text-[10px] font-inter tracking-[0.25em] text-neon uppercase">
+              THE PROCESS
+            </span>
+          </div>
+          <h2 className="font-heading text-6xl md:text-7xl text-white uppercase leading-none">
+            HOW THE <span className="text-neon">DROP</span> WORKS
           </h2>
-        </div>
+        </motion.div>
 
         {/* Steps */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative"
-        >
-          {/* Connecting line (desktop) */}
-          <div className="absolute top-10 left-[12.5%] right-[12.5%] h-px hidden lg:block"
-            style={{ background: 'linear-gradient(90deg, transparent, rgba(124,58,237,0.3), rgba(6,182,212,0.3), rgba(16,185,129,0.3), transparent)' }}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-0 relative">
+          {/* Connecting line */}
+          <div className="absolute hidden md:block top-8 left-[12.5%] right-[12.5%] h-px"
+            style={{ background: 'linear-gradient(90deg, #00D4FF20, #FFFFFF15, #00FF8820, #BF5AF220)' }}
           />
 
-          {steps.map((step) => {
+          {steps.map((step, i) => {
             const Icon = step.icon
             return (
-              <motion.div key={step.number} variants={itemVariants}>
-                <div
-                  className="relative rounded-2xl p-6 h-full transition-all duration-300 hover:-translate-y-1 group"
-                  style={{
-                    background: step.bg,
-                    border: `1px solid ${step.border}`,
-                  }}
-                >
-                  {/* Step number */}
-                  <div className="flex items-center justify-between mb-5">
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center"
-                      style={{ background: `${step.color}20`, border: `1px solid ${step.color}30` }}
-                    >
-                      <Icon size={18} style={{ color: step.color }} />
-                    </div>
-                    <span
-                      className="font-grotesk font-extrabold text-4xl opacity-10 group-hover:opacity-20 transition-opacity"
-                      style={{ color: step.color }}
-                    >
-                      {step.number}
-                    </span>
-                  </div>
-
-                  <h3
-                    className="font-grotesk font-bold text-base uppercase tracking-wide mb-3"
-                    style={{ color: step.color }}
+              <motion.div
+                key={step.number}
+                initial={{ opacity: 0, y: 30 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="relative p-6 border-r border-white/5 last:border-r-0 group"
+              >
+                {/* Step number */}
+                <div className="flex items-center gap-3 mb-6">
+                  <div
+                    className="w-8 h-8 rounded flex items-center justify-center border"
+                    style={{ borderColor: `${step.accent}30`, background: `${step.accent}08` }}
                   >
-                    {step.title}
-                  </h3>
-                  <p className="text-white/50 text-sm leading-relaxed">
-                    {step.description}
-                  </p>
+                    <Icon size={15} style={{ color: step.accent }} />
+                  </div>
+                  <span
+                    className="font-heading text-5xl leading-none opacity-10 group-hover:opacity-20 transition-opacity"
+                    style={{ color: step.accent }}
+                  >
+                    {step.number}
+                  </span>
                 </div>
+
+                <h3
+                  className="font-heading text-3xl leading-none mb-0.5 uppercase"
+                  style={{ color: step.accent }}
+                >
+                  {step.title}
+                </h3>
+                <h3 className="font-heading text-3xl text-white leading-none uppercase mb-4">
+                  {step.sub}
+                </h3>
+                <p className="text-fog text-sm font-inter leading-relaxed">
+                  {step.description}
+                </p>
               </motion.div>
             )
           })}
-        </motion.div>
+        </div>
       </div>
     </section>
   )

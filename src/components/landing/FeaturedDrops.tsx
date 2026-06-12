@@ -6,51 +6,45 @@ import { ArrowRight } from 'lucide-react'
 import DropCard from '@/components/project/DropCard'
 import { mockProjects } from '@/lib/mock-data'
 
-const featured = mockProjects.filter((p) => ['1', '7', '3'].includes(p.id))
+const featured = mockProjects.filter((p) => ['1', '7', '4'].includes(p.id))
 
 export default function FeaturedDrops() {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
 
   return (
-    <section className="py-24 relative" ref={ref}>
-      {/* Section bg glow */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full opacity-30"
-        style={{
-          background: 'radial-gradient(ellipse, rgba(124,58,237,0.08) 0%, transparent 70%)',
-          filter: 'blur(60px)',
-        }}
-      />
-
+    <section className="py-28" ref={ref}>
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="flex flex-col md:flex-row items-start md:items-end justify-between mb-10 gap-4"
+          className="flex flex-col md:flex-row items-start md:items-end justify-between mb-12 gap-6"
         >
           <div>
-            <p className="text-[11px] font-grotesk font-bold uppercase tracking-widest text-brand-cyan mb-2">
-              🔥 TRENDING DROPS
-            </p>
-            <h2 className="font-grotesk font-extrabold text-4xl md:text-5xl uppercase text-white tracking-tight">
-              HOT RIGHT{' '}
-              <span className="gradient-text-static">NOW</span>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-4 h-px bg-electric" />
+              <span className="text-[10px] font-inter tracking-[0.25em] text-electric uppercase">
+                TRENDING NOW
+              </span>
+            </div>
+            <h2 className="font-heading text-6xl md:text-7xl text-white uppercase leading-none">
+              HOT <span className="text-electric">DROPS</span>
             </h2>
           </div>
+
           <Link
             href="/marketplace"
-            className="flex items-center gap-2 text-brand-cyan text-sm font-grotesk font-semibold uppercase tracking-wider hover:gap-3 transition-all duration-200 group"
+            className="flex items-center gap-2 text-[11px] font-inter font-medium tracking-[0.2em] uppercase text-fog hover:text-electric transition-colors group"
           >
-            VIEW ALL DROPS
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            VIEW ALL
+            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {featured.map((project, i) => (
             <DropCard key={project.id} project={project} index={i} />
           ))}

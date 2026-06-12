@@ -2,15 +2,17 @@ import { cn } from '@/lib/utils'
 import { type HTMLAttributes } from 'react'
 
 interface GlassCardProps extends HTMLAttributes<HTMLDivElement> {
-  glow?: 'purple' | 'cyan' | 'pink' | 'orange' | 'none'
+  variant?: 'default' | 'dark' | 'electric' | 'neon'
   hover?: boolean
   padding?: boolean
+  corners?: boolean
 }
 
 export default function GlassCard({
-  glow = 'none',
+  variant = 'default',
   hover = false,
   padding = true,
+  corners = false,
   className,
   children,
   ...props
@@ -18,14 +20,14 @@ export default function GlassCard({
   return (
     <div
       className={cn(
-        'glass rounded-xl transition-all duration-300',
+        'relative transition-all duration-300',
+        variant === 'default' && 'glass rounded-lg',
+        variant === 'dark' && 'glass-frosted rounded-lg',
+        variant === 'electric' && 'glass rounded-lg border-electric-glow',
+        variant === 'neon' && 'glass rounded-lg border-neon-glow',
         padding && 'p-5',
-        hover && 'cursor-pointer',
-        hover && glow === 'purple' && 'hover:border-brand-purple/40 hover:shadow-glow-purple hover:-translate-y-1',
-        hover && glow === 'cyan' && 'hover:border-brand-cyan/40 hover:shadow-glow-cyan hover:-translate-y-1',
-        hover && glow === 'pink' && 'hover:border-brand-pink/40 hover:shadow-glow-pink hover:-translate-y-1',
-        hover && glow === 'orange' && 'hover:border-brand-orange/40 hover:shadow-glow-orange hover:-translate-y-1',
-        hover && glow === 'none' && 'hover:border-white/20 hover:bg-white/5 hover:-translate-y-1',
+        hover && 'hover:-translate-y-1 hover:shadow-glass cursor-pointer',
+        corners && 'corner-accent',
         className
       )}
       {...props}

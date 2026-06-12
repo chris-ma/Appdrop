@@ -14,15 +14,11 @@ export default function CategoryBadge({ category, size = 'sm', className }: Cate
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full font-grotesk font-semibold uppercase tracking-wider',
-        size === 'sm' ? 'text-[10px] px-2.5 py-1' : 'text-xs px-3 py-1.5',
+        'inline-flex items-center font-inter font-medium uppercase tracking-[0.18em]',
+        size === 'sm' ? 'text-[10px] px-2.5 py-1' : 'text-[11px] px-3 py-1.5',
         className
       )}
-      style={{
-        background: config.bg,
-        color: config.color,
-        border: `1px solid ${config.color}30`,
-      }}
+      style={{ color: config.color }}
     >
       {config.label}
     </span>

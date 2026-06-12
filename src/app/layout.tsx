@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
-import { Space_Grotesk, Inter } from 'next/font/google'
+import { Bebas_Neue, Inter } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 
-const spaceGrotesk = Space_Grotesk({
+const bebasNeue = Bebas_Neue({
+  weight: '400',
   subsets: ['latin'],
-  variable: '--font-grotesk',
-  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-heading',
   display: 'swap',
 })
 
@@ -18,20 +18,20 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'AppDrop — Build What the World Actually Wants',
+  title: 'AppDrop — Demand-Driven App Culture',
   description:
-    'The crowdsourced software marketplace. Submit app ideas, vote for what gets built, fund the best ones, and get access before anyone else.',
+    'The platform where communities decide which apps get built. Submit. Vote. Fund. Drop.',
   openGraph: {
     title: 'AppDrop',
-    description: 'Where communities decide which apps get built.',
+    description: 'The next generation app creation marketplace.',
     type: 'website',
   },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`}>
-      <body className="bg-brand-black text-white antialiased min-h-screen">
+    <html lang="en" className={`${bebasNeue.variable} ${inter.variable}`}>
+      <body className="bg-void text-ash antialiased min-h-screen font-inter overflow-x-hidden">
         <Navbar />
         <main>{children}</main>
         <Footer />

@@ -33,56 +33,64 @@ export default function DevelopersPage() {
   return (
     <div className="min-h-screen pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-6">
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-10"
         >
-          <p className="text-[11px] font-grotesk font-bold uppercase tracking-widest text-brand-cyan mb-2">
-            VERIFIED BUILDERS
-          </p>
-          <h1 className="font-grotesk font-extrabold text-4xl md:text-6xl uppercase text-white tracking-tight mb-2">
-            FIND YOUR{' '}
-            <span className="gradient-text-static">BUILDER</span>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-4 h-px bg-neon" />
+            <span className="text-[10px] font-inter tracking-[0.25em] text-neon uppercase">
+              VERIFIED BUILDERS
+            </span>
+          </div>
+          <h1 className="font-heading text-6xl md:text-7xl text-white uppercase leading-none mb-2">
+            FIND YOUR <span className="text-neon">BUILDER</span>
           </h1>
-          <p className="text-white/40 text-sm font-grotesk">
+          <p className="text-fog text-sm font-inter">
             {filtered.length} developer{filtered.length !== 1 ? 's' : ''} available
           </p>
         </motion.div>
 
         {/* Controls */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
+        <div className="flex flex-col md:flex-row gap-3 mb-6">
           <div className="relative flex-1">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/30" />
+            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-fog" />
             <input
               type="text"
               placeholder="Search by name or skill..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full glass rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-white/30 outline-none focus:border-brand-cyan/50 transition-colors"
+              className="w-full pl-11 pr-4 py-3 text-sm text-white placeholder-fog outline-none font-inter transition-all duration-200 rounded-lg border border-white/8 focus:border-neon/40"
+              style={{ background: '#0D0D0D' }}
             />
           </div>
 
           <button
             onClick={() => setAvailableOnly((v) => !v)}
-            className={`flex-shrink-0 text-xs font-grotesk font-bold uppercase tracking-wider px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer ${
+            className="flex-shrink-0 font-heading text-[14px] uppercase px-5 py-3 rounded-lg transition-all duration-200 cursor-pointer"
+            style={
               availableOnly
-                ? 'bg-brand-green/20 text-brand-green border border-brand-green/30'
-                : 'glass text-white/40 hover:text-white'
-            }`}
+                ? { background: 'rgba(0,255,136,0.1)', color: '#00FF88', border: '1px solid rgba(0,255,136,0.3)' }
+                : { background: '#0D0D0D', color: 'rgba(255,255,255,0.35)', border: '1px solid rgba(255,255,255,0.08)' }
+            }
           >
             {availableOnly ? '✓ AVAILABLE ONLY' : 'AVAILABLE ONLY'}
           </button>
         </div>
 
         {/* Skill filter chips */}
-        <div className="flex items-center gap-2 mb-8 overflow-x-auto scrollbar-none pb-1">
+        <div className="flex items-center gap-2 mb-10 overflow-x-auto scrollbar-none pb-1">
           <button
             onClick={() => setSelectedSkill(null)}
-            className={`flex-shrink-0 text-xs font-grotesk font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${
-              !selectedSkill ? 'bg-white/15 text-white border border-white/30' : 'text-white/30 border border-white/10 hover:text-white'
-            }`}
+            className="flex-shrink-0 text-[10px] font-inter font-medium uppercase tracking-[0.2em] px-3 py-1.5 rounded transition-all duration-200 cursor-pointer"
+            style={
+              !selectedSkill
+                ? { background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)' }
+                : { color: 'rgba(255,255,255,0.3)', border: '1px solid rgba(255,255,255,0.08)' }
+            }
           >
             ALL SKILLS
           </button>
@@ -90,11 +98,12 @@ export default function DevelopersPage() {
             <button
               key={skill}
               onClick={() => setSelectedSkill(selectedSkill === skill ? null : skill)}
-              className={`flex-shrink-0 text-xs font-grotesk font-semibold px-3 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${
+              className="flex-shrink-0 text-[10px] font-inter font-medium px-3 py-1.5 rounded transition-all duration-200 cursor-pointer"
+              style={
                 selectedSkill === skill
-                  ? 'bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30'
-                  : 'text-white/30 border border-white/10 hover:text-white/60'
-              }`}
+                  ? { background: 'rgba(0,212,255,0.1)', color: '#00D4FF', border: '1px solid rgba(0,212,255,0.3)' }
+                  : { color: 'rgba(255,255,255,0.3)', border: '1px solid rgba(255,255,255,0.08)' }
+              }
             >
               {skill}
             </button>
@@ -102,11 +111,17 @@ export default function DevelopersPage() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((dev, i) => (
             <DeveloperCard key={dev.id} developer={dev} index={i} />
           ))}
         </div>
+
+        {filtered.length === 0 && (
+          <div className="text-center py-20 text-fog font-inter">
+            No builders found. Try a different search or filter.
+          </div>
+        )}
       </div>
     </div>
   )

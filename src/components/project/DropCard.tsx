@@ -1,12 +1,12 @@
 'use client'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { ArrowRight, Users } from 'lucide-react'
-import { formatCount, formatCurrency, fundingPercent } from '@/lib/utils'
+import { ArrowUpRight } from 'lucide-react'
+import { formatCurrency, fundingPercent } from '@/lib/utils'
 import type { Project } from '@/lib/types'
-import CategoryBadge from './CategoryBadge'
-import StatusPill from './StatusPill'
+import { CATEGORY_CONFIG, STATUS_CONFIG } from '@/lib/constants'
 import VoteButton from './VoteButton'
+import TiltCard from '@/components/ui/TiltCard'
 
 interface DropCardProps {
   project: Project
@@ -15,75 +15,103 @@ interface DropCardProps {
 
 export default function DropCard({ project, index = 0 }: DropCardProps) {
   const pct = fundingPercent(project.fundingCurrent, project.fundingGoal)
+  const catConfig = CATEGORY_CONFIG[project.category]
+  const statusConfig = STATUS_CONFIG[project.status]
   const showFunding = project.status !== 'VOTING' && project.fundingGoal > 0
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      whileHover={{ y: -6 }}
+      transition={{ duration: 0.6, delay: index * 0.12 }}
     >
-      <Link href={`/projects/${project.id}`} className="block group">
-        <div className="relative glass rounded-2xl overflow-hidden border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-[0_30px_80px_rgba(0,0,0,0.6)]">
-          {/* Gradient header band */}
+      <TiltCard glowColor={`${catConfig.accent}12`} strength={12}>
+        <Link href={`/projects/${project.id}`} className="block group">
           <div
-            className={`h-1.5 bg-gradient-to-r ${project.gradient}`}
-          />
+            className="relative rounded-lg overflow-hidden border border-white/6 hover:border-white/12 transition-all duration-400 bg-[#0D0D0D]"
+            style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}
+          >
+            {/* Category accent — left border strip */}
+            <div
+              className="absolute top-0 bottom-0 left-0 w-px"
+              style={{ background: catConfig.accent, opacity: 0.4 }}
+            />
 
-          <div className="p-6">
-            {/* Top row */}
-            <div className="flex items-center justify-between mb-4">
-              <CategoryBadge category={project.category} size="md" />
-              <StatusPill status={project.status} />
-            </div>
+            {/* Header glow zone */}
+            <div
+              className="absolute top-0 left-0 right-0 h-32 opacity-20"
+              style={{
+                background: `radial-gradient(ellipse at 50% 0%, ${catConfig.accent} 0%, transparent 70%)`,
+              }}
+            />
 
-            {/* Title */}
-            <h3 className="font-grotesk font-bold text-white text-xl leading-tight mb-1.5">
-              {project.title}
-            </h3>
-            <p className="text-white/50 text-sm line-clamp-2 leading-relaxed mb-5">
-              {project.tagline}
-            </p>
-
-            {/* Funding */}
-            {showFunding && (
-              <div className="mb-5">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-white font-grotesk font-bold text-base">
-                    {formatCurrency(project.fundingCurrent)}
-                  </span>
-                  <span className="text-white/40 text-xs font-grotesk">
-                    {pct >= 100 ? 'FULLY FUNDED' : `${pct}% of ${formatCurrency(project.fundingGoal)}`}
-                  </span>
-                </div>
-                <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
-                  <div
-                    className={`h-full rounded-full bg-gradient-to-r ${project.gradient} transition-all duration-1000`}
-                    style={{ width: `${pct}%` }}
-                  />
-                </div>
+            <div className="relative p-6 pl-7">
+              {/* Top row */}
+              <div className="flex items-center justify-between mb-5">
+                <span
+                  className="text-[10px] font-inter font-semibold tracking-[0.25em] uppercase"
+                  style={{ color: catConfig.color }}
+                >
+                  {catConfig.label}
+                </span>
+                <span
+                  className="text-[10px] font-inter font-medium tracking-[0.15em] uppercase px-2.5 py-1 rounded-sm"
+                  style={{
+                    background: statusConfig.bg,
+                    color: statusConfig.text,
+                    border: `1px solid ${statusConfig.border}`,
+                  }}
+                >
+                  {statusConfig.label}
+                </span>
               </div>
-            )}
 
-            {/* Footer */}
-            <div className="flex items-center justify-between pt-4 border-t border-white/5">
-              <VoteButton upvotes={project.upvotes} size="md" />
+              {/* Title */}
+              <h3 className="font-heading text-[38px] text-white leading-none uppercase mb-2">
+                {project.title}
+              </h3>
+              <p className="text-fog text-sm font-inter leading-relaxed line-clamp-2 mb-6">
+                {project.tagline}
+              </p>
 
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1.5 text-white/30 text-xs font-grotesk">
-                  <Users size={13} />
-                  {formatCount(project.backerCount)} backers
+              {/* Funding */}
+              {showFunding && (
+                <div className="mb-5">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-heading text-xl text-white">
+                      {formatCurrency(project.fundingCurrent)}
+                    </span>
+                    <span className="text-fog text-[11px] font-inter tracking-wider">
+                      {pct >= 100 ? 'FULLY FUNDED' : `${pct}% / ${formatCurrency(project.fundingGoal)}`}
+                    </span>
+                  </div>
+                  <div className="h-px bg-white/8 relative overflow-hidden">
+                    <motion.div
+                      className="absolute left-0 top-0 h-full"
+                      style={{ background: catConfig.accent, boxShadow: `0 0 8px ${catConfig.accent}` }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${pct}%` }}
+                      transition={{ duration: 1.4, delay: 0.3 }}
+                    />
+                  </div>
                 </div>
-                <span className="flex items-center gap-1 text-brand-cyan text-xs font-grotesk font-bold uppercase tracking-wider group-hover:gap-2 transition-all duration-200">
-                  VIEW
-                  <ArrowRight size={13} />
+              )}
+
+              {/* Divider */}
+              <div className="chrome-line mb-4" />
+
+              {/* Footer */}
+              <div className="flex items-center justify-between">
+                <VoteButton upvotes={project.upvotes} size="sm" />
+                <span className="flex items-center gap-1.5 text-[11px] font-inter font-medium tracking-wider uppercase text-fog opacity-0 group-hover:opacity-100 group-hover:text-electric transition-all duration-200">
+                  VIEW DROP
+                  <ArrowUpRight size={12} />
                 </span>
               </div>
             </div>
           </div>
-        </div>
-      </Link>
+        </Link>
+      </TiltCard>
     </motion.div>
   )
 }

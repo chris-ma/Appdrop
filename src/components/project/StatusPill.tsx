@@ -13,22 +13,22 @@ export default function StatusPill({ status, className }: StatusPillProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full font-grotesk font-bold text-[10px] uppercase tracking-wider px-2.5 py-1',
+        'inline-flex items-center gap-1.5 font-inter font-medium text-[10px] uppercase tracking-[0.18em] px-2.5 py-1 rounded-sm',
         className
       )}
       style={{
         background: config.bg,
         color: config.text,
-        border: `1px solid ${config.border}50`,
+        border: `1px solid ${config.border}`,
       }}
     >
       {status === 'LIVE' && (
         <span
-          className="w-1.5 h-1.5 rounded-full animate-pulse-glow"
-          style={{ background: config.text }}
+          className="w-1.5 h-1.5 rounded-full"
+          style={{ background: config.text, boxShadow: `0 0 4px ${config.text}` }}
         />
       )}
-      {config.label.replace('● ', '')}
+      {config.label}
     </span>
   )
 }

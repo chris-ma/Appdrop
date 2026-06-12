@@ -3,8 +3,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
-  Check, Circle, Star, ArrowLeft, Share2, Bookmark, Users, MessageCircle,
-  Heart, ThumbsUp, CheckCircle2
+  Check, Circle, Star, ArrowLeft, Share2, Bookmark,
+  ThumbsUp, CheckCircle2
 } from 'lucide-react'
 import type { Project } from '@/lib/types'
 import { CATEGORY_CONFIG } from '@/lib/constants'
@@ -14,49 +14,64 @@ import StatusPill from '@/components/project/StatusPill'
 import FundingBar from '@/components/project/FundingBar'
 import VoteButton from '@/components/project/VoteButton'
 import Button from '@/components/ui/Button'
-import GlassCard from '@/components/ui/GlassCard'
+import MagneticButton from '@/components/ui/MagneticButton'
 
 interface ProjectDetailClientProps {
   project: Project
+}
+
+function Panel({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div
+      className={`rounded-lg border border-white/6 p-6 ${className}`}
+      style={{ background: '#0D0D0D' }}
+    >
+      {children}
+    </div>
+  )
+}
+
+function SectionLabel({ color, children }: { color: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-3 mb-5">
+      <div className="w-3 h-px" style={{ background: color }} />
+      <span className="text-[10px] font-inter tracking-[0.25em] uppercase" style={{ color }}>
+        {children}
+      </span>
+    </div>
+  )
 }
 
 export default function ProjectDetailClient({ project }: ProjectDetailClientProps) {
   const [bookmarked, setBookmarked] = useState(false)
   const catConfig = CATEGORY_CONFIG[project.category]
   const showFunding = project.status !== 'VOTING' && project.fundingGoal > 0
+  const accentColor = catConfig.color
 
   return (
     <div className="min-h-screen pt-16">
       {/* Hero */}
       <div
-        className="relative overflow-hidden"
-        style={{
-          background: `linear-gradient(135deg, ${catConfig.bg} 0%, rgba(0,0,0,0.8) 100%)`,
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
-        }}
+        className="relative overflow-hidden border-b border-white/5"
+        style={{ background: '#070707' }}
       >
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: "url('/noise.svg')",
-            opacity: 0.03,
-          }}
-        />
+        {/* Corner accent lines */}
+        <div className="absolute top-0 left-0 w-32 h-px" style={{ background: `linear-gradient(90deg, ${accentColor}, transparent)` }} />
+        <div className="absolute top-0 left-0 w-px h-32" style={{ background: `linear-gradient(180deg, ${accentColor}, transparent)` }} />
+
+        {/* Glow orb */}
         <div
           className="absolute -right-40 top-0 w-96 h-96 rounded-full"
-          style={{
-            background: `radial-gradient(circle, ${catConfig.bg} 0%, transparent 70%)`,
-            filter: 'blur(60px)',
-          }}
+          style={{ background: `radial-gradient(circle, ${accentColor}10, transparent)`, filter: 'blur(80px)' }}
         />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 pt-10 pb-12">
           {/* Breadcrumb */}
           <Link
             href="/marketplace"
-            className="inline-flex items-center gap-2 text-white/40 hover:text-white text-sm mb-8 transition-colors font-grotesk"
+            className="inline-flex items-center gap-2 text-fog hover:text-white text-[11px] font-inter tracking-[0.2em] uppercase mb-8 transition-colors"
           >
-            <ArrowLeft size={16} />
+            <ArrowLeft size={14} />
             ALL DROPS
           </Link>
 
@@ -66,23 +81,29 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                 <CategoryBadge category={project.category} size="md" />
                 <StatusPill status={project.status} />
               </div>
-              <h1 className="font-grotesk font-extrabold text-4xl md:text-6xl text-white uppercase tracking-tight leading-tight mb-2">
+              <h1 className="font-heading text-5xl md:text-7xl text-white uppercase leading-none mb-3">
                 {project.title}
               </h1>
-              <p className="text-white/50 text-lg max-w-xl">{project.tagline}</p>
+              <p className="text-fog text-base font-inter max-w-xl">{project.tagline}</p>
             </div>
 
-            <div className="flex items-center gap-3 flex-shrink-0">
+            <div className="flex items-center gap-2 flex-shrink-0">
               <button
                 onClick={() => setBookmarked((v) => !v)}
-                className={`p-2.5 rounded-xl transition-all duration-200 cursor-pointer ${
-                  bookmarked ? 'bg-brand-purple/20 text-brand-purple border border-brand-purple/30' : 'glass text-white/40 hover:text-white'
-                }`}
+                className="p-2.5 rounded transition-all duration-200 cursor-pointer border"
+                style={
+                  bookmarked
+                    ? { background: `${accentColor}10`, color: accentColor, borderColor: `${accentColor}30` }
+                    : { background: 'rgba(255,255,255,0.03)', color: 'rgba(255,255,255,0.4)', borderColor: 'rgba(255,255,255,0.08)' }
+                }
               >
-                <Bookmark size={18} fill={bookmarked ? 'currentColor' : 'none'} />
+                <Bookmark size={16} fill={bookmarked ? 'currentColor' : 'none'} />
               </button>
-              <button className="p-2.5 glass rounded-xl text-white/40 hover:text-white transition-colors cursor-pointer">
-                <Share2 size={18} />
+              <button
+                className="p-2.5 rounded transition-colors cursor-pointer border border-white/8 text-fog hover:text-white"
+                style={{ background: 'rgba(255,255,255,0.03)' }}
+              >
+                <Share2 size={16} />
               </button>
             </div>
           </div>
@@ -91,68 +112,67 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
 
       {/* Body */}
       <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left: Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Description */}
-            <GlassCard>
-              <h2 className="font-grotesk font-bold text-white uppercase tracking-wide text-sm mb-3 text-brand-purple">
-                THE PROBLEM
-              </h2>
-              <p className="text-white/60 leading-relaxed">{project.description}</p>
-            </GlassCard>
+          <div className="lg:col-span-2 space-y-4">
+
+            {/* The Problem */}
+            <Panel>
+              <SectionLabel color="#00D4FF">THE PROBLEM</SectionLabel>
+              <p className="text-fog font-inter leading-relaxed text-sm">{project.description}</p>
+            </Panel>
 
             {/* Features */}
-            <GlassCard>
-              <h2 className="font-grotesk font-bold text-white uppercase tracking-wide text-sm mb-4 text-brand-cyan">
-                WHAT IT DOES
-              </h2>
+            <Panel>
+              <SectionLabel color="#00FF88">WHAT IT DOES</SectionLabel>
               <ul className="space-y-3">
                 {project.features.map((feature, i) => (
                   <motion.li
                     key={i}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.06 }}
+                    transition={{ delay: i * 0.05 }}
                     className="flex items-start gap-3"
                   >
-                    <div className="mt-0.5 w-5 h-5 rounded-full bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center flex-shrink-0">
-                      <Check size={11} className="text-brand-cyan" strokeWidth={3} />
+                    <div
+                      className="mt-0.5 w-4 h-4 rounded flex items-center justify-center flex-shrink-0"
+                      style={{ background: 'rgba(0,255,136,0.08)', border: '1px solid rgba(0,255,136,0.2)' }}
+                    >
+                      <Check size={10} style={{ color: '#00FF88' }} strokeWidth={3} />
                     </div>
-                    <span className="text-white/70 text-sm leading-relaxed">{feature}</span>
+                    <span className="text-fog text-sm font-inter leading-relaxed">{feature}</span>
                   </motion.li>
                 ))}
               </ul>
-            </GlassCard>
+            </Panel>
 
             {/* Milestones */}
-            <GlassCard>
-              <h2 className="font-grotesk font-bold text-white uppercase tracking-wide text-sm mb-5 text-brand-orange">
-                ROADMAP
-              </h2>
+            <Panel>
+              <SectionLabel color="#BF5AF2">ROADMAP</SectionLabel>
               <div className="relative">
-                <div className="absolute left-3.5 top-2 bottom-2 w-px bg-white/10" />
+                <div className="absolute left-3 top-2 bottom-2 w-px bg-white/5" />
                 <ul className="space-y-5">
-                  {project.milestones.map((m, i) => (
+                  {project.milestones.map((m) => (
                     <li key={m.id} className="relative flex items-start gap-4 pl-1">
                       <div
-                        className={`relative z-10 mt-0.5 w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        className="relative z-10 mt-0.5 w-6 h-6 rounded flex items-center justify-center flex-shrink-0"
+                        style={
                           m.completed
-                            ? 'bg-brand-green/20 border border-brand-green/40'
-                            : 'bg-white/5 border border-white/15'
-                        }`}
+                            ? { background: 'rgba(0,255,136,0.1)', border: '1px solid rgba(0,255,136,0.3)' }
+                            : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)' }
+                        }
                       >
                         {m.completed ? (
-                          <CheckCircle2 size={14} className="text-brand-green" />
+                          <CheckCircle2 size={13} style={{ color: '#00FF88' }} />
                         ) : (
-                          <Circle size={14} className="text-white/20" />
+                          <Circle size={13} className="text-white/20" />
                         )}
                       </div>
                       <div className="flex-1">
-                        <p className={`font-grotesk font-semibold text-sm ${m.completed ? 'text-white' : 'text-white/40'}`}>
+                        <p className={`font-inter text-sm font-medium ${m.completed ? 'text-white' : 'text-fog'}`}>
                           {m.title}
                         </p>
-                        <p className={`text-xs mt-0.5 font-grotesk ${m.completed ? 'text-brand-green' : 'text-white/25'}`}>
+                        <p className="text-[11px] font-inter mt-0.5" style={{ color: m.completed ? '#00FF88' : 'rgba(255,255,255,0.2)' }}>
                           {m.completed ? '✓ COMPLETED' : `Due ${new Date(m.dueDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`}
                         </p>
                       </div>
@@ -160,53 +180,53 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                   ))}
                 </ul>
               </div>
-            </GlassCard>
+            </Panel>
 
             {/* Discussion */}
-            <GlassCard>
-              <h2 className="font-grotesk font-bold text-white uppercase tracking-wide text-sm mb-5 text-brand-pink">
-                DISCUSSION
-                <span className="ml-2 text-white/30 font-normal">({project.comments.length})</span>
-              </h2>
-              <div className="space-y-4">
+            <Panel>
+              <SectionLabel color="#C8C8C8">
+                DISCUSSION <span className="opacity-40">({project.comments.length})</span>
+              </SectionLabel>
+              <div className="space-y-5">
                 {project.comments.map((comment) => (
                   <div key={comment.id} className="flex gap-3">
                     <div
-                      className="w-8 h-8 rounded-lg flex items-center justify-center font-grotesk font-bold text-xs flex-shrink-0"
-                      style={{ background: `${comment.avatarColor}20`, color: comment.avatarColor, border: `1px solid ${comment.avatarColor}30` }}
+                      className="w-8 h-8 rounded flex items-center justify-center font-heading text-sm flex-shrink-0"
+                      style={{ background: `${comment.avatarColor}12`, color: comment.avatarColor, border: `1px solid ${comment.avatarColor}25` }}
                     >
                       {comment.initials}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-white font-grotesk font-semibold text-sm">{comment.author}</span>
-                        <span className="text-white/30 text-xs font-grotesk">{timeAgo(comment.createdAt)}</span>
+                        <span className="text-white font-inter font-medium text-sm">{comment.author}</span>
+                        <span className="text-fog text-[11px] font-inter">{timeAgo(comment.createdAt)}</span>
                       </div>
-                      <p className="text-white/60 text-sm leading-relaxed">{comment.content}</p>
-                      <button className="flex items-center gap-1.5 mt-2 text-white/30 hover:text-white/60 text-xs transition-colors cursor-pointer">
-                        <ThumbsUp size={12} />
+                      <p className="text-fog text-sm font-inter leading-relaxed">{comment.content}</p>
+                      <button className="flex items-center gap-1.5 mt-2 text-fog hover:text-white text-[11px] font-inter transition-colors cursor-pointer">
+                        <ThumbsUp size={11} />
                         {comment.likes}
                       </button>
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="mt-5 pt-4 border-t border-white/8">
+              <div className="mt-6 pt-5 border-t border-white/5">
                 <textarea
                   placeholder="Join the discussion..."
-                  className="w-full glass rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 outline-none resize-none h-20 focus:border-brand-purple/40 transition-colors"
+                  className="w-full px-4 py-3 text-sm text-white placeholder-fog outline-none resize-none h-20 rounded-lg border border-white/8 focus:border-electric/30 transition-all font-inter"
+                  style={{ background: 'rgba(255,255,255,0.02)' }}
                 />
                 <div className="flex justify-end mt-2">
-                  <Button variant="primary" size="sm">POST COMMENT</Button>
+                  <Button variant="primary" size="sm" className="font-heading text-[13px]">POST COMMENT</Button>
                 </div>
               </div>
-            </GlassCard>
+            </Panel>
           </div>
 
-          {/* Right sidebar: sticky */}
-          <div className="space-y-5 lg:sticky lg:top-24 lg:self-start">
+          {/* Right sidebar */}
+          <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
             {/* Vote + Back */}
-            <GlassCard glow="purple" className="text-center">
+            <Panel className="text-center">
               <div className="flex items-center justify-center gap-4 mb-5">
                 <VoteButton
                   upvotes={project.upvotes}
@@ -224,69 +244,73 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                 />
               )}
 
-              <Button variant="primary" size="lg" className="w-full mb-3">
-                {project.status === 'VOTING' ? '⬆ VOTE FOR THIS DROP' :
-                 project.status === 'FUNDING' ? '💎 BACK THIS DROP' :
-                 project.status === 'LIVE' ? '🚀 GET ACCESS' : '📧 JOIN WAITLIST'}
-              </Button>
-              <p className="text-white/25 text-xs font-grotesk">
+              <MagneticButton>
+                <Button variant="primary" size="lg" className="w-full font-heading text-[15px] mb-3">
+                  {project.status === 'VOTING' ? 'VOTE FOR THIS DROP' :
+                   project.status === 'FUNDING' ? 'BACK THIS DROP' :
+                   project.status === 'LIVE' ? 'GET ACCESS' : 'JOIN WAITLIST'}
+                </Button>
+              </MagneticButton>
+              <p className="text-fog text-[11px] font-inter">
                 {project.backerCount.toLocaleString()} people already
                 {project.status === 'LIVE' ? ' using this' : ' backing this'}
               </p>
-            </GlassCard>
+            </Panel>
 
             {/* Tags */}
-            <GlassCard padding={false} className="p-4">
-              <p className="text-[10px] font-grotesk font-bold uppercase tracking-widest text-white/30 mb-3">TAGS</p>
+            <Panel>
+              <p className="text-[10px] font-inter tracking-[0.25em] text-fog uppercase mb-3">TAGS</p>
               <div className="flex flex-wrap gap-1.5">
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs font-grotesk text-white/40 bg-white/5 border border-white/10 rounded-md px-2 py-0.5"
+                    className="text-[10px] font-inter text-fog border border-white/6 rounded px-2 py-0.5"
+                    style={{ background: 'rgba(255,255,255,0.02)' }}
                   >
                     #{tag}
                   </span>
                 ))}
               </div>
-            </GlassCard>
+            </Panel>
 
             {/* Developer */}
             {project.developer && (
-              <GlassCard glow="cyan">
-                <p className="text-[10px] font-grotesk font-bold uppercase tracking-widest text-brand-cyan mb-4">
+              <Panel>
+                <p className="text-[10px] font-inter tracking-[0.25em] text-electric uppercase mb-4">
                   ASSIGNED BUILDER
                 </p>
                 <div className="flex items-center gap-3 mb-3">
                   <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center font-grotesk font-bold text-sm"
+                    className="w-10 h-10 rounded flex items-center justify-center font-heading text-lg"
                     style={{
-                      background: `${project.developer.avatarColor}20`,
-                      border: `1px solid ${project.developer.avatarColor}40`,
-                      color: project.developer.avatarColor
+                      background: `${project.developer.avatarColor}12`,
+                      border: `1px solid ${project.developer.avatarColor}30`,
+                      color: project.developer.avatarColor,
                     }}
                   >
                     {project.developer.initials}
                   </div>
                   <div>
-                    <p className="font-grotesk font-bold text-white text-sm">{project.developer.name}</p>
-                    <div className="flex items-center gap-1 mt-0.5">
+                    <p className="font-heading text-xl text-white leading-none">{project.developer.name}</p>
+                    <div className="flex items-center gap-0.5 mt-1">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
                           key={i}
                           size={10}
-                          className={i < Math.floor(project.developer!.rating) ? 'text-brand-yellow fill-brand-yellow' : 'text-white/20'}
+                          className={i < Math.floor(project.developer!.rating) ? 'fill-current' : 'opacity-20'}
+                          style={{ color: i < Math.floor(project.developer!.rating) ? '#00D4FF' : 'white' }}
                         />
                       ))}
-                      <span className="text-white/40 text-xs ml-1">{project.developer.rating}</span>
+                      <span className="text-fog text-[11px] ml-1">{project.developer.rating}</span>
                     </div>
                   </div>
                 </div>
-                <p className="text-white/40 text-xs leading-relaxed">{project.developer.tagline}</p>
-              </GlassCard>
+                <p className="text-fog text-[11px] font-inter leading-relaxed">{project.developer.tagline}</p>
+              </Panel>
             )}
 
             {/* Stats */}
-            <GlassCard padding={false} className="p-4">
+            <Panel>
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { label: 'UPVOTES', value: formatCount(project.upvotes) },
@@ -295,12 +319,12 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                   { label: 'SUBMITTED', value: timeAgo(project.createdAt) },
                 ].map((stat) => (
                   <div key={stat.label} className="text-center p-2">
-                    <p className="font-grotesk font-bold text-white text-lg">{stat.value}</p>
-                    <p className="text-[9px] font-grotesk uppercase tracking-widest text-white/30 mt-0.5">{stat.label}</p>
+                    <p className="font-heading text-3xl text-white leading-none">{stat.value}</p>
+                    <p className="text-[9px] font-inter tracking-[0.2em] uppercase text-fog mt-1">{stat.label}</p>
                   </div>
                 ))}
               </div>
-            </GlassCard>
+            </Panel>
           </div>
         </div>
       </div>

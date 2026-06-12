@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { CATEGORIES, CATEGORY_CONFIG } from '@/lib/constants'
 import type { Category } from '@/lib/types'
 import Button from '@/components/ui/Button'
-import GlassCard from '@/components/ui/GlassCard'
+import MagneticButton from '@/components/ui/MagneticButton'
 import CategoryBadge from '@/components/project/CategoryBadge'
 import StatusPill from '@/components/project/StatusPill'
 
@@ -27,6 +27,9 @@ const slideVariants = {
   center: { x: 0, opacity: 1 },
   exit: (dir: number) => ({ x: dir > 0 ? -60 : 60, opacity: 0 }),
 }
+
+const inputClass = 'w-full px-4 py-3 text-white placeholder-fog outline-none text-sm font-inter transition-all duration-200 rounded-lg border border-white/8 focus:border-electric/40'
+const inputStyle = { background: 'rgba(255,255,255,0.02)' }
 
 export default function SubmitPage() {
   const [step, setStep] = useState(0)
@@ -67,20 +70,36 @@ export default function SubmitPage() {
           animate={{ scale: 1, opacity: 1 }}
           className="text-center max-w-md"
         >
-          <div className="w-20 h-20 rounded-full bg-brand-purple/20 border border-brand-purple/40 flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
-            <Rocket size={36} className="text-brand-purple" />
+          {/* Corner accents */}
+          <div className="relative inline-block mb-8">
+            <div
+              className="w-24 h-24 rounded flex items-center justify-center mx-auto"
+              style={{ background: 'rgba(0,212,255,0.06)', border: '1px solid rgba(0,212,255,0.2)' }}
+            >
+              <Rocket size={36} style={{ color: '#00D4FF' }} />
+            </div>
           </div>
-          <h2 className="font-grotesk font-extrabold text-4xl uppercase text-white mb-3">
+          <h2 className="font-heading text-6xl uppercase text-white mb-3">
             DROP SUBMITTED!
           </h2>
-          <p className="text-white/50 mb-8">
+          <p className="text-fog font-inter mb-8">
             Your idea is now live on AppDrop. The community will start voting shortly.
           </p>
           <div className="flex gap-3 justify-center">
-            <Link href="/marketplace">
-              <Button variant="primary">VIEW MARKETPLACE</Button>
-            </Link>
-            <Button variant="ghost" onClick={() => { setSubmitted(false); setStep(0); setForm({ title: '', category: '', problem: '', audience: '', features: [], monetization: '', tags: '' }) }}>
+            <MagneticButton>
+              <Link href="/marketplace">
+                <Button variant="primary" className="font-heading text-[15px]">VIEW MARKETPLACE</Button>
+              </Link>
+            </MagneticButton>
+            <Button
+              variant="electric"
+              className="font-heading text-[15px]"
+              onClick={() => {
+                setSubmitted(false)
+                setStep(0)
+                setForm({ title: '', category: '', problem: '', audience: '', features: [], monetization: '', tags: '' })
+              }}
+            >
               SUBMIT ANOTHER
             </Button>
           </div>
@@ -94,30 +113,37 @@ export default function SubmitPage() {
       <div className="max-w-2xl mx-auto px-6">
         {/* Header */}
         <div className="mb-10 text-center">
-          <p className="text-[11px] font-grotesk font-bold uppercase tracking-widest text-brand-purple mb-2">
-            CREATE A DROP
-          </p>
-          <h1 className="font-grotesk font-extrabold text-4xl uppercase text-white tracking-tight">
-            SUBMIT YOUR{' '}
-            <span className="gradient-text-static">IDEA</span>
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <div className="w-6 h-px bg-cyber" />
+            <span className="text-[10px] font-inter tracking-[0.25em] text-cyber uppercase">CREATE A DROP</span>
+            <div className="w-6 h-px bg-cyber" />
+          </div>
+          <h1 className="font-heading text-6xl md:text-7xl uppercase text-white leading-none">
+            SUBMIT YOUR <span className="text-cyber">IDEA</span>
           </h1>
         </div>
 
         {/* Step indicator */}
         <div className="flex items-center justify-between mb-10 relative">
-          <div className="absolute top-3.5 left-0 right-0 h-px bg-white/10" />
+          <div className="absolute top-3 left-0 right-0 h-px bg-white/6" />
           {STEPS.map((label, i) => (
             <div key={label} className="relative flex flex-col items-center gap-2 z-10">
               <div
-                className={`w-7 h-7 rounded-full flex items-center justify-center font-grotesk font-bold text-xs transition-all duration-300 ${
-                  i < step ? 'bg-brand-purple text-white' :
-                  i === step ? 'bg-brand-purple/20 border-2 border-brand-purple text-brand-purple' :
-                  'bg-white/5 border border-white/15 text-white/30'
-                }`}
+                className="w-6 h-6 rounded flex items-center justify-center font-inter text-xs transition-all duration-300"
+                style={
+                  i < step
+                    ? { background: 'rgba(191,90,242,0.2)', border: '1px solid rgba(191,90,242,0.5)', color: '#BF5AF2' }
+                    : i === step
+                    ? { background: 'rgba(191,90,242,0.15)', border: '2px solid #BF5AF2', color: '#BF5AF2' }
+                    : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.3)' }
+                }
               >
-                {i < step ? <Check size={12} strokeWidth={3} /> : i + 1}
+                {i < step ? <Check size={11} strokeWidth={3} /> : i + 1}
               </div>
-              <span className={`text-[10px] font-grotesk font-bold uppercase tracking-wider hidden sm:block ${i === step ? 'text-brand-purple' : 'text-white/25'}`}>
+              <span
+                className="text-[9px] font-inter uppercase tracking-[0.2em] hidden sm:block"
+                style={{ color: i === step ? '#BF5AF2' : 'rgba(255,255,255,0.2)' }}
+              >
                 {label}
               </span>
             </div>
@@ -136,25 +162,31 @@ export default function SubmitPage() {
               exit="exit"
               transition={{ duration: 0.3, ease: 'easeOut' }}
             >
-              <GlassCard className="mb-6">
+              <div
+                className="rounded-lg border border-white/6 p-6 mb-6"
+                style={{ background: '#0D0D0D' }}
+              >
                 {/* Step 0: Basics */}
                 {step === 0 && (
                   <div className="space-y-5">
-                    <h2 className="font-grotesk font-bold text-white text-lg uppercase mb-1">Basic Info</h2>
-                    <p className="text-white/40 text-sm mb-5">What's your app idea?</p>
+                    <div className="mb-5">
+                      <h2 className="font-heading text-3xl text-white uppercase mb-1">Basic Info</h2>
+                      <p className="text-fog text-sm font-inter">What's your app idea?</p>
+                    </div>
 
                     <div>
-                      <label className="text-[11px] font-grotesk font-bold uppercase tracking-widest text-white/40 mb-2 block">APP NAME *</label>
+                      <label className="text-[10px] font-inter tracking-[0.2em] uppercase text-fog mb-2 block">APP NAME *</label>
                       <input
                         value={form.title}
                         onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
                         placeholder="e.g. SprintFlow, NeuralNote..."
-                        className="w-full glass rounded-xl px-4 py-3 text-white placeholder-white/25 outline-none focus:border-brand-purple/50 text-sm transition-colors"
+                        className={inputClass}
+                        style={inputStyle}
                       />
                     </div>
 
                     <div>
-                      <label className="text-[11px] font-grotesk font-bold uppercase tracking-widest text-white/40 mb-2 block">CATEGORY *</label>
+                      <label className="text-[10px] font-inter tracking-[0.2em] uppercase text-fog mb-3 block">CATEGORY *</label>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                         {CATEGORIES.map((cat) => {
                           const config = CATEGORY_CONFIG[cat]
@@ -162,14 +194,14 @@ export default function SubmitPage() {
                             <button
                               key={cat}
                               onClick={() => setForm((f) => ({ ...f, category: cat }))}
-                              className="rounded-xl p-2.5 text-left transition-all duration-200 cursor-pointer"
+                              className="rounded p-2.5 text-left transition-all duration-200 cursor-pointer"
                               style={
                                 form.category === cat
-                                  ? { background: config.bg, border: `1px solid ${config.color}50`, color: config.color }
-                                  : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.4)' }
+                                  ? { background: `${config.color}10`, border: `1px solid ${config.color}40`, color: config.color }
+                                  : { background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.35)' }
                               }
                             >
-                              <p className="text-xs font-grotesk font-semibold">{config.label}</p>
+                              <p className="text-[11px] font-inter font-medium">{config.label}</p>
                             </button>
                           )
                         })}
@@ -177,13 +209,14 @@ export default function SubmitPage() {
                     </div>
 
                     <div>
-                      <label className="text-[11px] font-grotesk font-bold uppercase tracking-widest text-white/40 mb-2 block">PROBLEM STATEMENT *</label>
+                      <label className="text-[10px] font-inter tracking-[0.2em] uppercase text-fog mb-2 block">PROBLEM STATEMENT *</label>
                       <textarea
                         value={form.problem}
                         onChange={(e) => setForm((f) => ({ ...f, problem: e.target.value }))}
                         placeholder="What problem does this solve? Be specific..."
                         rows={4}
-                        className="w-full glass rounded-xl px-4 py-3 text-white placeholder-white/25 outline-none resize-none text-sm transition-colors"
+                        className={`${inputClass} resize-none`}
+                        style={inputStyle}
                       />
                     </div>
                   </div>
@@ -192,41 +225,51 @@ export default function SubmitPage() {
                 {/* Step 1: Features */}
                 {step === 1 && (
                   <div className="space-y-5">
-                    <h2 className="font-grotesk font-bold text-white text-lg uppercase mb-1">Features & Audience</h2>
-                    <p className="text-white/40 text-sm mb-5">What will it do and who is it for?</p>
+                    <div className="mb-5">
+                      <h2 className="font-heading text-3xl text-white uppercase mb-1">Features & Audience</h2>
+                      <p className="text-fog text-sm font-inter">What will it do and who is it for?</p>
+                    </div>
 
                     <div>
-                      <label className="text-[11px] font-grotesk font-bold uppercase tracking-widest text-white/40 mb-2 block">TARGET AUDIENCE</label>
+                      <label className="text-[10px] font-inter tracking-[0.2em] uppercase text-fog mb-2 block">TARGET AUDIENCE</label>
                       <input
                         value={form.audience}
                         onChange={(e) => setForm((f) => ({ ...f, audience: e.target.value }))}
                         placeholder="e.g. Solo developers, healthcare workers..."
-                        className="w-full glass rounded-xl px-4 py-3 text-white placeholder-white/25 outline-none text-sm"
+                        className={inputClass}
+                        style={inputStyle}
                       />
                     </div>
 
                     <div>
-                      <label className="text-[11px] font-grotesk font-bold uppercase tracking-widest text-white/40 mb-2 block">KEY FEATURES ({form.features.length})</label>
+                      <label className="text-[10px] font-inter tracking-[0.2em] uppercase text-fog mb-2 block">
+                        KEY FEATURES ({form.features.length})
+                      </label>
                       <div className="flex gap-2 mb-3">
                         <input
                           value={newFeature}
                           onChange={(e) => setNewFeature(e.target.value)}
                           onKeyDown={(e) => e.key === 'Enter' && addFeature()}
                           placeholder="Add a feature and press Enter..."
-                          className="flex-1 glass rounded-xl px-4 py-3 text-white placeholder-white/25 outline-none text-sm"
+                          className={inputClass}
+                          style={inputStyle}
                         />
-                        <Button variant="primary" size="sm" onClick={addFeature} className="flex-shrink-0">
+                        <Button variant="primary" size="sm" onClick={addFeature} className="flex-shrink-0 font-heading">
                           <Plus size={16} />
                         </Button>
                       </div>
                       {form.features.length > 0 && (
                         <ul className="space-y-2">
                           {form.features.map((feat, i) => (
-                            <li key={i} className="flex items-center gap-3 glass rounded-lg px-3 py-2">
-                              <Check size={14} className="text-brand-cyan flex-shrink-0" />
-                              <span className="text-white/80 text-sm flex-1">{feat}</span>
-                              <button onClick={() => removeFeature(i)} className="text-white/30 hover:text-white/60 cursor-pointer">
-                                <X size={14} />
+                            <li
+                              key={i}
+                              className="flex items-center gap-3 px-3 py-2 rounded border border-white/6"
+                              style={{ background: 'rgba(255,255,255,0.02)' }}
+                            >
+                              <Check size={12} style={{ color: '#00D4FF' }} className="flex-shrink-0" />
+                              <span className="text-white text-sm font-inter flex-1">{feat}</span>
+                              <button onClick={() => removeFeature(i)} className="text-fog hover:text-white cursor-pointer">
+                                <X size={13} />
                               </button>
                             </li>
                           ))}
@@ -239,21 +282,24 @@ export default function SubmitPage() {
                 {/* Step 2: Details */}
                 {step === 2 && (
                   <div className="space-y-5">
-                    <h2 className="font-grotesk font-bold text-white text-lg uppercase mb-1">Details</h2>
-                    <p className="text-white/40 text-sm mb-5">Help the community understand your vision.</p>
+                    <div className="mb-5">
+                      <h2 className="font-heading text-3xl text-white uppercase mb-1">Details</h2>
+                      <p className="text-fog text-sm font-inter">Help the community understand your vision.</p>
+                    </div>
 
                     <div>
-                      <label className="text-[11px] font-grotesk font-bold uppercase tracking-widest text-white/40 mb-2 block">MONETIZATION MODEL</label>
+                      <label className="text-[10px] font-inter tracking-[0.2em] uppercase text-fog mb-3 block">MONETIZATION MODEL</label>
                       <div className="grid grid-cols-2 gap-2">
                         {['Subscription', 'One-time purchase', 'Freemium', 'Open source'].map((option) => (
                           <button
                             key={option}
                             onClick={() => setForm((f) => ({ ...f, monetization: option }))}
-                            className={`rounded-xl px-4 py-3 text-sm font-grotesk text-left transition-all cursor-pointer ${
+                            className="rounded px-4 py-3 text-sm font-inter text-left transition-all cursor-pointer"
+                            style={
                               form.monetization === option
-                                ? 'bg-brand-cyan/15 text-brand-cyan border border-brand-cyan/30'
-                                : 'glass text-white/40 hover:text-white/60'
-                            }`}
+                                ? { background: 'rgba(0,212,255,0.08)', color: '#00D4FF', border: '1px solid rgba(0,212,255,0.3)' }
+                                : { background: 'rgba(255,255,255,0.02)', color: 'rgba(255,255,255,0.35)', border: '1px solid rgba(255,255,255,0.06)' }
+                            }
                           >
                             {option}
                           </button>
@@ -262,12 +308,13 @@ export default function SubmitPage() {
                     </div>
 
                     <div>
-                      <label className="text-[11px] font-grotesk font-bold uppercase tracking-widest text-white/40 mb-2 block">TAGS (comma separated)</label>
+                      <label className="text-[10px] font-inter tracking-[0.2em] uppercase text-fog mb-2 block">TAGS (comma separated)</label>
                       <input
                         value={form.tags}
                         onChange={(e) => setForm((f) => ({ ...f, tags: e.target.value }))}
                         placeholder="ai, productivity, mobile..."
-                        className="w-full glass rounded-xl px-4 py-3 text-white placeholder-white/25 outline-none text-sm"
+                        className={inputClass}
+                        style={inputStyle}
                       />
                     </div>
                   </div>
@@ -276,39 +323,52 @@ export default function SubmitPage() {
                 {/* Step 3: Preview */}
                 {step === 3 && (
                   <div>
-                    <h2 className="font-grotesk font-bold text-white text-lg uppercase mb-1">Preview Your Drop</h2>
-                    <p className="text-white/40 text-sm mb-6">This is how your idea will appear in the marketplace.</p>
+                    <div className="mb-5">
+                      <h2 className="font-heading text-3xl text-white uppercase mb-1">Preview Your Drop</h2>
+                      <p className="text-fog text-sm font-inter">This is how your idea will appear in the marketplace.</p>
+                    </div>
 
-                    <div className="glass rounded-xl p-5 mb-6">
+                    {/* Preview card */}
+                    <div
+                      className="rounded-lg border border-white/6 p-5 mb-5"
+                      style={{ background: '#070707' }}
+                    >
                       <div className="flex items-center justify-between mb-3">
-                        {form.category ? <CategoryBadge category={form.category as Category} /> : <span className="text-white/20 text-xs">No category</span>}
+                        {form.category ? <CategoryBadge category={form.category as Category} /> : <span className="text-fog text-[11px] font-inter">No category</span>}
                         <StatusPill status="VOTING" />
                       </div>
-                      <h3 className="font-grotesk font-bold text-white text-xl mb-1">
-                        {form.title || 'Your App Name'}
+                      <h3 className="font-heading text-3xl text-white uppercase mb-1">
+                        {form.title || 'YOUR APP NAME'}
                       </h3>
-                      <p className="text-white/50 text-sm mb-4 line-clamp-2">
+                      <p className="text-fog text-sm font-inter mb-4 line-clamp-2">
                         {form.problem || 'Your problem statement will appear here...'}
                       </p>
                       {form.features.length > 0 && (
                         <ul className="space-y-1.5 mb-4">
                           {form.features.slice(0, 3).map((feat, i) => (
-                            <li key={i} className="flex items-center gap-2 text-xs text-white/60">
-                              <Check size={11} className="text-brand-cyan" />
+                            <li key={i} className="flex items-center gap-2 text-[11px] text-fog font-inter">
+                              <Check size={10} style={{ color: '#00D4FF' }} />
                               {feat}
                             </li>
                           ))}
                         </ul>
                       )}
-                      <div className="flex items-center justify-between pt-3 border-t border-white/8">
-                        <div className="flex items-center gap-1.5 glass rounded-lg px-2.5 py-1 text-xs text-white/40">
+                      <div className="flex items-center justify-between pt-3 border-t border-white/5">
+                        <div
+                          className="flex items-center gap-1.5 rounded px-2.5 py-1 text-[11px] text-fog font-inter"
+                          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+                        >
                           ▲ 0
                         </div>
-                        <span className="text-brand-cyan text-xs font-grotesk font-semibold">VIEW DROP →</span>
+                        <span className="text-electric text-[11px] font-inter tracking-wider">VIEW →</span>
                       </div>
                     </div>
 
-                    <div className="glass rounded-xl p-4 border border-brand-green/20">
+                    {/* Checklist */}
+                    <div
+                      className="rounded-lg border border-white/6 p-4"
+                      style={{ background: 'rgba(255,255,255,0.01)' }}
+                    >
                       <ul className="space-y-2">
                         {[
                           { check: !!form.title, label: 'App name provided' },
@@ -316,18 +376,25 @@ export default function SubmitPage() {
                           { check: !!form.problem, label: 'Problem statement written' },
                           { check: form.features.length >= 1, label: `At least 1 feature added (${form.features.length})` },
                         ].map((item, i) => (
-                          <li key={i} className="flex items-center gap-2.5 text-sm">
-                            <div className={`w-4 h-4 rounded-full flex items-center justify-center ${item.check ? 'bg-brand-green/20 text-brand-green' : 'bg-white/5 text-white/20'}`}>
-                              <Check size={10} strokeWidth={3} />
+                          <li key={i} className="flex items-center gap-2.5 text-sm font-inter">
+                            <div
+                              className="w-4 h-4 rounded flex items-center justify-center"
+                              style={
+                                item.check
+                                  ? { background: 'rgba(0,255,136,0.1)', border: '1px solid rgba(0,255,136,0.3)' }
+                                  : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }
+                              }
+                            >
+                              <Check size={9} strokeWidth={3} style={{ color: item.check ? '#00FF88' : 'rgba(255,255,255,0.2)' }} />
                             </div>
-                            <span className={item.check ? 'text-white/70' : 'text-white/25'}>{item.label}</span>
+                            <span style={{ color: item.check ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.25)' }}>{item.label}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                   </div>
                 )}
-              </GlassCard>
+              </div>
             </motion.div>
           </AnimatePresence>
         </div>
@@ -335,31 +402,36 @@ export default function SubmitPage() {
         {/* Navigation */}
         <div className="flex items-center justify-between">
           {step > 0 ? (
-            <Button variant="ghost" onClick={() => go(step - 1)}>
+            <Button variant="electric" onClick={() => go(step - 1)} className="font-heading text-[14px]">
               <ArrowLeft size={16} />
               BACK
             </Button>
           ) : (
             <Link href="/marketplace">
-              <Button variant="ghost">CANCEL</Button>
+              <Button variant="electric" className="font-heading text-[14px]">CANCEL</Button>
             </Link>
           )}
 
           {step < 3 ? (
-            <Button variant="primary" onClick={() => go(step + 1)}>
-              NEXT
-              <ArrowRight size={16} />
-            </Button>
+            <MagneticButton>
+              <Button variant="primary" onClick={() => go(step + 1)} className="font-heading text-[14px]">
+                NEXT
+                <ArrowRight size={16} />
+              </Button>
+            </MagneticButton>
           ) : (
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={() => setSubmitted(true)}
-              disabled={!form.title || !form.category || !form.problem}
-            >
-              <Rocket size={18} />
-              LAUNCH DROP
-            </Button>
+            <MagneticButton>
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={() => setSubmitted(true)}
+                disabled={!form.title || !form.category || !form.problem}
+                className="font-heading text-[16px]"
+              >
+                <Rocket size={18} />
+                LAUNCH DROP
+              </Button>
+            </MagneticButton>
           )}
         </div>
       </div>

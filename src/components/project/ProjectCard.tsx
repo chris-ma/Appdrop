@@ -24,8 +24,8 @@ export default function ProjectCard({ project, className, compact = false }: Pro
         <div
           className={cn(
             'relative rounded-lg overflow-hidden transition-all duration-300',
-            'border border-white/6 hover:border-white/15',
-            'bg-[#0D0D0D]',
+            'border border-white/10 hover:border-white/15',
+            'bg-[#181818]',
             compact ? 'p-4' : 'p-5',
             className
           )}

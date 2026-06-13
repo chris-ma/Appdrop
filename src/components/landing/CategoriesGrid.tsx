@@ -64,7 +64,7 @@ export default function CategoriesGrid() {
                 <TiltCard glowColor={`${config.accent}10`} strength={8}>
                   <Link href={`/marketplace?category=${cat}`} className="block group">
                     <div
-                      className="relative rounded-lg p-5 border border-white/6 hover:border-white/12 transition-all duration-300 bg-[#0D0D0D] overflow-hidden"
+                      className="relative rounded-lg p-5 border border-white/10 hover:border-white/18 transition-all duration-300 bg-[#181818] overflow-hidden"
                     >
                       {/* Accent glow top */}
                       <div

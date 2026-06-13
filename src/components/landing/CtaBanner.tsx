@@ -16,8 +16,8 @@ export default function CtaBanner() {
         initial={{ opacity: 0, y: 40 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.7 }}
-        className="max-w-6xl mx-auto relative rounded-lg overflow-hidden border border-white/8"
-        style={{ background: '#0D0D0D', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}
+        className="max-w-6xl mx-auto relative rounded-lg overflow-hidden border border-white/12"
+        style={{ background: '#181818', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}
       >
         {/* Corner accent */}
         <div className="absolute top-0 left-0 w-20 h-px bg-gradient-to-r from-electric to-transparent" />
@@ -31,11 +31,11 @@ export default function CtaBanner() {
         {/* Glow orbs */}
         <div
           className="absolute -left-20 top-1/2 -translate-y-1/2 w-64 h-64 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(0,212,255,0.08), transparent)', filter: 'blur(40px)' }}
+          style={{ background: 'radial-gradient(circle, rgba(0,212,255,0.12), transparent)', filter: 'blur(40px)' }}
         />
         <div
           className="absolute -right-20 top-1/2 -translate-y-1/2 w-64 h-64 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(0,255,136,0.06), transparent)', filter: 'blur(40px)' }}
+          style={{ background: 'radial-gradient(circle, rgba(0,255,136,0.1), transparent)', filter: 'blur(40px)' }}
         />
 
         <div className="relative z-10 px-10 py-16 md:py-20 text-center">

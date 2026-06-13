@@ -18,7 +18,7 @@ export default function DeveloperCard({ developer, index = 0 }: DeveloperCardPro
       transition={{ duration: 0.4, delay: index * 0.08 }}
     >
       <TiltCard strength={6}>
-        <div className="group rounded-lg border border-white/6 hover:border-white/12 transition-all duration-300 overflow-hidden" style={{ background: '#0D0D0D' }}>
+        <div className="group rounded-lg border border-white/10 hover:border-white/18 transition-all duration-300 overflow-hidden" style={{ background: '#181818' }}>
           {/* Accent line top */}
           <div
             className="h-px w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -44,7 +44,7 @@ export default function DeveloperCard({ developer, index = 0 }: DeveloperCardPro
                 className="text-[9px] font-inter font-medium uppercase tracking-[0.2em] px-2 py-1 rounded"
                 style={
                   developer.available
-                    ? { background: 'rgba(0,255,136,0.08)', color: '#00FF88', border: '1px solid rgba(0,255,136,0.2)' }
+                    ? { background: 'rgba(0,255,136,0.12)', color: '#00FF88', border: '1px solid rgba(0,255,136,0.2)' }
                     : { background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.25)', border: '1px solid rgba(255,255,255,0.08)' }
                 }
               >
@@ -73,14 +73,14 @@ export default function DeveloperCard({ developer, index = 0 }: DeveloperCardPro
               {developer.skills.slice(0, 4).map((skill) => (
                 <span
                   key={skill}
-                  className="text-[10px] font-inter text-fog border border-white/8 rounded px-2 py-0.5"
-                  style={{ background: 'rgba(255,255,255,0.03)' }}
+                  className="text-[10px] font-inter text-fog border border-white/12 rounded px-2 py-0.5"
+                  style={{ background: 'rgba(255,255,255,0.06)' }}
                 >
                   {skill}
                 </span>
               ))}
               {developer.skills.length > 4 && (
-                <span className="text-[10px] font-inter text-mist rounded px-2 py-0.5" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                <span className="text-[10px] font-inter text-mist rounded px-2 py-0.5" style={{ background: 'rgba(255,255,255,0.06)' }}>
                   +{developer.skills.length - 4}
                 </span>
               )}

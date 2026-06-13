@@ -28,8 +28,8 @@ const slideVariants = {
   exit: (dir: number) => ({ x: dir > 0 ? -60 : 60, opacity: 0 }),
 }
 
-const inputClass = 'w-full px-4 py-3 text-white placeholder-fog outline-none text-sm font-inter transition-all duration-200 rounded-lg border border-white/8 focus:border-electric/40'
-const inputStyle = { background: 'rgba(255,255,255,0.02)' }
+const inputClass = 'w-full px-4 py-3 text-white placeholder-fog outline-none text-sm font-inter transition-all duration-200 rounded-lg border border-white/12 focus:border-electric/40'
+const inputStyle = { background: 'rgba(255,255,255,0.05)' }
 
 export default function SubmitPage() {
   const [step, setStep] = useState(0)
@@ -74,7 +74,7 @@ export default function SubmitPage() {
           <div className="relative inline-block mb-8">
             <div
               className="w-24 h-24 rounded flex items-center justify-center mx-auto"
-              style={{ background: 'rgba(0,212,255,0.06)', border: '1px solid rgba(0,212,255,0.2)' }}
+              style={{ background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.2)' }}
             >
               <Rocket size={36} style={{ color: '#00D4FF' }} />
             </div>
@@ -135,7 +135,7 @@ export default function SubmitPage() {
                     ? { background: 'rgba(191,90,242,0.2)', border: '1px solid rgba(191,90,242,0.5)', color: '#BF5AF2' }
                     : i === step
                     ? { background: 'rgba(191,90,242,0.15)', border: '2px solid #BF5AF2', color: '#BF5AF2' }
-                    : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.3)' }
+                    : { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.3)' }
                 }
               >
                 {i < step ? <Check size={11} strokeWidth={3} /> : i + 1}
@@ -163,8 +163,8 @@ export default function SubmitPage() {
               transition={{ duration: 0.3, ease: 'easeOut' }}
             >
               <div
-                className="rounded-lg border border-white/6 p-6 mb-6"
-                style={{ background: '#0D0D0D' }}
+                className="rounded-lg border border-white/10 p-6 mb-6"
+                style={{ background: '#181818' }}
               >
                 {/* Step 0: Basics */}
                 {step === 0 && (
@@ -198,7 +198,7 @@ export default function SubmitPage() {
                               style={
                                 form.category === cat
                                   ? { background: `${config.color}10`, border: `1px solid ${config.color}40`, color: config.color }
-                                  : { background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.35)' }
+                                  : { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.35)' }
                               }
                             >
                               <p className="text-[11px] font-inter font-medium">{config.label}</p>
@@ -263,8 +263,8 @@ export default function SubmitPage() {
                           {form.features.map((feat, i) => (
                             <li
                               key={i}
-                              className="flex items-center gap-3 px-3 py-2 rounded border border-white/6"
-                              style={{ background: 'rgba(255,255,255,0.02)' }}
+                              className="flex items-center gap-3 px-3 py-2 rounded border border-white/10"
+                              style={{ background: 'rgba(255,255,255,0.05)' }}
                             >
                               <Check size={12} style={{ color: '#00D4FF' }} className="flex-shrink-0" />
                               <span className="text-white text-sm font-inter flex-1">{feat}</span>
@@ -297,8 +297,8 @@ export default function SubmitPage() {
                             className="rounded px-4 py-3 text-sm font-inter text-left transition-all cursor-pointer"
                             style={
                               form.monetization === option
-                                ? { background: 'rgba(0,212,255,0.08)', color: '#00D4FF', border: '1px solid rgba(0,212,255,0.3)' }
-                                : { background: 'rgba(255,255,255,0.02)', color: 'rgba(255,255,255,0.35)', border: '1px solid rgba(255,255,255,0.06)' }
+                                ? { background: 'rgba(0,212,255,0.12)', color: '#00D4FF', border: '1px solid rgba(0,212,255,0.3)' }
+                                : { background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.35)', border: '1px solid rgba(255,255,255,0.06)' }
                             }
                           >
                             {option}
@@ -330,8 +330,8 @@ export default function SubmitPage() {
 
                     {/* Preview card */}
                     <div
-                      className="rounded-lg border border-white/6 p-5 mb-5"
-                      style={{ background: '#070707' }}
+                      className="rounded-lg border border-white/10 p-5 mb-5"
+                      style={{ background: '#111111' }}
                     >
                       <div className="flex items-center justify-between mb-3">
                         {form.category ? <CategoryBadge category={form.category as Category} /> : <span className="text-fog text-[11px] font-inter">No category</span>}
@@ -356,7 +356,7 @@ export default function SubmitPage() {
                       <div className="flex items-center justify-between pt-3 border-t border-white/5">
                         <div
                           className="flex items-center gap-1.5 rounded px-2.5 py-1 text-[11px] text-fog font-inter"
-                          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+                          style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.06)' }}
                         >
                           ▲ 0
                         </div>
@@ -366,7 +366,7 @@ export default function SubmitPage() {
 
                     {/* Checklist */}
                     <div
-                      className="rounded-lg border border-white/6 p-4"
+                      className="rounded-lg border border-white/10 p-4"
                       style={{ background: 'rgba(255,255,255,0.01)' }}
                     >
                       <ul className="space-y-2">
@@ -382,7 +382,7 @@ export default function SubmitPage() {
                               style={
                                 item.check
                                   ? { background: 'rgba(0,255,136,0.1)', border: '1px solid rgba(0,255,136,0.3)' }
-                                  : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }
+                                  : { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }
                               }
                             >
                               <Check size={9} strokeWidth={3} style={{ color: item.check ? '#00FF88' : 'rgba(255,255,255,0.2)' }} />

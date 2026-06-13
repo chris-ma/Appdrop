@@ -63,8 +63,8 @@ export default function DevelopersPage() {
               placeholder="Search by name or skill..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 text-sm text-white placeholder-fog outline-none font-inter transition-all duration-200 rounded-lg border border-white/8 focus:border-neon/40"
-              style={{ background: '#0D0D0D' }}
+              className="w-full pl-11 pr-4 py-3 text-sm text-white placeholder-fog outline-none font-inter transition-all duration-200 rounded-lg border border-white/12 focus:border-neon/40"
+              style={{ background: '#181818' }}
             />
           </div>
 
@@ -74,7 +74,7 @@ export default function DevelopersPage() {
             style={
               availableOnly
                 ? { background: 'rgba(0,255,136,0.1)', color: '#00FF88', border: '1px solid rgba(0,255,136,0.3)' }
-                : { background: '#0D0D0D', color: 'rgba(255,255,255,0.35)', border: '1px solid rgba(255,255,255,0.08)' }
+                : { background: '#181818', color: 'rgba(255,255,255,0.35)', border: '1px solid rgba(255,255,255,0.08)' }
             }
           >
             {availableOnly ? '✓ AVAILABLE ONLY' : 'AVAILABLE ONLY'}

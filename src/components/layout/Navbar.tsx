@@ -31,7 +31,7 @@ export default function Navbar() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className={`pointer-events-auto w-full max-w-5xl transition-all duration-500 ${
             scrolled
-              ? 'glass-frosted rounded-xl border border-white/8 shadow-glass'
+              ? 'glass-frosted rounded-xl border border-white/12 shadow-glass'
               : 'rounded-xl'
           }`}
         >
@@ -90,7 +90,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-20 left-4 right-4 z-40 glass-frosted rounded-xl border border-white/8 px-6 py-6 flex flex-col gap-5 md:hidden"
+            className="fixed top-20 left-4 right-4 z-40 glass-frosted rounded-xl border border-white/12 px-6 py-6 flex flex-col gap-5 md:hidden"
           >
             {navLinks.map((link) => (
               <Link
@@ -102,7 +102,7 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <div className="pt-2 border-t border-white/8">
+            <div className="pt-2 border-t border-white/12">
               <Link href="/submit" onClick={() => setMobileOpen(false)}>
                 <Button variant="primary" size="md" className="w-full font-heading">
                   SUBMIT DROP

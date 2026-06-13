@@ -23,7 +23,7 @@ const links = {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/8 bg-[#080808] mt-20">
+    <footer className="border-t border-white/12 bg-[#101010] mt-20">
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-16">
           {/* Brand */}
@@ -60,7 +60,7 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/8 gap-4">
+        <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/12 gap-4">
           <p className="text-white/30 text-xs font-grotesk">
             © 2026 AppDrop. All rights reserved.
           </p>

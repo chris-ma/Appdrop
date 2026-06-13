@@ -30,9 +30,9 @@ export default function HeroSection() {
         <HeroScene />
       </div>
 
-      {/* Vignette */}
-      <div className="absolute inset-0 bg-gradient-to-r from-void via-void/80 to-transparent z-[1]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-void via-transparent to-void/40 z-[1]" />
+      {/* Vignette — lightened so 3D scene shows through */}
+      <div className="absolute inset-0 bg-gradient-to-r from-void/95 via-void/55 to-transparent z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-void/80 via-transparent to-void/20 z-[1]" />
 
       {/* Noise */}
       <div
@@ -52,7 +52,7 @@ export default function HeroSection() {
             className="flex items-center gap-3 mb-6"
           >
             <div className="w-1 h-4 bg-electric" />
-            <span className="text-[11px] font-inter font-medium tracking-[0.25em] text-fog uppercase">
+            <span className="text-[11px] font-inter font-medium tracking-[0.25em] text-silver uppercase">
               DEMAND-DRIVEN APP CULTURE
             </span>
           </motion.div>
@@ -98,7 +98,7 @@ export default function HeroSection() {
             variants={textVariants}
             initial="hidden"
             animate="visible"
-            className="text-fog text-base font-inter max-w-md leading-relaxed mb-10"
+            className="text-silver text-base font-inter max-w-md leading-relaxed mb-10"
           >
             The platform where communities decide which apps get built.
             Submit. Vote. Fund. Ship.
@@ -137,7 +137,7 @@ export default function HeroSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2, duration: 1 }}
-          className="absolute bottom-8 left-6 flex items-center gap-3"
+          className="absolute bottom-8 left-6 flex items-center gap-3 opacity-70"
         >
           <div className="flex flex-col gap-1">
             <div className="w-4 h-px bg-white/20" />

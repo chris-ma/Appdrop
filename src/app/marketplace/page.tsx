@@ -90,8 +90,8 @@ export default function MarketplacePage() {
             placeholder="Search drops, ideas, tags..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-11 pr-4 py-3.5 text-sm text-white placeholder-fog outline-none font-inter transition-all duration-200 rounded-lg border border-white/8 focus:border-electric/40"
-            style={{ background: '#0D0D0D' }}
+            className="w-full pl-11 pr-4 py-3.5 text-sm text-white placeholder-fog outline-none font-inter transition-all duration-200 rounded-lg border border-white/12 focus:border-electric/40"
+            style={{ background: '#181818' }}
           />
         </motion.div>
 

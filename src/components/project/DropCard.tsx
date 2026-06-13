@@ -28,7 +28,7 @@ export default function DropCard({ project, index = 0 }: DropCardProps) {
       <TiltCard glowColor={`${catConfig.accent}12`} strength={12}>
         <Link href={`/projects/${project.id}`} className="block group">
           <div
-            className="relative rounded-lg overflow-hidden border border-white/6 hover:border-white/12 transition-all duration-400 bg-[#0D0D0D]"
+            className="relative rounded-lg overflow-hidden border border-white/10 hover:border-white/18 transition-all duration-400 bg-[#181818]"
             style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}
           >
             {/* Category accent — left border strip */}

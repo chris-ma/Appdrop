@@ -44,7 +44,7 @@ export default function VoteButton({
         size === 'lg' && 'text-base px-4 py-2.5',
         voted
           ? 'text-electric border border-electric/40 bg-electric/8 shadow-electric'
-          : 'text-fog border border-white/8 hover:border-white/20 hover:text-ash bg-white/[0.02]',
+          : 'text-fog border border-white/12 hover:border-white/20 hover:text-ash bg-white/[0.02]',
         className
       )}
     >

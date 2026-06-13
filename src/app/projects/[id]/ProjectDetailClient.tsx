@@ -23,8 +23,8 @@ interface ProjectDetailClientProps {
 function Panel({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
     <div
-      className={`rounded-lg border border-white/6 p-6 ${className}`}
-      style={{ background: '#0D0D0D' }}
+      className={`rounded-lg border border-white/10 p-6 ${className}`}
+      style={{ background: '#181818' }}
     >
       {children}
     </div>
@@ -53,7 +53,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
       {/* Hero */}
       <div
         className="relative overflow-hidden border-b border-white/5"
-        style={{ background: '#070707' }}
+        style={{ background: '#111111' }}
       >
         {/* Corner accent lines */}
         <div className="absolute top-0 left-0 w-32 h-px" style={{ background: `linear-gradient(90deg, ${accentColor}, transparent)` }} />
@@ -94,14 +94,14 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                 style={
                   bookmarked
                     ? { background: `${accentColor}10`, color: accentColor, borderColor: `${accentColor}30` }
-                    : { background: 'rgba(255,255,255,0.03)', color: 'rgba(255,255,255,0.4)', borderColor: 'rgba(255,255,255,0.08)' }
+                    : { background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.4)', borderColor: 'rgba(255,255,255,0.08)' }
                 }
               >
                 <Bookmark size={16} fill={bookmarked ? 'currentColor' : 'none'} />
               </button>
               <button
-                className="p-2.5 rounded transition-colors cursor-pointer border border-white/8 text-fog hover:text-white"
-                style={{ background: 'rgba(255,255,255,0.03)' }}
+                className="p-2.5 rounded transition-colors cursor-pointer border border-white/12 text-fog hover:text-white"
+                style={{ background: 'rgba(255,255,255,0.06)' }}
               >
                 <Share2 size={16} />
               </button>
@@ -136,7 +136,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                   >
                     <div
                       className="mt-0.5 w-4 h-4 rounded flex items-center justify-center flex-shrink-0"
-                      style={{ background: 'rgba(0,255,136,0.08)', border: '1px solid rgba(0,255,136,0.2)' }}
+                      style={{ background: 'rgba(0,255,136,0.12)', border: '1px solid rgba(0,255,136,0.2)' }}
                     >
                       <Check size={10} style={{ color: '#00FF88' }} strokeWidth={3} />
                     </div>
@@ -159,7 +159,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                         style={
                           m.completed
                             ? { background: 'rgba(0,255,136,0.1)', border: '1px solid rgba(0,255,136,0.3)' }
-                            : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)' }
+                            : { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }
                         }
                       >
                         {m.completed ? (
@@ -213,8 +213,8 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
               <div className="mt-6 pt-5 border-t border-white/5">
                 <textarea
                   placeholder="Join the discussion..."
-                  className="w-full px-4 py-3 text-sm text-white placeholder-fog outline-none resize-none h-20 rounded-lg border border-white/8 focus:border-electric/30 transition-all font-inter"
-                  style={{ background: 'rgba(255,255,255,0.02)' }}
+                  className="w-full px-4 py-3 text-sm text-white placeholder-fog outline-none resize-none h-20 rounded-lg border border-white/12 focus:border-electric/30 transition-all font-inter"
+                  style={{ background: 'rgba(255,255,255,0.05)' }}
                 />
                 <div className="flex justify-end mt-2">
                   <Button variant="primary" size="sm" className="font-heading text-[13px]">POST COMMENT</Button>
@@ -264,8 +264,8 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-[10px] font-inter text-fog border border-white/6 rounded px-2 py-0.5"
-                    style={{ background: 'rgba(255,255,255,0.02)' }}
+                    className="text-[10px] font-inter text-fog border border-white/10 rounded px-2 py-0.5"
+                    style={{ background: 'rgba(255,255,255,0.05)' }}
                   >
                     #{tag}
                   </span>

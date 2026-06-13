@@ -5,14 +5,14 @@
    ============================================ */
 @theme {
   /* Core — 90% monochromatic */
-  --color-void: #050505;
-  --color-obsidian: #0A0A0A;
-  --color-slate: #111111;
-  --color-onyx: #181818;
-  --color-chrome: #2A2A2A;
-  --color-ash: #EAEAEA;
-  --color-fog: #888888;
-  --color-mist: #444444;
+  --color-void: #0A0A0A;
+  --color-obsidian: #0F0F0F;
+  --color-slate: #161616;
+  --color-onyx: #1E1E1E;
+  --color-chrome: #333333;
+  --color-ash: #F0F0F0;
+  --color-fog: #B0B0B0;
+  --color-mist: #707070;
 
   /* Accents — use sparingly */
   --color-electric: #00D4FF;
@@ -95,13 +95,13 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-  background: #050505;
+  background: #0A0A0A;
   color-scheme: dark;
   scroll-behavior: smooth;
 }
 
 body {
-  background: #050505;
+  background: #0A0A0A;
   color: #EAEAEA;
   font-family: var(--font-inter, "Inter", system-ui, sans-serif);
   -webkit-font-smoothing: antialiased;
@@ -135,12 +135,12 @@ h1, h2, h3, h4, h5, h6 {
    UTILITY CLASSES
    ============================================ */
 
-/* Premium glass — ultra dark */
+/* Premium glass */
 .glass {
-  background: rgba(255,255,255,0.025);
+  background: rgba(255,255,255,0.05);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
 /* Frosted glass variant */
@@ -177,11 +177,11 @@ h1, h2, h3, h4, h5, h6 {
   background-clip: text;
 }
 
-/* Grid lines overlay — very technical */
+/* Grid lines overlay */
 .grid-technical {
   background-image:
-    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
@@ -233,7 +233,7 @@ h1, h2, h3, h4, h5, h6 {
 /* The chrome thin divider line */
 .chrome-line {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
 }
 
 /* Corner accent decoration */

@@ -19,7 +19,7 @@ export default function ProfilePage() {
       {/* Banner */}
       <div
         className="relative overflow-hidden border-b border-white/5"
-        style={{ background: '#070707' }}
+        style={{ background: '#111111' }}
       >
         {/* Corner accent lines */}
         <div className="absolute top-0 left-0 w-48 h-px" style={{ background: 'linear-gradient(90deg, #BF5AF2, transparent)' }} />
@@ -30,7 +30,7 @@ export default function ProfilePage() {
         {/* Glow */}
         <div
           className="absolute -right-20 top-0 w-80 h-80 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(191,90,242,0.06), transparent)', filter: 'blur(60px)' }}
+          style={{ background: 'radial-gradient(circle, rgba(191,90,242,0.1), transparent)', filter: 'blur(60px)' }}
         />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 pt-12 pb-10">
@@ -68,7 +68,7 @@ export default function ProfilePage() {
             {/* Reputation */}
             <div
               className="flex items-center gap-3 rounded px-4 py-3"
-              style={{ background: 'rgba(0,212,255,0.05)', border: '1px solid rgba(0,212,255,0.15)' }}
+              style={{ background: 'rgba(0,212,255,0.09)', border: '1px solid rgba(0,212,255,0.15)' }}
             >
               <Zap size={18} style={{ color: '#00D4FF' }} />
               <div>
@@ -96,8 +96,8 @@ export default function ProfilePage() {
           ].map((stat) => (
             <div
               key={stat.label}
-              className="p-4 text-center rounded-lg border border-white/6"
-              style={{ background: '#0D0D0D' }}
+              className="p-4 text-center rounded-lg border border-white/10"
+              style={{ background: '#181818' }}
             >
               <p className="font-heading text-3xl text-white leading-none mb-1">{stat.value}</p>
               <p className="text-[9px] font-inter tracking-[0.2em] uppercase text-fog">{stat.label}</p>
@@ -114,8 +114,8 @@ export default function ProfilePage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
             {user.badges.map((badge, i) => {
               const colorMap: Record<string, { bg: string; border: string; text: string }> = {
-                purple: { bg: 'rgba(191,90,242,0.08)', border: 'rgba(191,90,242,0.2)', text: '#BF5AF2' },
-                cyan: { bg: 'rgba(0,212,255,0.08)', border: 'rgba(0,212,255,0.2)', text: '#00D4FF' },
+                purple: { bg: 'rgba(191,90,242,0.12)', border: 'rgba(191,90,242,0.2)', text: '#BF5AF2' },
+                cyan: { bg: 'rgba(0,212,255,0.12)', border: 'rgba(0,212,255,0.2)', text: '#00D4FF' },
                 pink: { bg: 'rgba(255,45,130,0.08)', border: 'rgba(255,45,130,0.2)', text: '#FF2D82' },
                 orange: { bg: 'rgba(255,149,0,0.08)', border: 'rgba(255,149,0,0.2)', text: '#FF9500' },
               }

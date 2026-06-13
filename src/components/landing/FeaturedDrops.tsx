@@ -4,11 +4,13 @@ import { useRef } from 'react'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import DropCard from '@/components/project/DropCard'
-import { mockProjects } from '@/lib/mock-data'
+import type { Project } from '@/lib/types'
 
-const featured = mockProjects.filter((p) => ['1', '7', '4'].includes(p.id))
+interface Props {
+  projects: Project[]
+}
 
-export default function FeaturedDrops() {
+export default function FeaturedDrops({ projects }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
 
@@ -45,7 +47,7 @@ export default function FeaturedDrops() {
 
         {/* Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {featured.map((project, i) => (
+          {projects.map((project, i) => (
             <DropCard key={project.id} project={project} index={i} />
           ))}
         </div>

@@ -3,8 +3,10 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Check, Plus, X, Rocket } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { CATEGORIES, CATEGORY_CONFIG } from '@/lib/constants'
 import type { Category } from '@/lib/types'
+import { submitProject } from '@/lib/api'
 import Button from '@/components/ui/Button'
 import MagneticButton from '@/components/ui/MagneticButton'
 import CategoryBadge from '@/components/project/CategoryBadge'
@@ -32,9 +34,11 @@ const inputClass = 'w-full px-4 py-3 text-white placeholder-fog outline-none tex
 const inputStyle = { background: 'rgba(255,255,255,0.05)' }
 
 export default function SubmitPage() {
+  const router = useRouter()
   const [step, setStep] = useState(0)
   const [dir, setDir] = useState(1)
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const [newFeature, setNewFeature] = useState('')
   const [form, setForm] = useState<FormData>({
     title: '',
@@ -424,12 +428,28 @@ export default function SubmitPage() {
               <Button
                 variant="primary"
                 size="lg"
-                onClick={() => setSubmitted(true)}
-                disabled={!form.title || !form.category || !form.problem}
+                onClick={async () => {
+                  setSubmitting(true)
+                  const result = await submitProject({
+                    title: form.title,
+                    category: form.category,
+                    problem: form.problem,
+                    audience: form.audience,
+                    features: form.features,
+                    monetization: form.monetization,
+                    tags: form.tags,
+                  })
+                  setSubmitting(false)
+                  if (result) {
+                    setSubmitted(true)
+                    router.refresh()
+                  }
+                }}
+                disabled={!form.title || !form.category || !form.problem || submitting}
                 className="font-heading text-[16px]"
               >
                 <Rocket size={18} />
-                LAUNCH DROP
+                {submitting ? 'LAUNCHING...' : 'LAUNCH DROP'}
               </Button>
             </MagneticButton>
           )}

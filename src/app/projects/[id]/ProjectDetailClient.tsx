@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 import type { Project, Comment } from '@/lib/types'
 import { CATEGORY_CONFIG } from '@/lib/constants'
-import { formatCurrency, formatCount, timeAgo } from '@/lib/utils'
+import { formatCount, timeAgo } from '@/lib/utils'
 import CategoryBadge from '@/components/project/CategoryBadge'
 import StatusPill from '@/components/project/StatusPill'
 import FundingBar from '@/components/project/FundingBar'
@@ -19,6 +19,9 @@ import PledgeModal from '@/components/ui/PledgeModal'
 import { postComment } from '@/lib/api'
 import { useAuth } from '@/lib/auth-context'
 import { useToast } from '@/components/ui/Toast'
+import { getSupabase } from '@/lib/supabase'
+
+const USE_MOCK = !process.env.NEXT_PUBLIC_SUPABASE_URL
 
 interface ProjectDetailClientProps {
   project: Project
@@ -46,16 +49,68 @@ function SectionLabel({ color, children }: { color: string; children: React.Reac
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function rowToComment(row: Record<string, any>): Comment {
+  return {
+    id: String(row.id),
+    author: String(row.author),
+    initials: String(row.initials),
+    avatarColor: String(row.avatar_color),
+    content: String(row.content),
+    likes: Number(row.likes ?? 0),
+    createdAt: String(row.created_at),
+  }
+}
+
 export default function ProjectDetailClient({ project }: ProjectDetailClientProps) {
   const [bookmarked, setBookmarked] = useState(false)
   const [pledgeOpen, setPledgeOpen] = useState(false)
   const [fundingCurrent, setFundingCurrent] = useState(project.fundingCurrent)
   const [backerCount, setBackerCount] = useState(project.backerCount)
+  const [upvotes, setUpvotes] = useState(project.upvotes)
   const [comments, setComments] = useState<Comment[]>(project.comments)
   const [commentText, setCommentText] = useState('')
   const [posting, setPosting] = useState(false)
   const { user, signIn } = useAuth()
   const toast = useToast()
+  const commentIds = useRef(new Set(project.comments.map((c) => c.id)))
+
+  // Supabase Realtime — live vote counts, comments, funding
+  useEffect(() => {
+    if (USE_MOCK) return
+
+    const supabase = getSupabase()
+    const channel = supabase
+      .channel(`idea:${project.id}`)
+      .on(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        'postgres_changes' as any,
+        { event: 'INSERT', schema: 'public', table: 'comments', filter: `idea_id=eq.${project.id}` },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (payload: any) => {
+          const newComment = rowToComment(payload.new)
+          if (!commentIds.current.has(newComment.id)) {
+            commentIds.current.add(newComment.id)
+            setComments((prev) => [...prev, newComment])
+          }
+        }
+      )
+      .on(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        'postgres_changes' as any,
+        { event: 'UPDATE', schema: 'public', table: 'ideas', filter: `id=eq.${project.id}` },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (payload: any) => {
+          const row = payload.new
+          if (row.funding_current !== undefined) setFundingCurrent(Number(row.funding_current))
+          if (row.backer_count !== undefined) setBackerCount(Number(row.backer_count))
+          if (row.upvotes !== undefined) setUpvotes(Number(row.upvotes))
+        }
+      )
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
+  }, [project.id])
 
   const catConfig = CATEGORY_CONFIG[project.category]
   const showFunding = project.status !== 'VOTING' && project.fundingGoal > 0
@@ -295,7 +350,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
             <Panel className="text-center">
               <div className="flex items-center justify-center gap-4 mb-5">
                 <VoteButton
-                  upvotes={project.upvotes}
+                  upvotes={upvotes}
                   downvotes={project.downvotes}
                   ideaId={project.id}
                   size="lg"
@@ -380,7 +435,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
             <Panel>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: 'UPVOTES', value: formatCount(project.upvotes) },
+                  { label: 'UPVOTES', value: formatCount(upvotes) },
                   { label: 'BACKERS', value: formatCount(backerCount) },
                   { label: 'COMMENTS', value: String(comments.length) },
                   { label: 'SUBMITTED', value: timeAgo(project.createdAt) },

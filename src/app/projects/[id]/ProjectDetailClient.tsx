@@ -4,9 +4,9 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
   Check, Circle, Star, ArrowLeft, Share2, Bookmark,
-  ThumbsUp, CheckCircle2
+  ThumbsUp, CheckCircle2, MessageSquare
 } from 'lucide-react'
-import type { Project } from '@/lib/types'
+import type { Project, Comment } from '@/lib/types'
 import { CATEGORY_CONFIG } from '@/lib/constants'
 import { formatCurrency, formatCount, timeAgo } from '@/lib/utils'
 import CategoryBadge from '@/components/project/CategoryBadge'
@@ -15,6 +15,10 @@ import FundingBar from '@/components/project/FundingBar'
 import VoteButton from '@/components/project/VoteButton'
 import Button from '@/components/ui/Button'
 import MagneticButton from '@/components/ui/MagneticButton'
+import PledgeModal from '@/components/ui/PledgeModal'
+import { postComment } from '@/lib/api'
+import { useAuth } from '@/lib/auth-context'
+import { useToast } from '@/components/ui/Toast'
 
 interface ProjectDetailClientProps {
   project: Project
@@ -44,9 +48,50 @@ function SectionLabel({ color, children }: { color: string; children: React.Reac
 
 export default function ProjectDetailClient({ project }: ProjectDetailClientProps) {
   const [bookmarked, setBookmarked] = useState(false)
+  const [pledgeOpen, setPledgeOpen] = useState(false)
+  const [fundingCurrent, setFundingCurrent] = useState(project.fundingCurrent)
+  const [backerCount, setBackerCount] = useState(project.backerCount)
+  const [comments, setComments] = useState<Comment[]>(project.comments)
+  const [commentText, setCommentText] = useState('')
+  const [posting, setPosting] = useState(false)
+  const { user, signIn } = useAuth()
+  const toast = useToast()
+
   const catConfig = CATEGORY_CONFIG[project.category]
   const showFunding = project.status !== 'VOTING' && project.fundingGoal > 0
   const accentColor = catConfig.color
+
+  const handlePledgeSuccess = (amount: number) => {
+    setFundingCurrent((v) => v + amount)
+    setBackerCount((v) => v + 1)
+  }
+
+  const handlePostComment = async () => {
+    if (!user) { await signIn(); return }
+    const text = commentText.trim()
+    if (!text) return
+    setPosting(true)
+    const result = await postComment(project.id, text)
+    setPosting(false)
+    if (result) {
+      setComments((prev) => [...prev, result])
+      setCommentText('')
+      toast.success('Comment posted!')
+    } else {
+      toast.error('Failed to post comment.')
+    }
+  }
+
+  const ctaLabel =
+    project.status === 'VOTING' ? 'VOTE FOR THIS DROP' :
+    project.status === 'FUNDING' ? 'BACK THIS DROP' :
+    project.status === 'LIVE' ? 'GET ACCESS' : 'JOIN WAITLIST'
+
+  const handleCta = () => {
+    if (project.status === 'FUNDING') {
+      setPledgeOpen(true)
+    }
+  }
 
   return (
     <div className="min-h-screen pt-16">
@@ -55,18 +100,15 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
         className="relative overflow-hidden border-b border-white/5"
         style={{ background: '#111111' }}
       >
-        {/* Corner accent lines */}
         <div className="absolute top-0 left-0 w-32 h-px" style={{ background: `linear-gradient(90deg, ${accentColor}, transparent)` }} />
         <div className="absolute top-0 left-0 w-px h-32" style={{ background: `linear-gradient(180deg, ${accentColor}, transparent)` }} />
 
-        {/* Glow orb */}
         <div
           className="absolute -right-40 top-0 w-96 h-96 rounded-full"
           style={{ background: `radial-gradient(circle, ${accentColor}10, transparent)`, filter: 'blur(80px)' }}
         />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 pt-10 pb-12">
-          {/* Breadcrumb */}
           <Link
             href="/marketplace"
             className="inline-flex items-center gap-2 text-fog hover:text-white text-[11px] font-inter tracking-[0.2em] uppercase mb-8 transition-colors"
@@ -116,13 +158,11 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
           {/* Left: Content */}
           <div className="lg:col-span-2 space-y-4">
 
-            {/* The Problem */}
             <Panel>
               <SectionLabel color="#00D4FF">THE PROBLEM</SectionLabel>
               <p className="text-fog font-inter leading-relaxed text-sm">{project.description}</p>
             </Panel>
 
-            {/* Features */}
             <Panel>
               <SectionLabel color="#00FF88">WHAT IT DOES</SectionLabel>
               <ul className="space-y-3">
@@ -146,7 +186,6 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
               </ul>
             </Panel>
 
-            {/* Milestones */}
             <Panel>
               <SectionLabel color="#BF5AF2">ROADMAP</SectionLabel>
               <div className="relative">
@@ -185,10 +224,10 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
             {/* Discussion */}
             <Panel>
               <SectionLabel color="#C8C8C8">
-                DISCUSSION <span className="opacity-40">({project.comments.length})</span>
+                DISCUSSION <span className="opacity-40">({comments.length})</span>
               </SectionLabel>
               <div className="space-y-5">
-                {project.comments.map((comment) => (
+                {comments.map((comment) => (
                   <div key={comment.id} className="flex gap-3">
                     <div
                       className="w-8 h-8 rounded flex items-center justify-center font-heading text-sm flex-shrink-0"
@@ -209,55 +248,85 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                     </div>
                   </div>
                 ))}
+                {comments.length === 0 && (
+                  <p className="text-fog text-sm font-inter text-center py-4">
+                    No comments yet. Be the first to join the discussion.
+                  </p>
+                )}
               </div>
               <div className="mt-6 pt-5 border-t border-white/5">
-                <textarea
-                  placeholder="Join the discussion..."
-                  className="w-full px-4 py-3 text-sm text-white placeholder-fog outline-none resize-none h-20 rounded-lg border border-white/12 focus:border-electric/30 transition-all font-inter"
-                  style={{ background: 'rgba(255,255,255,0.05)' }}
-                />
-                <div className="flex justify-end mt-2">
-                  <Button variant="primary" size="sm" className="font-heading text-[13px]">POST COMMENT</Button>
-                </div>
+                {user ? (
+                  <>
+                    <textarea
+                      placeholder="Join the discussion..."
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                      className="w-full px-4 py-3 text-sm text-white placeholder-fog outline-none resize-none h-20 rounded-lg border border-white/12 focus:border-electric/30 transition-all font-inter"
+                      style={{ background: 'rgba(255,255,255,0.05)' }}
+                    />
+                    <div className="flex justify-end mt-2">
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        className="font-heading text-[13px]"
+                        onClick={handlePostComment}
+                        disabled={posting || !commentText.trim()}
+                      >
+                        <MessageSquare size={13} />
+                        {posting ? 'POSTING...' : 'POST COMMENT'}
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => signIn()}
+                    className="w-full py-3 text-sm font-inter text-fog hover:text-white transition-colors cursor-pointer border border-white/10 rounded-lg"
+                    style={{ background: 'rgba(255,255,255,0.03)' }}
+                  >
+                    Sign in to join the discussion
+                  </button>
+                )}
               </div>
             </Panel>
           </div>
 
           {/* Right sidebar */}
           <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-            {/* Vote + Back */}
             <Panel className="text-center">
               <div className="flex items-center justify-center gap-4 mb-5">
                 <VoteButton
                   upvotes={project.upvotes}
                   downvotes={project.downvotes}
+                  ideaId={project.id}
                   size="lg"
                 />
               </div>
 
               {showFunding && (
                 <FundingBar
-                  current={project.fundingCurrent}
+                  current={fundingCurrent}
                   goal={project.fundingGoal}
-                  backerCount={project.backerCount}
+                  backerCount={backerCount}
                   className="mb-5"
                 />
               )}
 
               <MagneticButton>
-                <Button variant="primary" size="lg" className="w-full font-heading text-[15px] mb-3">
-                  {project.status === 'VOTING' ? 'VOTE FOR THIS DROP' :
-                   project.status === 'FUNDING' ? 'BACK THIS DROP' :
-                   project.status === 'LIVE' ? 'GET ACCESS' : 'JOIN WAITLIST'}
+                <Button
+                  variant="primary"
+                  size="lg"
+                  className="w-full font-heading text-[15px] mb-3"
+                  onClick={handleCta}
+                >
+                  {ctaLabel}
                 </Button>
               </MagneticButton>
               <p className="text-fog text-[11px] font-inter">
-                {project.backerCount.toLocaleString()} people already
+                {backerCount.toLocaleString()} people already
                 {project.status === 'LIVE' ? ' using this' : ' backing this'}
               </p>
             </Panel>
 
-            {/* Tags */}
             <Panel>
               <p className="text-[10px] font-inter tracking-[0.25em] text-fog uppercase mb-3">TAGS</p>
               <div className="flex flex-wrap gap-1.5">
@@ -273,7 +342,6 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
               </div>
             </Panel>
 
-            {/* Developer */}
             {project.developer && (
               <Panel>
                 <p className="text-[10px] font-inter tracking-[0.25em] text-electric uppercase mb-4">
@@ -309,13 +377,12 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
               </Panel>
             )}
 
-            {/* Stats */}
             <Panel>
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { label: 'UPVOTES', value: formatCount(project.upvotes) },
-                  { label: 'BACKERS', value: formatCount(project.backerCount) },
-                  { label: 'COMMENTS', value: String(project.comments.length) },
+                  { label: 'BACKERS', value: formatCount(backerCount) },
+                  { label: 'COMMENTS', value: String(comments.length) },
                   { label: 'SUBMITTED', value: timeAgo(project.createdAt) },
                 ].map((stat) => (
                   <div key={stat.label} className="text-center p-2">
@@ -328,6 +395,14 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
           </div>
         </div>
       </div>
+
+      <PledgeModal
+        projectId={project.id}
+        projectTitle={project.title}
+        isOpen={pledgeOpen}
+        onClose={() => setPledgeOpen(false)}
+        onSuccess={handlePledgeSuccess}
+      />
     </div>
   )
 }

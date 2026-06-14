@@ -86,7 +86,7 @@ export default function ProjectCard({ project, className, compact = false }: Pro
 
           {/* Footer */}
           <div className="flex items-center justify-between">
-            <VoteButton upvotes={project.upvotes} downvotes={project.downvotes} size="sm" />
+            <VoteButton upvotes={project.upvotes} downvotes={project.downvotes} ideaId={project.id} size="sm" />
 
             <span
               className="flex items-center gap-1.5 text-[11px] font-inter font-medium tracking-[0.15em] uppercase text-fog opacity-0 group-hover:opacity-100 group-hover:text-electric transition-all duration-200"

@@ -2,9 +2,10 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ArrowUpRight } from 'lucide-react'
+import { Menu, X, ArrowUpRight, LogOut } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import MagneticButton from '@/components/ui/MagneticButton'
+import { useAuth } from '@/lib/auth-context'
 
 const navLinks = [
   { label: 'MARKET', href: '/marketplace' },
@@ -15,6 +16,7 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { user, profile, loading, signIn, signOut } = useAuth()
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 40)
@@ -61,6 +63,36 @@ export default function Navbar() {
 
             {/* CTA */}
             <div className="hidden md:flex items-center gap-3">
+              {/* Auth */}
+              {loading ? (
+                <div className="w-8 h-8 rounded bg-white/5 animate-pulse" />
+              ) : user ? (
+                <button
+                  onClick={() => signOut()}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded border border-white/10 hover:border-white/20 transition-all cursor-pointer group"
+                  style={{ background: 'rgba(255,255,255,0.04)' }}
+                  title="Sign out"
+                >
+                  <div
+                    className="w-6 h-6 rounded flex items-center justify-center font-heading text-sm"
+                    style={{
+                      background: `${profile?.avatarColor ?? '#00D4FF'}15`,
+                      color: profile?.avatarColor ?? '#00D4FF',
+                      border: `1px solid ${profile?.avatarColor ?? '#00D4FF'}30`,
+                    }}
+                  >
+                    {profile?.initials ?? (user.email?.charAt(0).toUpperCase() ?? 'U')}
+                  </div>
+                  <LogOut size={13} className="text-fog group-hover:text-white transition-colors" />
+                </button>
+              ) : (
+                <button
+                  onClick={() => signIn()}
+                  className="text-[11px] font-inter font-medium uppercase tracking-[0.15em] text-fog hover:text-white transition-colors cursor-pointer px-3 py-1.5"
+                >
+                  SIGN IN
+                </button>
+              )}
               <MagneticButton>
                 <Link href="/submit">
                   <Button variant="primary" size="sm" className="font-heading text-[12px]">

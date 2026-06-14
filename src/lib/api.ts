@@ -1,5 +1,5 @@
 import { getSupabase } from './supabase'
-import type { Project, Developer, UserProfile } from './types'
+import type { Project, Developer, UserProfile, Comment } from './types'
 import { mockProjects, mockDevelopers, mockUser } from './mock-data'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -136,17 +136,21 @@ export async function submitProject(input: {
 
 // ─── Votes ───────────────────────────────────────────────────────────────────
 
-export async function voteOnProject(ideaId: string, direction: 'up' | 'down'): Promise<void> {
+export async function voteOnProject(ideaId: string, direction: 'up' | 'down' | null): Promise<void> {
   if (USE_MOCK) return
 
   const db = getSupabase()
   const { data: { user } } = await db.auth.getUser()
   if (!user) return
 
-  await db.from('votes').upsert(
-    { idea_id: ideaId, user_id: user.id, direction },
-    { onConflict: 'idea_id,user_id' }
-  )
+  if (direction === null) {
+    await db.from('votes').delete().eq('idea_id', ideaId).eq('user_id', user.id)
+  } else {
+    await db.from('votes').upsert(
+      { idea_id: ideaId, user_id: user.id, direction },
+      { onConflict: 'idea_id,user_id' }
+    )
+  }
 }
 
 export async function getUserVote(ideaId: string): Promise<'up' | 'down' | null> {
@@ -202,6 +206,107 @@ export async function getCurrentUser(): Promise<UserProfile> {
     },
     badges: mockUser.badges,
   }
+}
+
+// ─── Comments ────────────────────────────────────────────────────────────────
+
+export async function postComment(ideaId: string, content: string): Promise<Comment | null> {
+  if (USE_MOCK) return null
+
+  const db = getSupabase()
+  const { data: { user } } = await db.auth.getUser()
+  if (!user) return null
+
+  const { data: profile } = await db.from('profiles').select('name, initials, avatar_color').eq('id', user.id).single()
+  const p = profile as Row | null
+
+  const { data, error } = await db.from('comments').insert({
+    idea_id: ideaId,
+    user_id: user.id,
+    content,
+    author: p?.name ?? 'Anonymous',
+    initials: p?.initials ?? '??',
+    avatar_color: p?.avatar_color ?? '#00D4FF',
+  }).select('*').single()
+
+  if (error || !data) return null
+  const row = data as Row
+  return {
+    id: String(row.id),
+    author: String(row.author),
+    initials: String(row.initials),
+    avatarColor: String(row.avatar_color),
+    content: String(row.content),
+    likes: Number(row.likes),
+    createdAt: String(row.created_at),
+  }
+}
+
+// ─── Pledges ─────────────────────────────────────────────────────────────────
+
+export async function pledgeToProject(ideaId: string, amount: number): Promise<boolean> {
+  if (USE_MOCK) return true
+
+  const db = getSupabase()
+  const { data: { user } } = await db.auth.getUser()
+  if (!user) return false
+
+  const { error } = await db.from('pledges').insert({ idea_id: ideaId, user_id: user.id, amount })
+  return !error
+}
+
+// ─── User Projects ────────────────────────────────────────────────────────────
+
+export async function getProjectsByCreator(userId: string): Promise<Project[]> {
+  if (USE_MOCK) return mockProjects.slice(0, 3)
+
+  const db = getSupabase()
+  const { data } = await db.from('ideas').select('*').eq('creator_id', userId).order('created_at', { ascending: false })
+  return ((data ?? []) as Row[]).map((row) => rowToProject(row, [], []))
+}
+
+export async function getBackedProjects(userId: string): Promise<Project[]> {
+  if (USE_MOCK) return mockProjects.slice(3, 6)
+
+  const db = getSupabase()
+  const { data: pledges } = await db.from('pledges').select('idea_id').eq('user_id', userId).neq('status', 'refunded')
+  if (!pledges || pledges.length === 0) return []
+
+  const ids = (pledges as Row[]).map((r) => String(r.idea_id))
+  const { data } = await db.from('ideas').select('*').in('id', ids)
+  return ((data ?? []) as Row[]).map((row) => rowToProject(row, [], []))
+}
+
+export async function getRecentActivity(userId: string): Promise<Array<{
+  type: 'vote' | 'comment'
+  ideaId: string
+  content: string
+  createdAt: string
+}>> {
+  if (USE_MOCK) return []
+
+  const db = getSupabase()
+  const [{ data: votes }, { data: comments }] = await Promise.all([
+    db.from('votes').select('idea_id, direction, created_at').eq('user_id', userId).order('created_at', { ascending: false }).limit(5),
+    db.from('comments').select('idea_id, content, created_at').eq('user_id', userId).order('created_at', { ascending: false }).limit(5),
+  ])
+
+  const items = [
+    ...((votes ?? []) as Row[]).map((v) => ({
+      type: 'vote' as const,
+      ideaId: String(v.idea_id),
+      content: String(v.direction) === 'up' ? 'Upvoted a project' : 'Downvoted a project',
+      createdAt: String(v.created_at),
+    })),
+    ...((comments ?? []) as Row[]).map((c) => ({
+      type: 'comment' as const,
+      ideaId: String(c.idea_id),
+      content: String(c.content).slice(0, 80),
+      createdAt: String(c.created_at),
+    })),
+  ]
+
+  return items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 10)
 }
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────

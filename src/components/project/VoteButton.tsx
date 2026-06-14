@@ -1,33 +1,57 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronUp } from 'lucide-react'
 import { formatCount, cn } from '@/lib/utils'
+import { useAuth } from '@/lib/auth-context'
+import { voteOnProject, getUserVote } from '@/lib/api'
 
 interface VoteButtonProps {
   upvotes: number
   downvotes?: number
+  ideaId?: string
   size?: 'sm' | 'md' | 'lg'
   className?: string
 }
 
 export default function VoteButton({
   upvotes: initialUpvotes,
+  ideaId,
   size = 'md',
   className,
 }: VoteButtonProps) {
   const [count, setCount] = useState(initialUpvotes)
   const [voted, setVoted] = useState(false)
+  const { user, signIn } = useAuth()
 
-  const handleVote = (e: React.MouseEvent) => {
+  useEffect(() => {
+    if (!ideaId || !user) return
+    getUserVote(ideaId).then((v) => {
+      if (v === 'up') setVoted(true)
+    })
+  }, [ideaId, user])
+
+  const handleVote = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (voted) {
-      setCount((v) => v - 1)
-      setVoted(false)
-    } else {
-      setCount((v) => v + 1)
-      setVoted(true)
+
+    if (ideaId && !user) {
+      await signIn()
+      return
+    }
+
+    const next = !voted
+    setVoted(next)
+    setCount((v) => v + (next ? 1 : -1))
+
+    if (ideaId) {
+      try {
+        await voteOnProject(ideaId, next ? 'up' : null)
+      } catch {
+        // revert optimistic update
+        setVoted(voted)
+        setCount(initialUpvotes)
+      }
     }
   }
 

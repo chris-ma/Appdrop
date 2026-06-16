@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Check, Plus, X, Rocket } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, Plus, X, Rocket, Video, FileText } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { CATEGORIES, CATEGORY_CONFIG } from '@/lib/constants'
@@ -20,9 +20,17 @@ interface FormData {
   features: string[]
   monetization: string
   tags: string
+  videoUrl: string
+  images: string[]
+  pitchDeckUrl: string
 }
 
-const STEPS = ['BASICS', 'FEATURES', 'DETAILS', 'PREVIEW']
+const STEPS = ['BASICS', 'FEATURES', 'DETAILS', 'MEDIA', 'PREVIEW']
+
+function extractYouTubeId(url: string): string | null {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([A-Za-z0-9_-]{11})/)
+  return match?.[1] ?? null
+}
 
 const slideVariants = {
   enter: (dir: number) => ({ x: dir > 0 ? 60 : -60, opacity: 0 }),
@@ -49,6 +57,9 @@ export default function SubmitPage() {
     features: [],
     monetization: '',
     tags: '',
+    videoUrl: '',
+    images: [],
+    pitchDeckUrl: '',
   })
 
   const go = (next: number) => {
@@ -104,7 +115,7 @@ export default function SubmitPage() {
                 setSubmitted(false)
                 setNewProjectId(null)
                 setStep(0)
-                setForm({ title: '', category: '', problem: '', audience: '', features: [], monetization: '', tags: '' })
+                setForm({ title: '', category: '', problem: '', audience: '', features: [], monetization: '', tags: '', videoUrl: '', images: [], pitchDeckUrl: '' })
               }}
             >
               SUBMIT ANOTHER
@@ -327,8 +338,98 @@ export default function SubmitPage() {
                   </div>
                 )}
 
-                {/* Step 3: Preview */}
+                {/* Step 3: Media */}
                 {step === 3 && (
+                  <div className="space-y-5">
+                    <div className="mb-5">
+                      <h2 className="font-heading text-3xl text-white uppercase mb-1">Pitch Media</h2>
+                      <p className="text-fog text-sm font-inter">Optional — add media to make your pitch stand out.</p>
+                    </div>
+
+                    {/* Video URL */}
+                    <div>
+                      <label className="text-[10px] font-inter tracking-[0.2em] uppercase text-fog mb-2 block flex items-center gap-1.5">
+                        <Video size={10} />
+                        DEMO VIDEO URL
+                        <span className="ml-1 text-fog/50 normal-case tracking-normal">YouTube or Vimeo</span>
+                      </label>
+                      <input
+                        value={form.videoUrl}
+                        onChange={(e) => setForm((f) => ({ ...f, videoUrl: e.target.value }))}
+                        placeholder="https://youtube.com/watch?v=..."
+                        className={inputClass}
+                        style={inputStyle}
+                      />
+                      {extractYouTubeId(form.videoUrl) && (
+                        <p className="text-neon text-[11px] font-inter mt-1.5">✓ YouTube video detected</p>
+                      )}
+                    </div>
+
+                    {/* Screenshot URLs */}
+                    <div>
+                      <label className="text-[10px] font-inter tracking-[0.2em] uppercase text-fog mb-2 block">
+                        SCREENSHOT URLS
+                        <span className="ml-2 text-fog/50 normal-case tracking-normal">Up to 4, paste image URLs</span>
+                      </label>
+                      {[0, 1, 2, 3].map((i) => (
+                        <div key={i} className="flex gap-2 mb-2">
+                          <input
+                            value={form.images[i] ?? ''}
+                            onChange={(e) => {
+                              const next = [...form.images]
+                              next[i] = e.target.value
+                              while (next.length > 0 && !next[next.length - 1]) next.pop()
+                              setForm((f) => ({ ...f, images: next }))
+                            }}
+                            placeholder={`Screenshot ${i + 1} URL...`}
+                            className={inputClass}
+                            style={inputStyle}
+                            disabled={i > 0 && !form.images[i - 1]}
+                          />
+                          {form.images[i] && (
+                            <button
+                              onClick={() => {
+                                const next = form.images.filter((_, idx) => idx !== i)
+                                setForm((f) => ({ ...f, images: next }))
+                              }}
+                              className="text-fog hover:text-white cursor-pointer flex-shrink-0"
+                            >
+                              <X size={14} />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Pitch deck URL */}
+                    <div>
+                      <label className="text-[10px] font-inter tracking-[0.2em] uppercase text-fog mb-2 block flex items-center gap-1.5">
+                        <FileText size={10} />
+                        PITCH DECK URL
+                        <span className="ml-1 text-fog/50 normal-case tracking-normal">Google Slides, Figma, Notion, or PDF</span>
+                      </label>
+                      <input
+                        value={form.pitchDeckUrl}
+                        onChange={(e) => setForm((f) => ({ ...f, pitchDeckUrl: e.target.value }))}
+                        placeholder="https://docs.google.com/presentation/d/..."
+                        className={inputClass}
+                        style={inputStyle}
+                      />
+                    </div>
+
+                    <div
+                      className="rounded-lg border border-white/6 px-4 py-3"
+                      style={{ background: 'rgba(0,212,255,0.03)' }}
+                    >
+                      <p className="text-[11px] font-inter text-fog">
+                        All fields optional — skip straight to Preview if you don&apos;t have media yet.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 4: Preview */}
+                {step === 4 && (
                   <div>
                     <div className="mb-5">
                       <h2 className="font-heading text-3xl text-white uppercase mb-1">Preview Your Drop</h2>
@@ -419,7 +520,7 @@ export default function SubmitPage() {
             </Link>
           )}
 
-          {step < 3 ? (
+          {step < 4 ? (
             <MagneticButton>
               <Button variant="primary" onClick={() => go(step + 1)} className="font-heading text-[14px]">
                 NEXT
@@ -441,6 +542,9 @@ export default function SubmitPage() {
                     features: form.features,
                     monetization: form.monetization,
                     tags: form.tags,
+                    videoUrl: form.videoUrl || undefined,
+                    images: form.images.filter(Boolean),
+                    pitchDeckUrl: form.pitchDeckUrl || undefined,
                   })
                   setSubmitting(false)
                   if (result) {

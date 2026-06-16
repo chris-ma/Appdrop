@@ -28,6 +28,9 @@ function rowToProject(row: Row, milestones: Row[], comments: Row[]): Project {
     createdAt: String(row.created_at),
     gradient: 'from-void to-slate',
     creatorId: row.creator_id ? String(row.creator_id) : undefined,
+    videoUrl: row.video_url ? String(row.video_url) : undefined,
+    images: Array.isArray(row.images) ? (row.images as string[]) : [],
+    pitchDeckUrl: row.pitch_deck_url ? String(row.pitch_deck_url) : undefined,
     milestones: milestones.map((m) => ({
       id: String(m.id),
       title: String(m.title),
@@ -52,7 +55,7 @@ function rowToDeveloper(row: Row): Developer {
     id: String(row.id),
     name: String(row.name),
     tagline: String(row.tagline),
-    bio: String(row.tagline),
+    bio: row.bio ? String(row.bio) : String(row.tagline),
     skills: (row.skills as string[]) ?? [],
     hourlyRate: Number(row.hourly_rate),
     rating: Number(row.rating),
@@ -61,10 +64,16 @@ function rowToDeveloper(row: Row): Developer {
     available: Boolean(row.available),
     avatarColor: String(row.avatar_color),
     initials: String(row.initials),
+    githubUrl: row.github_url ? String(row.github_url) : undefined,
+    linkedinUrl: row.linkedin_url ? String(row.linkedin_url) : undefined,
+    websiteUrl: row.website_url ? String(row.website_url) : undefined,
     portfolioItems: portfolio.map((p) => ({
       title: String(p.title),
       description: String(p.description),
       url: p.url ? String(p.url) : undefined,
+      image_url: p.image_url ? String(p.image_url) : undefined,
+      tech_stack: Array.isArray(p.tech_stack) ? (p.tech_stack as string[]) : undefined,
+      role: p.role ? String(p.role) : undefined,
     })),
   }
 }
@@ -110,6 +119,9 @@ export async function submitProject(input: {
   features: string[]
   monetization: string
   tags: string
+  videoUrl?: string
+  images?: string[]
+  pitchDeckUrl?: string
 }): Promise<{ id: string } | null> {
   if (USE_MOCK) return { id: String(Date.now()) }
 
@@ -129,6 +141,9 @@ export async function submitProject(input: {
     tags: input.tags.split(',').map((t: string) => t.trim()).filter(Boolean),
     funding_goal: 10000,
     creator_id: user?.id ?? null,
+    video_url: input.videoUrl ?? null,
+    images: input.images ?? [],
+    pitch_deck_url: input.pitchDeckUrl ?? null,
   }).select('id').single()
 
   if (error || !data) return null

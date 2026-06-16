@@ -14,9 +14,11 @@ export const mockDevelopers: Developer[] = [
     bio: 'Ex-Stripe engineer. I build fast, ship faster. Specialize in consumer apps with complex real-time requirements.',
     available: true,
     hourlyRate: 180,
+    githubUrl: 'https://github.com',
+    linkedinUrl: 'https://linkedin.com',
     portfolioItems: [
-      { title: 'PaySync', description: 'Real-time payment reconciliation SaaS — $2M ARR', url: '#' },
-      { title: 'FlowBoard', description: 'Kanban app with 50K MAU', url: '#' },
+      { title: 'PaySync', description: 'Real-time payment reconciliation SaaS — $2M ARR', url: '#', image_url: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&q=80', tech_stack: ['Next.js', 'Stripe', 'PostgreSQL'], role: 'Lead Engineer' },
+      { title: 'FlowBoard', description: 'Kanban app with 50K MAU', url: '#', image_url: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&q=80', tech_stack: ['React', 'Node.js', 'Redis'], role: 'Solo Developer' },
     ],
   },
   {
@@ -32,9 +34,11 @@ export const mockDevelopers: Developer[] = [
     bio: 'Former Google Brain researcher. I specialize in shipping production ML systems that actually scale.',
     available: true,
     hourlyRate: 220,
+    githubUrl: 'https://github.com',
+    linkedinUrl: 'https://linkedin.com',
     portfolioItems: [
-      { title: 'DocuMind', description: 'AI document analyzer processing 1M docs/day', url: '#' },
-      { title: 'PriceAI', description: 'Dynamic pricing engine for e-commerce', url: '#' },
+      { title: 'DocuMind', description: 'AI document analyzer processing 1M docs/day', url: '#', image_url: 'https://images.unsplash.com/photo-1568667256549-094345857637?w=800&q=80', tech_stack: ['Python', 'PyTorch', 'FastAPI'], role: 'ML Engineer' },
+      { title: 'PriceAI', description: 'Dynamic pricing engine for e-commerce', url: '#', image_url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80', tech_stack: ['Python', 'LangChain', 'Docker'], role: 'Lead ML Engineer' },
     ],
   },
   {
@@ -50,9 +54,10 @@ export const mockDevelopers: Developer[] = [
     bio: 'Built apps with 500K+ downloads. If it lives on a phone, I can build it beautifully.',
     available: false,
     hourlyRate: 160,
+    githubUrl: 'https://github.com',
     portfolioItems: [
-      { title: 'RunTrack Pro', description: '#1 running app in AU App Store', url: '#' },
-      { title: 'Mood.io', description: 'Mental health app, 200K+ users', url: '#' },
+      { title: 'RunTrack Pro', description: '#1 running app in AU App Store', url: '#', image_url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80', tech_stack: ['React Native', 'Firebase', 'HealthKit'], role: 'Solo Developer' },
+      { title: 'Mood.io', description: 'Mental health app, 200K+ users', url: '#', image_url: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&q=80', tech_stack: ['React Native', 'Expo', 'Supabase'], role: 'Lead Mobile Engineer' },
     ],
   },
   {
@@ -68,9 +73,11 @@ export const mockDevelopers: Developer[] = [
     bio: 'I blur the line between design and code. Every pixel matters, every interaction counts.',
     available: true,
     hourlyRate: 140,
+    githubUrl: 'https://github.com',
+    linkedinUrl: 'https://linkedin.com',
     portfolioItems: [
-      { title: 'Palette Studio', description: 'Design tool used by 30K designers', url: '#' },
-      { title: 'Spacer', description: 'Component spacing tool for Figma', url: '#' },
+      { title: 'Palette Studio', description: 'Design tool used by 30K designers', url: '#', image_url: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=800&q=80', tech_stack: ['Vue.js', 'Node.js', 'Figma API'], role: 'Solo Developer' },
+      { title: 'Spacer', description: 'Component spacing tool for Figma', url: '#', image_url: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80', tech_stack: ['TypeScript', 'Figma Plugin API'], role: 'Solo Developer' },
     ],
   },
   {
@@ -86,9 +93,10 @@ export const mockDevelopers: Developer[] = [
     bio: 'If performance matters, you want me. 10x faster is the baseline, not the goal.',
     available: true,
     hourlyRate: 200,
+    githubUrl: 'https://github.com',
     portfolioItems: [
-      { title: 'Velo', description: 'WASM-powered browser image processor', url: '#' },
-      { title: 'SigmaDB', description: 'Edge database written in Rust', url: '#' },
+      { title: 'Velo', description: 'WASM-powered browser image processor', url: '#', image_url: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&q=80', tech_stack: ['Rust', 'WebAssembly', 'TypeScript'], role: 'Solo Developer' },
+      { title: 'SigmaDB', description: 'Edge database written in Rust', url: '#', image_url: 'https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&q=80', tech_stack: ['Rust', 'gRPC', 'WASM'], role: 'Solo Developer' },
     ],
   },
   {
@@ -104,9 +112,11 @@ export const mockDevelopers: Developer[] = [
     bio: 'I build it, deploy it, monitor it. From idea to production in record time. 5 AppDrop projects shipped.',
     available: true,
     hourlyRate: 190,
+    githubUrl: 'https://github.com',
+    linkedinUrl: 'https://linkedin.com',
     portfolioItems: [
-      { title: 'LaunchKit', description: 'Startup boilerplate used by 5K teams', url: '#' },
-      { title: 'OpsView', description: 'Infrastructure monitoring dashboard', url: '#' },
+      { title: 'LaunchKit', description: 'Startup boilerplate used by 5K teams', url: '#', image_url: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&q=80', tech_stack: ['React', 'Supabase', 'Terraform'], role: 'Solo Developer' },
+      { title: 'OpsView', description: 'Infrastructure monitoring dashboard', url: '#', image_url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80', tech_stack: ['React', 'Python', 'Kubernetes', 'Grafana'], role: 'Lead Engineer' },
     ],
   },
 ]

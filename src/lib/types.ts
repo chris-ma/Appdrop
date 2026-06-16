@@ -31,6 +31,9 @@ export interface PortfolioItem {
   title: string
   description: string
   url?: string
+  image_url?: string
+  tech_stack?: string[]
+  role?: string
 }
 
 export interface Developer {
@@ -47,6 +50,9 @@ export interface Developer {
   available: boolean
   portfolioItems: PortfolioItem[]
   hourlyRate: number
+  githubUrl?: string
+  linkedinUrl?: string
+  websiteUrl?: string
 }
 
 export interface Project {
@@ -70,6 +76,9 @@ export interface Project {
   tags: string[]
   gradient: string
   creatorId?: string
+  videoUrl?: string
+  images?: string[]
+  pitchDeckUrl?: string
 }
 
 export interface Badge {

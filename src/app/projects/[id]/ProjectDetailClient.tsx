@@ -2,9 +2,10 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import {
   Check, Circle, Star, ArrowLeft, Share2, Bookmark,
-  ThumbsUp, CheckCircle2, MessageSquare
+  ThumbsUp, CheckCircle2, MessageSquare, Play, FileText, Globe
 } from 'lucide-react'
 import type { Project, Comment, Update } from '@/lib/types'
 import { CATEGORY_CONFIG } from '@/lib/constants'
@@ -47,6 +48,15 @@ function SectionLabel({ color, children }: { color: string; children: React.Reac
       </span>
     </div>
   )
+}
+
+function extractYouTubeId(url: string): string | null {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([A-Za-z0-9_-]{11})/)
+  return match?.[1] ?? null
+}
+
+function toGoogleSlidesEmbed(url: string): string {
+  return url.split('#')[0].split('?')[0].replace(/\/(edit|pub|present)$/, '') + '/embed'
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -332,6 +342,102 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                 </ul>
               </div>
             </Panel>
+
+            {/* Media panel — only renders if any media present */}
+            {(project.videoUrl || (project.images && project.images.length > 0) || project.pitchDeckUrl) && (
+              <Panel>
+                <SectionLabel color="#00D4FF">PITCH MEDIA</SectionLabel>
+                <div className="space-y-5">
+
+                  {/* Video embed */}
+                  {project.videoUrl && (() => {
+                    const ytId = extractYouTubeId(project.videoUrl)
+                    if (ytId) {
+                      return (
+                        <div>
+                          <p className="text-[10px] font-inter tracking-[0.2em] uppercase text-fog mb-2 flex items-center gap-1.5">
+                            <Play size={10} style={{ color: '#00D4FF' }} />
+                            DEMO VIDEO
+                          </p>
+                          <div className="relative w-full rounded-lg overflow-hidden border border-white/8" style={{ paddingBottom: '56.25%' }}>
+                            <iframe
+                              src={`https://www.youtube-nocookie.com/embed/${ytId}`}
+                              title="Demo video"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              className="absolute inset-0 w-full h-full"
+                            />
+                          </div>
+                        </div>
+                      )
+                    }
+                    return (
+                      <a href={project.videoUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-electric hover:text-white text-sm font-inter transition-colors">
+                        <Play size={14} />
+                        Watch Demo Video
+                      </a>
+                    )
+                  })()}
+
+                  {/* Image gallery */}
+                  {project.images && project.images.length > 0 && (
+                    <div>
+                      <p className="text-[10px] font-inter tracking-[0.2em] uppercase text-fog mb-2">SCREENSHOTS</p>
+                      <div className={`grid gap-2 ${project.images.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                        {project.images.map((src, i) => (
+                          <div
+                            key={i}
+                            className="relative aspect-video rounded-lg overflow-hidden border border-white/8"
+                            style={{ background: '#111' }}
+                          >
+                            <Image
+                              src={src}
+                              alt={`Screenshot ${i + 1}`}
+                              fill
+                              unoptimized
+                              className="object-cover"
+                              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Pitch deck */}
+                  {project.pitchDeckUrl && (
+                    <div>
+                      <p className="text-[10px] font-inter tracking-[0.2em] uppercase text-fog mb-2 flex items-center gap-1.5">
+                        <FileText size={10} style={{ color: '#BF5AF2' }} />
+                        PITCH DECK
+                      </p>
+                      {project.pitchDeckUrl.includes('docs.google.com/presentation') ? (
+                        <div className="relative w-full rounded-lg overflow-hidden border border-white/8" style={{ paddingBottom: '56.25%' }}>
+                          <iframe
+                            src={toGoogleSlidesEmbed(project.pitchDeckUrl)}
+                            title="Pitch deck"
+                            allowFullScreen
+                            className="absolute inset-0 w-full h-full"
+                          />
+                        </div>
+                      ) : (
+                        <a
+                          href={project.pitchDeckUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-4 py-3 rounded-lg border border-white/10 text-fog hover:text-white hover:border-cyber/40 transition-all text-sm font-inter"
+                          style={{ background: 'rgba(191,90,242,0.04)' }}
+                        >
+                          <FileText size={14} style={{ color: '#BF5AF2' }} />
+                          View Pitch Deck
+                          <Globe size={12} className="ml-auto opacity-40" />
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </Panel>
+            )}
 
             {/* Discussion + Updates tabs */}
             <Panel>

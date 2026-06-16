@@ -1,8 +1,9 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { Star, Briefcase, MessageCircle, ArrowLeft, ExternalLink } from 'lucide-react'
+import { Star, Briefcase, MessageCircle, ArrowLeft, ExternalLink, Globe, Code2, Link2 } from 'lucide-react'
 import type { Developer } from '@/lib/types'
 import Button from '@/components/ui/Button'
 import BidRequestModal from '@/components/ui/BidRequestModal'
@@ -67,6 +68,11 @@ export default function DeveloperDetailClient({ developer }: Props) {
                   </div>
                 </div>
 
+                {/* Bio */}
+                {developer.bio && developer.bio !== developer.tagline && (
+                  <p className="text-fog text-[13px] font-inter leading-relaxed mb-5">{developer.bio}</p>
+                )}
+
                 {/* Stats row */}
                 <div className="flex flex-wrap gap-6 text-[12px] text-fog font-inter mb-5">
                   <div className="flex items-center gap-1.5">
@@ -96,6 +102,48 @@ export default function DeveloperDetailClient({ developer }: Props) {
                   </div>
                 </div>
 
+                {/* Social links */}
+                {(developer.githubUrl || developer.linkedinUrl || developer.websiteUrl) && (
+                  <div className="flex items-center gap-2 mb-5">
+                    {developer.githubUrl && (
+                      <a
+                        href={developer.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-white/10 text-fog hover:text-white hover:border-white/20 transition-all text-[11px] font-inter"
+                        style={{ background: 'rgba(255,255,255,0.04)' }}
+                      >
+                        <Link2 size={12} />
+                        GitHub
+                      </a>
+                    )}
+                    {developer.linkedinUrl && (
+                      <a
+                        href={developer.linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-white/10 text-fog hover:text-white hover:border-white/20 transition-all text-[11px] font-inter"
+                        style={{ background: 'rgba(255,255,255,0.04)' }}
+                      >
+                        <Link2 size={12} />
+                        LinkedIn
+                      </a>
+                    )}
+                    {developer.websiteUrl && (
+                      <a
+                        href={developer.websiteUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-white/10 text-fog hover:text-white hover:border-white/20 transition-all text-[11px] font-inter"
+                        style={{ background: 'rgba(255,255,255,0.04)' }}
+                      >
+                        <Globe size={12} />
+                        Website
+                      </a>
+                    )}
+                  </div>
+                )}
+
                 {/* Skills */}
                 <div>
                   <p className="text-[10px] font-inter font-medium uppercase tracking-[0.15em] text-fog mb-2">Skills</p>
@@ -118,29 +166,90 @@ export default function DeveloperDetailClient({ developer }: Props) {
                 <div className="rounded-xl border border-white/10 p-6" style={{ background: '#181818' }}>
                   <div className="flex items-center gap-3 mb-5">
                     <div className="w-3 h-px" style={{ background: developer.avatarColor }} />
-                    <span className="text-[10px] font-inter tracking-[0.25em] uppercase" style={{ color: developer.avatarColor }}>
+                    <span
+                      className="text-[10px] font-inter tracking-[0.25em] uppercase"
+                      style={{ color: developer.avatarColor }}
+                    >
                       Portfolio
                     </span>
                   </div>
-                  <div className="flex flex-col gap-4">
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {developer.portfolioItems.map((item, i) => (
                       <motion.div
                         key={item.title}
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.05 }}
-                        className="rounded-lg border border-white/8 p-4 hover:border-white/16 transition-colors"
+                        transition={{ delay: i * 0.06 }}
+                        className="rounded-lg border border-white/8 overflow-hidden hover:border-white/16 transition-colors group"
                         style={{ background: '#111' }}
                       >
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
+                        {/* Image or gradient fallback */}
+                        <div className="relative h-36 w-full overflow-hidden">
+                          {item.image_url ? (
+                            <Image
+                              src={item.image_url}
+                              alt={item.title}
+                              fill
+                              unoptimized
+                              className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                          ) : (
+                            <div
+                              className="w-full h-full flex items-center justify-center"
+                              style={{
+                                background: `linear-gradient(135deg, ${developer.avatarColor}15 0%, rgba(0,0,0,0.5) 100%)`,
+                              }}
+                            >
+                              <Code2 size={32} style={{ color: `${developer.avatarColor}40` }} />
+                            </div>
+                          )}
+                          {/* Role badge */}
+                          {item.role && (
+                            <div className="absolute top-2 left-2">
+                              <span
+                                className="text-[9px] font-inter font-medium uppercase tracking-[0.15em] px-2 py-0.5 rounded"
+                                style={{
+                                  background: 'rgba(0,0,0,0.7)',
+                                  color: developer.avatarColor,
+                                  border: `1px solid ${developer.avatarColor}30`,
+                                  backdropFilter: 'blur(4px)',
+                                }}
+                              >
+                                {item.role}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Card body */}
+                        <div className="p-4">
+                          <div className="flex items-start justify-between gap-2 mb-1">
                             <p className="text-white font-inter font-medium text-sm">{item.title}</p>
-                            <p className="text-fog text-[12px] font-inter mt-1">{item.description}</p>
+                            {item.url && item.url !== '#' && (
+                              <a
+                                href={item.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-fog hover:text-white transition-colors flex-shrink-0"
+                              >
+                                <ExternalLink size={13} />
+                              </a>
+                            )}
                           </div>
-                          {item.url && (
-                            <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-fog hover:text-white transition-colors flex-shrink-0">
-                              <ExternalLink size={13} />
-                            </a>
+                          <p className="text-fog text-[12px] font-inter mb-3 leading-relaxed">{item.description}</p>
+                          {item.tech_stack && item.tech_stack.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {item.tech_stack.map((tech) => (
+                                <span
+                                  key={tech}
+                                  className="text-[9px] font-inter px-1.5 py-0.5 rounded border border-white/8"
+                                  style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.4)' }}
+                                >
+                                  {tech}
+                                </span>
+                              ))}
+                            </div>
                           )}
                         </div>
                       </motion.div>
@@ -162,7 +271,7 @@ export default function DeveloperDetailClient({ developer }: Props) {
 
                 <p className="font-heading text-2xl text-white mb-1">REQUEST A BID</p>
                 <p className="text-fog text-[12px] font-inter mb-5">
-                  Send {developer.name.split(' ')[0]} details about your project and they'll get back to you.
+                  Send {developer.name.split(' ')[0]} details about your project and they&apos;ll get back to you.
                 </p>
 
                 <div className="flex flex-col gap-3 mb-5 text-[12px] font-inter">

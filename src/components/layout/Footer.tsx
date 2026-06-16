@@ -7,34 +7,22 @@ const links = {
     { label: 'Find a Builder', href: '/developers' },
     { label: 'How It Works', href: '/#how-it-works' },
   ],
-  COMMUNITY: [
-    { label: 'Leaderboard', href: '#' },
-    { label: 'Discord', href: '#' },
-    { label: 'Twitter / X', href: '#' },
-    { label: 'Newsletter', href: '#' },
-  ],
-  COMPANY: [
-    { label: 'About', href: '#' },
-    { label: 'Blog', href: '#' },
-    { label: 'Careers', href: '#' },
-    { label: 'Press Kit', href: '#' },
-  ],
 }
 
 export default function Footer() {
   return (
     <footer className="border-t border-white/12 bg-[#101010] mt-20">
       <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-16">
+        <div className="flex flex-col md:flex-row gap-10 md:gap-20 mb-16">
           {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
+          <div className="shrink-0">
             <div className="font-grotesk font-extrabold text-2xl tracking-tight mb-3">
               <span className="text-white">APP</span>
-              <span className="text-brand-cyan">▼</span>
+              <span className="text-electric">▼</span>
               <span className="text-white">DROP</span>
             </div>
-            <p className="text-white/40 text-sm leading-relaxed max-w-[180px]">
-              Where communities decide which apps get built.
+            <p className="text-white/40 text-sm leading-relaxed max-w-[220px]">
+              The marketplace where communities decide which apps get built next.
             </p>
           </div>
 
@@ -64,11 +52,9 @@ export default function Footer() {
           <p className="text-white/30 text-xs font-grotesk">
             © 2026 AppDrop. All rights reserved.
           </p>
-          <div className="flex items-center gap-6">
-            <Link href="#" className="text-xs text-white/30 hover:text-white/60 transition-colors">Privacy</Link>
-            <Link href="#" className="text-xs text-white/30 hover:text-white/60 transition-colors">Terms</Link>
-            <Link href="#" className="text-xs text-white/30 hover:text-white/60 transition-colors">Cookies</Link>
-          </div>
+          <p className="text-white/20 text-xs font-grotesk">
+            Built on Supabase · Deployed on Vercel
+          </p>
         </div>
       </div>
     </footer>

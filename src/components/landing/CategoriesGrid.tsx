@@ -18,11 +18,6 @@ const categoryIcons: Record<Category, LucideIcon> = {
   DEVELOPER_TOOLS: Code2,
 }
 
-const counts: Record<Category, number> = {
-  AI: 312, PRODUCTIVITY: 487, HEALTH: 198, GAMING: 256,
-  SOCIAL: 341, FINTECH: 175, EDUCATION: 219, DEVELOPER_TOOLS: 403,
-}
-
 const categories = Object.keys(CATEGORY_CONFIG) as Category[]
 
 export default function CategoriesGrid() {
@@ -41,11 +36,11 @@ export default function CategoriesGrid() {
           <div className="flex items-center gap-3 mb-3">
             <div className="w-4 h-px bg-fog" />
             <span className="text-[10px] font-inter tracking-[0.25em] text-fog uppercase">
-              BROWSE
+              8 CATEGORIES
             </span>
           </div>
           <h2 className="font-heading text-6xl md:text-7xl text-white uppercase leading-none">
-            FIND YOUR <span className="chrome-text">NICHE</span>
+            WHAT GETS <span className="text-electric">BUILT</span>
           </h2>
         </motion.div>
 
@@ -81,7 +76,7 @@ export default function CategoriesGrid() {
                         {config.label}
                       </h3>
                       <p className="text-[11px] font-inter text-mist tracking-wider">
-                        {counts[cat].toLocaleString()} IDEAS
+                        EXPLORE →
                       </p>
                     </div>
                   </Link>

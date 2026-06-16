@@ -9,7 +9,7 @@ const steps = [
     icon: Lightbulb,
     title: 'SUBMIT',
     sub: 'YOUR DROP',
-    description: 'Write up your app idea in 5 minutes. Problem, solution, features. No technical skills required.',
+    description: 'Describe the app you wish existed. What problem does it solve, who needs it, what would it do? Takes about 5 minutes.',
     accent: '#00D4FF',
   },
   {
@@ -17,7 +17,7 @@ const steps = [
     icon: Vote,
     title: 'COMMUNITY',
     sub: 'VOTES',
-    description: 'The crowd decides what matters. Top ideas rise. Weak ideas fall. Pure signal, no noise.',
+    description: 'Your idea enters the open marketplace. People upvote what resonates, ignore what doesn\'t. The best concepts earn a shot at funding.',
     accent: '#FFFFFF',
   },
   {
@@ -25,7 +25,7 @@ const steps = [
     icon: DollarSign,
     title: 'FUND',
     sub: 'THE BUILD',
-    description: 'Back the ideas you believe in. Funds held in escrow and released when milestones are verified.',
+    description: 'Back ideas with real money when they hit the funding stage. Everything sits in escrow until milestones are delivered and confirmed.',
     accent: '#00FF88',
   },
   {
@@ -33,7 +33,7 @@ const steps = [
     icon: Rocket,
     title: 'DEV',
     sub: 'SHIPS IT',
-    description: 'Verified builders claim the project, hit milestones, get paid. You get early access.',
+    description: 'A developer from our network claims the project, builds it milestone by milestone, and gets paid on delivery. You get early access on day one.',
     accent: '#BF5AF2',
   },
 ]

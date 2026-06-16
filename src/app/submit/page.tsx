@@ -39,6 +39,7 @@ export default function SubmitPage() {
   const [dir, setDir] = useState(1)
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [newProjectId, setNewProjectId] = useState<string | null>(null)
   const [newFeature, setNewFeature] = useState('')
   const [form, setForm] = useState<FormData>({
     title: '',
@@ -89,10 +90,11 @@ export default function SubmitPage() {
           <p className="text-fog font-inter mb-8">
             Your idea is now live on AppDrop. The community will start voting shortly.
           </p>
+          <p className="text-fog/60 font-inter text-sm mb-6">Redirecting to your drop in a moment...</p>
           <div className="flex gap-3 justify-center">
             <MagneticButton>
-              <Link href="/marketplace">
-                <Button variant="primary" className="font-heading text-[15px]">VIEW MARKETPLACE</Button>
+              <Link href={newProjectId ? `/projects/${newProjectId}` : '/marketplace'}>
+                <Button variant="primary" className="font-heading text-[15px]">VIEW YOUR DROP</Button>
               </Link>
             </MagneticButton>
             <Button
@@ -100,6 +102,7 @@ export default function SubmitPage() {
               className="font-heading text-[15px]"
               onClick={() => {
                 setSubmitted(false)
+                setNewProjectId(null)
                 setStep(0)
                 setForm({ title: '', category: '', problem: '', audience: '', features: [], monetization: '', tags: '' })
               }}
@@ -441,8 +444,9 @@ export default function SubmitPage() {
                   })
                   setSubmitting(false)
                   if (result) {
+                    setNewProjectId(result.id)
                     setSubmitted(true)
-                    router.refresh()
+                    setTimeout(() => router.push(`/projects/${result.id}`), 2000)
                   }
                 }}
                 disabled={!form.title || !form.category || !form.problem || submitting}

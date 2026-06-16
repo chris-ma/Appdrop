@@ -309,6 +309,51 @@ export async function getRecentActivity(userId: string): Promise<Array<{
   return items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 10)
 }
 
+// ─── Admin ───────────────────────────────────────────────────────────────────
+
+export async function updateIdeaStatus(ideaId: string, status: string): Promise<boolean> {
+  if (USE_MOCK) return true
+
+  const db = getSupabase()
+  const { error } = await db.from('ideas').update({ status }).eq('id', ideaId)
+  return !error
+}
+
+export async function getAllIdeasAdmin(): Promise<Project[]> {
+  if (USE_MOCK) return mockProjects
+
+  const db = getSupabase()
+  const { data, error } = await db.from('ideas').select('*').order('created_at', { ascending: false })
+  if (error || !data) return []
+  return (data as Row[]).map((row) => rowToProject(row, [], []))
+}
+
+// ─── Bid Requests ────────────────────────────────────────────────────────────
+
+export async function requestBid(input: {
+  developerId: string
+  message: string
+  budget: string
+  timeline: string
+  ideaId?: string
+}): Promise<boolean> {
+  if (USE_MOCK) return true
+
+  const db = getSupabase()
+  const { data: { user } } = await db.auth.getUser()
+  if (!user) return false
+
+  const { error } = await db.from('bid_requests').insert({
+    developer_id: input.developerId,
+    user_id: user.id,
+    message: input.message,
+    budget: input.budget,
+    timeline: input.timeline,
+    idea_id: input.ideaId ?? null,
+  })
+  return !error
+}
+
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
 export async function signInWithGithub() {

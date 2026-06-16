@@ -1,9 +1,11 @@
 'use client'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Star, Briefcase, MessageCircle } from 'lucide-react'
 import type { Developer } from '@/lib/types'
 import Button from '@/components/ui/Button'
 import TiltCard from '@/components/ui/TiltCard'
+import BidRequestModal from '@/components/ui/BidRequestModal'
 
 interface DeveloperCardProps {
   developer: Developer
@@ -11,7 +13,11 @@ interface DeveloperCardProps {
 }
 
 export default function DeveloperCard({ developer, index = 0 }: DeveloperCardProps) {
+  const [modalOpen, setModalOpen] = useState(false)
+
   return (
+    <>
+    {modalOpen && <BidRequestModal developer={developer} onClose={() => setModalOpen(false)} />}
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -118,6 +124,7 @@ export default function DeveloperCard({ developer, index = 0 }: DeveloperCardPro
               size="sm"
               className="w-full font-heading text-[14px]"
               disabled={!developer.available}
+              onClick={developer.available ? () => setModalOpen(true) : undefined}
             >
               {developer.available ? 'REQUEST BID' : 'UNAVAILABLE'}
             </Button>
@@ -125,5 +132,6 @@ export default function DeveloperCard({ developer, index = 0 }: DeveloperCardPro
         </div>
       </TiltCard>
     </motion.div>
+    </>
   )
 }

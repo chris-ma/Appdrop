@@ -13,6 +13,8 @@ const navLinks = [
   { label: 'PROFILE', href: '/profile' },
 ]
 
+const ADMIN_EMAIL = 'crispy-studios@hotmail.com'
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -59,6 +61,15 @@ export default function Navbar() {
                   <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-electric group-hover:w-full transition-all duration-300" />
                 </Link>
               ))}
+              {user?.email === ADMIN_EMAIL && (
+                <Link
+                  href="/admin"
+                  className="text-[11px] font-inter font-medium text-electric hover:text-white uppercase tracking-[0.15em] transition-colors duration-200 relative group"
+                >
+                  ADMIN
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-electric group-hover:w-full transition-all duration-300" />
+                </Link>
+              )}
             </div>
 
             {/* CTA */}

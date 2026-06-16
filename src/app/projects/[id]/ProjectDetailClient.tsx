@@ -6,7 +6,7 @@ import {
   Check, Circle, Star, ArrowLeft, Share2, Bookmark,
   ThumbsUp, CheckCircle2, MessageSquare
 } from 'lucide-react'
-import type { Project, Comment } from '@/lib/types'
+import type { Project, Comment, Update } from '@/lib/types'
 import { CATEGORY_CONFIG } from '@/lib/constants'
 import { formatCount, timeAgo } from '@/lib/utils'
 import CategoryBadge from '@/components/project/CategoryBadge'
@@ -16,7 +16,7 @@ import VoteButton from '@/components/project/VoteButton'
 import Button from '@/components/ui/Button'
 import MagneticButton from '@/components/ui/MagneticButton'
 import PledgeModal from '@/components/ui/PledgeModal'
-import { postComment } from '@/lib/api'
+import { postComment, getProjectUpdates, postProjectUpdate } from '@/lib/api'
 import { useAuth } from '@/lib/auth-context'
 import { useToast } from '@/components/ui/Toast'
 import { getSupabase } from '@/lib/supabase'
@@ -71,9 +71,32 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
   const [comments, setComments] = useState<Comment[]>(project.comments)
   const [commentText, setCommentText] = useState('')
   const [posting, setPosting] = useState(false)
+  const [activeTab, setActiveTab] = useState<'DISCUSSION' | 'UPDATES'>('DISCUSSION')
+  const [updates, setUpdates] = useState<Update[]>([])
+  const [updateTitle, setUpdateTitle] = useState('')
+  const [updateContent, setUpdateContent] = useState('')
+  const [postingUpdate, setPostingUpdate] = useState(false)
   const { user, signIn } = useAuth()
   const toast = useToast()
   const commentIds = useRef(new Set(project.comments.map((c) => c.id)))
+  const updateIds = useRef(new Set<string>())
+
+  const isCreator = !!user && !!project.creatorId && user.id === project.creatorId
+
+  // Load updates on mount
+  useEffect(() => {
+    getProjectUpdates(project.id).then(setUpdates)
+  }, [project.id])
+
+  // Show success toast if returning from Stripe checkout
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('paid') === '1') {
+      toast.success('Payment successful! Your pledge has been received.')
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Supabase Realtime — live vote counts, comments, funding
   useEffect(() => {
@@ -107,6 +130,26 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
           if (row.upvotes !== undefined) setUpvotes(Number(row.upvotes))
         }
       )
+      .on(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        'postgres_changes' as any,
+        { event: 'INSERT', schema: 'public', table: 'project_updates', filter: `idea_id=eq.${project.id}` },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (payload: any) => {
+          const r = payload.new
+          const update: Update = {
+            id: String(r.id),
+            ideaId: String(r.idea_id),
+            title: String(r.title),
+            content: String(r.content),
+            createdAt: String(r.created_at),
+          }
+          if (!updateIds.current.has(update.id)) {
+            updateIds.current.add(update.id)
+            setUpdates((prev) => [update, ...prev])
+          }
+        }
+      )
       .subscribe()
 
     return () => { supabase.removeChannel(channel) }
@@ -134,6 +177,20 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
       toast.success('Comment posted!')
     } else {
       toast.error('Failed to post comment.')
+    }
+  }
+
+  const handlePostUpdate = async () => {
+    if (!user || !updateTitle.trim() || !updateContent.trim()) return
+    setPostingUpdate(true)
+    const result = await postProjectUpdate(project.id, updateTitle.trim(), updateContent.trim())
+    setPostingUpdate(false)
+    if (result) {
+      setUpdateTitle('')
+      setUpdateContent('')
+      toast.success('Update posted!')
+    } else {
+      toast.error('Failed to post update.')
     }
   }
 
@@ -276,72 +333,143 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
               </div>
             </Panel>
 
-            {/* Discussion */}
+            {/* Discussion + Updates tabs */}
             <Panel>
-              <SectionLabel color="#C8C8C8">
-                DISCUSSION <span className="opacity-40">({comments.length})</span>
-              </SectionLabel>
-              <div className="space-y-5">
-                {comments.map((comment) => (
-                  <div key={comment.id} className="flex gap-3">
-                    <div
-                      className="w-8 h-8 rounded flex items-center justify-center font-heading text-sm flex-shrink-0"
-                      style={{ background: `${comment.avatarColor}12`, color: comment.avatarColor, border: `1px solid ${comment.avatarColor}25` }}
-                    >
-                      {comment.initials}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-white font-inter font-medium text-sm">{comment.author}</span>
-                        <span className="text-fog text-[11px] font-inter">{timeAgo(comment.createdAt)}</span>
-                      </div>
-                      <p className="text-fog text-sm font-inter leading-relaxed">{comment.content}</p>
-                      <button className="flex items-center gap-1.5 mt-2 text-fog hover:text-white text-[11px] font-inter transition-colors cursor-pointer">
-                        <ThumbsUp size={11} />
-                        {comment.likes}
-                      </button>
-                    </div>
-                  </div>
-                ))}
-                {comments.length === 0 && (
-                  <p className="text-fog text-sm font-inter text-center py-4">
-                    No comments yet. Be the first to join the discussion.
-                  </p>
-                )}
-              </div>
-              <div className="mt-6 pt-5 border-t border-white/5">
-                {user ? (
-                  <>
-                    <textarea
-                      placeholder="Join the discussion..."
-                      value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
-                      className="w-full px-4 py-3 text-sm text-white placeholder-fog outline-none resize-none h-20 rounded-lg border border-white/12 focus:border-electric/30 transition-all font-inter"
-                      style={{ background: 'rgba(255,255,255,0.05)' }}
-                    />
-                    <div className="flex justify-end mt-2">
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        className="font-heading text-[13px]"
-                        onClick={handlePostComment}
-                        disabled={posting || !commentText.trim()}
-                      >
-                        <MessageSquare size={13} />
-                        {posting ? 'POSTING...' : 'POST COMMENT'}
-                      </Button>
-                    </div>
-                  </>
-                ) : (
+              {/* Tab bar */}
+              <div className="flex items-center gap-1 mb-5 border-b border-white/8 pb-4">
+                {(['DISCUSSION', 'UPDATES'] as const).map((tab) => (
                   <button
-                    onClick={() => signIn()}
-                    className="w-full py-3 text-sm font-inter text-fog hover:text-white transition-colors cursor-pointer border border-white/10 rounded-lg"
-                    style={{ background: 'rgba(255,255,255,0.03)' }}
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className="font-heading text-[13px] uppercase tracking-wide px-4 py-1.5 rounded transition-all duration-200 cursor-pointer"
+                    style={
+                      activeTab === tab
+                        ? { background: 'rgba(0,212,255,0.08)', color: '#00D4FF', border: '1px solid rgba(0,212,255,0.2)' }
+                        : { color: 'rgba(255,255,255,0.3)', border: '1px solid transparent' }
+                    }
                   >
-                    Sign in to join the discussion
+                    {tab === 'DISCUSSION' ? `${tab} (${comments.length})` : `${tab} (${updates.length})`}
                   </button>
-                )}
+                ))}
               </div>
+
+              {activeTab === 'DISCUSSION' && (
+                <>
+                  <div className="space-y-5">
+                    {comments.map((comment) => (
+                      <div key={comment.id} className="flex gap-3">
+                        <div
+                          className="w-8 h-8 rounded flex items-center justify-center font-heading text-sm flex-shrink-0"
+                          style={{ background: `${comment.avatarColor}12`, color: comment.avatarColor, border: `1px solid ${comment.avatarColor}25` }}
+                        >
+                          {comment.initials}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-white font-inter font-medium text-sm">{comment.author}</span>
+                            <span className="text-fog text-[11px] font-inter">{timeAgo(comment.createdAt)}</span>
+                          </div>
+                          <p className="text-fog text-sm font-inter leading-relaxed">{comment.content}</p>
+                          <button className="flex items-center gap-1.5 mt-2 text-fog hover:text-white text-[11px] font-inter transition-colors cursor-pointer">
+                            <ThumbsUp size={11} />
+                            {comment.likes}
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    {comments.length === 0 && (
+                      <p className="text-fog text-sm font-inter text-center py-4">
+                        No comments yet. Be the first to join the discussion.
+                      </p>
+                    )}
+                  </div>
+                  <div className="mt-6 pt-5 border-t border-white/5">
+                    {user ? (
+                      <>
+                        <textarea
+                          placeholder="Join the discussion..."
+                          value={commentText}
+                          onChange={(e) => setCommentText(e.target.value)}
+                          className="w-full px-4 py-3 text-sm text-white placeholder-fog outline-none resize-none h-20 rounded-lg border border-white/12 focus:border-electric/30 transition-all font-inter"
+                          style={{ background: 'rgba(255,255,255,0.05)' }}
+                        />
+                        <div className="flex justify-end mt-2">
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            className="font-heading text-[13px]"
+                            onClick={handlePostComment}
+                            disabled={posting || !commentText.trim()}
+                          >
+                            <MessageSquare size={13} />
+                            {posting ? 'POSTING...' : 'POST COMMENT'}
+                          </Button>
+                        </div>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => signIn()}
+                        className="w-full py-3 text-sm font-inter text-fog hover:text-white transition-colors cursor-pointer border border-white/10 rounded-lg"
+                        style={{ background: 'rgba(255,255,255,0.03)' }}
+                      >
+                        Sign in to join the discussion
+                      </button>
+                    )}
+                  </div>
+                </>
+              )}
+
+              {activeTab === 'UPDATES' && (
+                <>
+                  {isCreator && (
+                    <div className="mb-6 p-4 rounded-lg border border-white/10" style={{ background: 'rgba(0,212,255,0.04)' }}>
+                      <p className="text-[10px] font-inter tracking-[0.2em] text-electric uppercase mb-3">POST UPDATE</p>
+                      <input
+                        placeholder="Update title..."
+                        value={updateTitle}
+                        onChange={(e) => setUpdateTitle(e.target.value)}
+                        className="w-full px-3 py-2 text-sm text-white placeholder-fog outline-none rounded border border-white/12 focus:border-electric/30 transition-all font-inter mb-2"
+                        style={{ background: 'rgba(255,255,255,0.05)' }}
+                      />
+                      <textarea
+                        placeholder="What's the latest? Share progress with your backers..."
+                        value={updateContent}
+                        onChange={(e) => setUpdateContent(e.target.value)}
+                        className="w-full px-3 py-2 text-sm text-white placeholder-fog outline-none resize-none h-20 rounded border border-white/12 focus:border-electric/30 transition-all font-inter mb-2"
+                        style={{ background: 'rgba(255,255,255,0.05)' }}
+                      />
+                      <div className="flex justify-end">
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          className="font-heading text-[13px]"
+                          onClick={handlePostUpdate}
+                          disabled={postingUpdate || !updateTitle.trim() || !updateContent.trim()}
+                        >
+                          {postingUpdate ? 'POSTING...' : 'POST UPDATE'}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  <div className="space-y-4">
+                    {updates.map((update) => (
+                      <div key={update.id} className="rounded-lg border border-white/8 p-4" style={{ background: '#111' }}>
+                        <div className="flex items-center gap-2 mb-2">
+                          <CheckCircle2 size={13} style={{ color: '#00D4FF' }} />
+                          <span className="text-fog text-[11px] font-inter">{timeAgo(update.createdAt)}</span>
+                        </div>
+                        <p className="text-white font-inter font-medium text-sm mb-1">{update.title}</p>
+                        <p className="text-fog text-sm font-inter leading-relaxed">{update.content}</p>
+                      </div>
+                    ))}
+                    {updates.length === 0 && (
+                      <p className="text-fog text-sm font-inter text-center py-6">
+                        No updates yet. {isCreator ? 'Post your first update above.' : 'Check back soon.'}
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
             </Panel>
           </div>
 

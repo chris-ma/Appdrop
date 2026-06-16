@@ -1,5 +1,5 @@
 import { getSupabase } from './supabase'
-import type { Project, Developer, UserProfile, Comment } from './types'
+import type { Project, Developer, UserProfile, Comment, Update } from './types'
 import { mockProjects, mockDevelopers, mockUser } from './mock-data'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,6 +27,7 @@ function rowToProject(row: Row, milestones: Row[], comments: Row[]): Project {
     features: (row.features as string[]) ?? [],
     createdAt: String(row.created_at),
     gradient: 'from-void to-slate',
+    creatorId: row.creator_id ? String(row.creator_id) : undefined,
     milestones: milestones.map((m) => ({
       id: String(m.id),
       title: String(m.title),
@@ -177,6 +178,15 @@ export async function getDevelopers(): Promise<Developer[]> {
   return (data as Row[]).map(rowToDeveloper)
 }
 
+export async function getDeveloperById(id: string): Promise<Developer | null> {
+  if (USE_MOCK) return mockDevelopers.find((d) => d.id === id) ?? null
+
+  const db = getSupabase()
+  const { data, error } = await db.from('developers').select('*').eq('id', id).single()
+  if (error || !data) return null
+  return rowToDeveloper(data as Row)
+}
+
 // ─── Profile ─────────────────────────────────────────────────────────────────
 
 export async function getCurrentUser(): Promise<UserProfile> {
@@ -307,6 +317,55 @@ export async function getRecentActivity(userId: string): Promise<Array<{
   ]
 
   return items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 10)
+}
+
+// ─── Project Updates ─────────────────────────────────────────────────────────
+
+export async function getProjectUpdates(ideaId: string): Promise<Update[]> {
+  if (USE_MOCK) return []
+
+  const db = getSupabase()
+  const { data } = await db
+    .from('project_updates')
+    .select('*')
+    .eq('idea_id', ideaId)
+    .order('created_at', { ascending: false })
+
+  return ((data ?? []) as Row[]).map((r) => ({
+    id: String(r.id),
+    ideaId: String(r.idea_id),
+    title: String(r.title),
+    content: String(r.content),
+    createdAt: String(r.created_at),
+  }))
+}
+
+export async function postProjectUpdate(
+  ideaId: string,
+  title: string,
+  content: string
+): Promise<Update | null> {
+  if (USE_MOCK) return null
+
+  const db = getSupabase()
+  const { data: { user } } = await db.auth.getUser()
+  if (!user) return null
+
+  const { data, error } = await db
+    .from('project_updates')
+    .insert({ idea_id: ideaId, user_id: user.id, title, content })
+    .select('*')
+    .single()
+
+  if (error || !data) return null
+  const r = data as Row
+  return {
+    id: String(r.id),
+    ideaId: String(r.idea_id),
+    title: String(r.title),
+    content: String(r.content),
+    createdAt: String(r.created_at),
+  }
 }
 
 // ─── Admin ───────────────────────────────────────────────────────────────────

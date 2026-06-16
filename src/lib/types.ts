@@ -69,6 +69,7 @@ export interface Project {
   createdAt: string
   tags: string[]
   gradient: string
+  creatorId?: string
 }
 
 export interface Badge {
@@ -100,3 +101,11 @@ export interface UserProfile {
 }
 
 export type SortTab = 'TRENDING' | 'NEW' | 'MOST FUNDED' | 'MOST WANTED'
+
+export interface Update {
+  id: string
+  ideaId: string
+  title: string
+  content: string
+  createdAt: string
+}

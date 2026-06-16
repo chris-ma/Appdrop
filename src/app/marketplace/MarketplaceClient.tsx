@@ -1,30 +1,57 @@
 'use client'
-import { useState, useMemo } from 'react'
+import { useMemo, useCallback, Suspense, useState, useEffect } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Search } from 'lucide-react'
-import { SORT_TABS, CATEGORIES, CATEGORY_CONFIG } from '@/lib/constants'
-import type { Category, SortTab, Project } from '@/lib/types'
+import { SORT_TABS, CATEGORIES, CATEGORY_CONFIG, STATUS_CONFIG } from '@/lib/constants'
+import type { Category, SortTab, Project, ProjectStatus } from '@/lib/types'
 import ProjectCard from '@/components/project/ProjectCard'
 import { fundingPercent } from '@/lib/utils'
+
+const STATUSES: ProjectStatus[] = ['VOTING', 'FUNDING', 'IN_DEV', 'BETA', 'LIVE']
 
 interface Props {
   initialProjects: Project[]
 }
 
-export default function MarketplaceClient({ initialProjects }: Props) {
-  const [search, setSearch] = useState('')
-  const [activeSort, setActiveSort] = useState<SortTab>('TRENDING')
-  const [activeCategory, setActiveCategory] = useState<Category | null>(null)
+function MarketplaceInner({ initialProjects }: Props) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const activeSort = (searchParams.get('sort') as SortTab) ?? 'TRENDING'
+  const activeCategory = searchParams.get('category') as Category | null
+  const activeStatus = searchParams.get('status') as ProjectStatus | null
+  const urlSearch = searchParams.get('q') ?? ''
+
+  // Local state for search input so typing feels instant
+  const [searchInput, setSearchInput] = useState(urlSearch)
+  useEffect(() => { setSearchInput(urlSearch) }, [urlSearch])
+
+  const update = useCallback(
+    (key: string, value: string | null) => {
+      const params = new URLSearchParams(searchParams.toString())
+      if (value) params.set(key, value)
+      else params.delete(key)
+      const qs = params.toString()
+      router.replace(`/marketplace${qs ? `?${qs}` : ''}`, { scroll: false })
+    },
+    [searchParams, router]
+  )
+
+  // Debounce search → URL sync
+  useEffect(() => {
+    const t = setTimeout(() => update('q', searchInput || null), 300)
+    return () => clearTimeout(t)
+  }, [searchInput]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const filtered = useMemo(() => {
     let results = [...initialProjects]
 
-    if (activeCategory) {
-      results = results.filter((p) => p.category === activeCategory)
-    }
+    if (activeCategory) results = results.filter((p) => p.category === activeCategory)
+    if (activeStatus) results = results.filter((p) => p.status === activeStatus)
 
-    if (search.trim()) {
-      const q = search.toLowerCase()
+    if (searchInput.trim()) {
+      const q = searchInput.toLowerCase()
       results = results.filter(
         (p) =>
           p.title.toLowerCase().includes(q) ||
@@ -51,23 +78,17 @@ export default function MarketplaceClient({ initialProjects }: Props) {
       default:
         return results
     }
-  }, [search, activeSort, activeCategory, initialProjects])
+  }, [searchInput, activeSort, activeCategory, activeStatus, initialProjects])
 
   return (
     <div className="min-h-screen pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-6">
 
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-10"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-4 h-px bg-electric" />
-            <span className="text-[10px] font-inter tracking-[0.25em] text-electric uppercase">
-              THE MARKETPLACE
-            </span>
+            <span className="text-[10px] font-inter tracking-[0.25em] text-electric uppercase">THE MARKETPLACE</span>
           </div>
           <h1 className="font-heading text-6xl md:text-7xl text-white uppercase leading-none mb-2">
             ALL THE <span className="electric-text">DROPS</span>
@@ -88,19 +109,19 @@ export default function MarketplaceClient({ initialProjects }: Props) {
           <input
             type="text"
             placeholder="Search drops, ideas, tags..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             className="w-full pl-11 pr-4 py-3.5 text-sm text-white placeholder-fog outline-none font-inter transition-all duration-200 rounded-lg border border-white/12 focus:border-electric/40"
             style={{ background: '#181818' }}
           />
         </motion.div>
 
         {/* Sort tabs */}
-        <div className="flex items-center gap-1 mb-5 overflow-x-auto scrollbar-none pb-1">
+        <div className="flex items-center gap-1 mb-4 overflow-x-auto scrollbar-none pb-1">
           {SORT_TABS.map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveSort(tab)}
+              onClick={() => update('sort', tab === 'TRENDING' ? null : tab)}
               className="flex-shrink-0 font-heading text-[14px] uppercase tracking-wide px-4 py-2 rounded transition-all duration-200 cursor-pointer"
               style={
                 activeSort === tab
@@ -113,13 +134,46 @@ export default function MarketplaceClient({ initialProjects }: Props) {
           ))}
         </div>
 
+        {/* Status filters */}
+        <div className="flex items-center gap-2 mb-4 overflow-x-auto scrollbar-none pb-1">
+          <button
+            onClick={() => update('status', null)}
+            className="flex-shrink-0 text-[10px] font-inter font-medium uppercase tracking-[0.2em] px-3 py-1.5 rounded transition-all duration-200 cursor-pointer"
+            style={
+              !activeStatus
+                ? { background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)' }
+                : { color: 'rgba(255,255,255,0.3)', border: '1px solid rgba(255,255,255,0.08)' }
+            }
+          >
+            ALL STATUS
+          </button>
+          {STATUSES.map((status) => {
+            const cfg = STATUS_CONFIG[status]
+            const isActive = activeStatus === status
+            return (
+              <button
+                key={status}
+                onClick={() => update('status', isActive ? null : status)}
+                className="flex-shrink-0 text-[10px] font-inter font-medium uppercase tracking-[0.2em] px-3 py-1.5 rounded transition-all duration-200 cursor-pointer"
+                style={
+                  isActive
+                    ? { background: cfg.bg, color: cfg.text, border: `1px solid ${cfg.border}` }
+                    : { color: 'rgba(255,255,255,0.3)', border: '1px solid rgba(255,255,255,0.08)' }
+                }
+              >
+                {cfg.label}
+              </button>
+            )
+          })}
+        </div>
+
         {/* Category filters */}
         <div className="flex items-center gap-2 mb-10 overflow-x-auto scrollbar-none pb-1">
           <button
-            onClick={() => setActiveCategory(null)}
+            onClick={() => update('category', null)}
             className="flex-shrink-0 text-[10px] font-inter font-medium uppercase tracking-[0.2em] px-3 py-1.5 rounded transition-all duration-200 cursor-pointer"
             style={
-              activeCategory === null
+              !activeCategory
                 ? { background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)' }
                 : { color: 'rgba(255,255,255,0.3)', border: '1px solid rgba(255,255,255,0.08)' }
             }
@@ -132,7 +186,7 @@ export default function MarketplaceClient({ initialProjects }: Props) {
             return (
               <button
                 key={cat}
-                onClick={() => setActiveCategory(isActive ? null : cat)}
+                onClick={() => update('category', isActive ? null : cat)}
                 className="flex-shrink-0 text-[10px] font-inter font-medium uppercase tracking-[0.2em] px-3 py-1.5 rounded transition-all duration-200 cursor-pointer"
                 style={
                   isActive
@@ -172,5 +226,13 @@ export default function MarketplaceClient({ initialProjects }: Props) {
         )}
       </div>
     </div>
+  )
+}
+
+export default function MarketplaceClient({ initialProjects }: Props) {
+  return (
+    <Suspense fallback={<div className="min-h-screen pt-24 pb-20" />}>
+      <MarketplaceInner initialProjects={initialProjects} />
+    </Suspense>
   )
 }

@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Star, Briefcase, MessageCircle } from 'lucide-react'
 import type { Developer } from '@/lib/types'
@@ -42,7 +43,9 @@ export default function DeveloperCard({ developer, index = 0 }: DeveloperCardPro
                   {developer.initials}
                 </div>
                 <div>
-                  <h3 className="font-heading text-2xl text-white leading-none">{developer.name}</h3>
+                  <Link href={`/developers/${developer.id}`} className="font-heading text-2xl text-white leading-none hover:text-electric transition-colors">
+                    {developer.name}
+                  </Link>
                   <p className="text-fog text-[11px] font-inter mt-0.5 leading-tight">{developer.tagline}</p>
                 </div>
               </div>

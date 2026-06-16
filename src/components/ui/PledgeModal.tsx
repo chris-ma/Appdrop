@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, DollarSign, Zap } from 'lucide-react'
 import Button from '@/components/ui/Button'
-import { pledgeToProject } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
 import { useAuth } from '@/lib/auth-context'
 
@@ -17,7 +16,7 @@ interface PledgeModalProps {
 
 const PRESETS = [25, 50, 100, 250]
 
-export default function PledgeModal({ projectId, projectTitle, isOpen, onClose, onSuccess }: PledgeModalProps) {
+export default function PledgeModal({ projectId, projectTitle, isOpen, onClose }: PledgeModalProps) {
   const [selected, setSelected] = useState(50)
   const [custom, setCustom] = useState('')
   const [loading, setLoading] = useState(false)
@@ -27,20 +26,25 @@ export default function PledgeModal({ projectId, projectTitle, isOpen, onClose, 
   const amount = custom ? parseInt(custom, 10) || 0 : selected
 
   const handleConfirm = async () => {
-    if (!user) {
-      await signIn()
-      return
-    }
+    if (!user) { await signIn(); return }
     if (amount <= 0) return
     setLoading(true)
-    const ok = await pledgeToProject(projectId, amount)
-    setLoading(false)
-    if (ok) {
-      toast.success(`Pledged $${amount} to ${projectTitle}!`)
-      onSuccess(amount)
-      onClose()
-    } else {
-      toast.error('Pledge failed. Please try again.')
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ideaId: projectId, ideaTitle: projectTitle, amount, userId: user.id }),
+      })
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        toast.error('Could not start checkout. Please try again.')
+        setLoading(false)
+      }
+    } catch {
+      toast.error('Could not start checkout. Please try again.')
+      setLoading(false)
     }
   }
 
@@ -114,13 +118,13 @@ export default function PledgeModal({ projectId, projectTitle, isOpen, onClose, 
                 onClick={handleConfirm}
                 disabled={loading || amount <= 0}
               >
-                {loading ? 'PROCESSING...' : !user ? 'SIGN IN TO BACK' : (
-                  <><Zap size={15} />CONFIRM ${amount || '—'}</>
+                {loading ? 'REDIRECTING...' : !user ? 'SIGN IN TO BACK' : (
+                  <><Zap size={15} />PAY ${amount || '—'} WITH STRIPE</>
                 )}
               </Button>
 
               <p className="text-fog text-[11px] font-inter text-center mt-3">
-                No charges until the funding goal is reached
+                Secure payment via Stripe · No hidden fees
               </p>
             </div>
           </motion.div>

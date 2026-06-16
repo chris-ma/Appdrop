@@ -134,7 +134,28 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <div className="pt-2 border-t border-white/12">
+            <div className="pt-2 border-t border-white/12 flex flex-col gap-3">
+              {user ? (
+                <button
+                  onClick={() => { signOut(); setMobileOpen(false) }}
+                  className="flex items-center gap-3 font-heading text-xl text-ash hover:text-white tracking-wider transition-colors cursor-pointer"
+                >
+                  <div
+                    className="w-7 h-7 rounded flex items-center justify-center font-heading text-sm"
+                    style={{ background: `${profile?.avatarColor ?? '#00D4FF'}15`, color: profile?.avatarColor ?? '#00D4FF', border: `1px solid ${profile?.avatarColor ?? '#00D4FF'}30` }}
+                  >
+                    {profile?.initials ?? (user.email?.charAt(0).toUpperCase() ?? 'U')}
+                  </div>
+                  SIGN OUT
+                </button>
+              ) : (
+                <button
+                  onClick={() => { signIn(); setMobileOpen(false) }}
+                  className="font-heading text-xl text-electric hover:text-white tracking-wider transition-colors cursor-pointer text-left"
+                >
+                  SIGN IN
+                </button>
+              )}
               <Link href="/submit" onClick={() => setMobileOpen(false)}>
                 <Button variant="primary" size="md" className="w-full font-heading">
                   SUBMIT DROP

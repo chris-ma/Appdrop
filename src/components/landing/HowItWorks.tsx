@@ -7,33 +7,33 @@ const steps = [
   {
     number: '01',
     icon: Lightbulb,
-    title: 'SUBMIT',
-    sub: 'YOUR DROP',
-    description: 'Describe the app you wish existed. What problem does it solve, who needs it, what would it do? Takes about 5 minutes.',
+    title: 'POST',
+    sub: 'YOUR IDEA',
+    description: 'Describe the problem. Who has it? Why does it matter? Takes 5 minutes and no technical knowledge.',
     accent: '#00D4FF',
   },
   {
     number: '02',
     icon: Vote,
-    title: 'COMMUNITY',
-    sub: 'VOTES',
-    description: 'Your idea enters the open marketplace. People upvote what resonates, ignore what doesn\'t. The best concepts earn a shot at funding.',
+    title: 'COLLECT',
+    sub: 'REAL SIGNALS',
+    description: 'Your idea collects weighted demand signals — upvotes, comments, and waitlist joins from real potential users. Not vanity metrics.',
     accent: '#FFFFFF',
   },
   {
     number: '03',
     icon: DollarSign,
-    title: 'FUND',
-    sub: 'THE BUILD',
-    description: 'Back ideas with real money when they hit the funding stage. Everything sits in escrow until milestones are delivered and confirmed.',
+    title: 'SEE YOUR',
+    sub: 'VERDICT',
+    description: 'Your Validation Score tells you if the idea has legs. Strong signal = green light. Weak signal = pivot before you\'ve spent a cent.',
     accent: '#00FF88',
   },
   {
     number: '04',
     icon: Rocket,
-    title: 'DEV',
-    sub: 'SHIPS IT',
-    description: 'A developer from our network claims the project, builds it milestone by milestone, and gets paid on delivery. You get early access on day one.',
+    title: 'BUILD',
+    sub: 'WITH CONVICTION',
+    description: 'Validated ideas unlock funding. Backers commit real money. A developer ships it milestone by milestone. You get early access.',
     accent: '#BF5AF2',
   },
 ]
@@ -61,7 +61,7 @@ export default function HowItWorks() {
             </span>
           </div>
           <h2 className="font-heading text-6xl md:text-7xl text-white uppercase leading-none">
-            HOW THE <span className="text-neon">DROP</span> WORKS
+            HOW <span className="text-neon">VALIDATION</span> WORKS
           </h2>
         </motion.div>
 

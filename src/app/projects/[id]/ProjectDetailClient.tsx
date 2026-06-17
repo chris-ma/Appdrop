@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 import type { Project, Comment, Update } from '@/lib/types'
 import { CATEGORY_CONFIG } from '@/lib/constants'
-import { formatCount, timeAgo } from '@/lib/utils'
+import { formatCount, timeAgo, validationScore, validationTier } from '@/lib/utils'
 import CategoryBadge from '@/components/project/CategoryBadge'
 import StatusPill from '@/components/project/StatusPill'
 import FundingBar from '@/components/project/FundingBar'
@@ -17,7 +17,7 @@ import VoteButton from '@/components/project/VoteButton'
 import Button from '@/components/ui/Button'
 import MagneticButton from '@/components/ui/MagneticButton'
 import PledgeModal from '@/components/ui/PledgeModal'
-import { postComment, getProjectUpdates, postProjectUpdate } from '@/lib/api'
+import { postComment, getProjectUpdates, postProjectUpdate, joinWaitlist } from '@/lib/api'
 import { useAuth } from '@/lib/auth-context'
 import { useToast } from '@/components/ui/Toast'
 import { getSupabase } from '@/lib/supabase'
@@ -86,6 +86,10 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
   const [updateTitle, setUpdateTitle] = useState('')
   const [updateContent, setUpdateContent] = useState('')
   const [postingUpdate, setPostingUpdate] = useState(false)
+  const [waitlistCount, setWaitlistCount] = useState(project.waitlistCount ?? 0)
+  const [waitlistEmail, setWaitlistEmail] = useState('')
+  const [waitlistSubmitting, setWaitlistSubmitting] = useState(false)
+  const [waitlistResult, setWaitlistResult] = useState<'joined' | 'already' | 'error' | null>(null)
   const { user, signIn } = useAuth()
   const toast = useToast()
   const commentIds = useRef(new Set(project.comments.map((c) => c.id)))
@@ -201,6 +205,19 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
       toast.success('Update posted!')
     } else {
       toast.error('Failed to post update.')
+    }
+  }
+
+  const handleJoinWaitlist = async () => {
+    const email = waitlistEmail.trim()
+    if (!email || !email.includes('@')) return
+    setWaitlistSubmitting(true)
+    const result = await joinWaitlist(project.id, email)
+    setWaitlistSubmitting(false)
+    setWaitlistResult(result)
+    if (result === 'joined') {
+      setWaitlistCount((v) => v + 1)
+      setWaitlistEmail('')
     }
   }
 
@@ -581,40 +598,139 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
 
           {/* Right sidebar */}
           <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-            <Panel className="text-center">
-              <div className="flex items-center justify-center gap-4 mb-5">
-                <VoteButton
-                  upvotes={upvotes}
-                  downvotes={project.downvotes}
-                  ideaId={project.id}
-                  size="lg"
-                />
-              </div>
 
-              {showFunding && (
-                <FundingBar
-                  current={fundingCurrent}
-                  goal={project.fundingGoal}
-                  backerCount={backerCount}
-                  className="mb-5"
-                />
-              )}
+            {project.status === 'VOTING' ? (
+              <>
+                {/* Validation Score panel */}
+                {(() => {
+                  const score = validationScore({ ...project, upvotes, comments, waitlistCount })
+                  const tier = validationTier(score)
+                  return (
+                    <Panel>
+                      <div className="h-px w-full mb-5" style={{ background: `linear-gradient(90deg, ${tier.color}60, transparent)` }} />
+                      <p className="text-[10px] font-inter tracking-[0.25em] uppercase text-fog mb-2">VALIDATION SCORE</p>
+                      <div className="flex items-end gap-2 mb-1">
+                        <span className="font-heading text-5xl text-white leading-none">{score.toLocaleString()}</span>
+                        <span className="font-heading text-lg pb-1" style={{ color: tier.color }}>pts</span>
+                      </div>
+                      <span className="text-[10px] font-inter tracking-widest uppercase" style={{ color: tier.color }}>
+                        ● {tier.label}
+                      </span>
 
-              <MagneticButton>
-                <Button
-                  variant="primary"
-                  size="lg"
-                  className="w-full font-heading text-[15px] mb-3"
-                  onClick={handleCta}
-                >
-                  {ctaLabel}
-                </Button>
-              </MagneticButton>
-              <p className="text-fog text-[11px] font-inter">
-                {backerCount.toLocaleString()} people already
-                {project.status === 'LIVE' ? ' using this' : ' backing this'}
-              </p>
-            </Panel>
+                      <div className="mt-5 space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-[11px] font-inter text-fog uppercase tracking-wider">INTEREST</span>
+                          <span className="text-white font-inter text-sm font-medium">
+                            {upvotes} votes · {comments.length} comments
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-[11px] font-inter text-fog uppercase tracking-wider">INTENT</span>
+                          <span className="text-white font-inter text-sm font-medium">
+                            {waitlistCount} waitlist
+                          </span>
+                        </div>
+                      </div>
+                    </Panel>
+                  )
+                })()}
+
+                {/* Waitlist CTA */}
+                <Panel>
+                  <p className="font-heading text-xl text-white mb-1">JOIN THE WAITLIST</p>
+                  <p className="text-fog text-[12px] font-inter mb-4">
+                    Signal real intent. We&apos;ll notify you when this launches.
+                  </p>
+
+                  {waitlistResult === 'joined' ? (
+                    <div className="rounded-lg px-4 py-3 text-[12px] font-inter text-center" style={{ background: 'rgba(0,255,136,0.08)', border: '1px solid rgba(0,255,136,0.2)', color: '#00FF88' }}>
+                      You&apos;re on the list. We&apos;ll notify you when this launches.
+                    </div>
+                  ) : waitlistResult === 'already' ? (
+                    <div className="rounded-lg px-4 py-3 text-[12px] font-inter text-center" style={{ background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.2)', color: '#00D4FF' }}>
+                      You&apos;re already on this waitlist.
+                    </div>
+                  ) : (
+                    <>
+                      <input
+                        type="email"
+                        placeholder="your@email.com"
+                        value={waitlistEmail}
+                        onChange={(e) => { setWaitlistEmail(e.target.value); setWaitlistResult(null) }}
+                        onKeyDown={(e) => e.key === 'Enter' && handleJoinWaitlist()}
+                        className="w-full px-3 py-2.5 text-sm text-white placeholder-fog outline-none rounded border border-white/12 focus:border-electric/40 transition-all font-inter mb-3"
+                        style={{ background: 'rgba(255,255,255,0.05)' }}
+                      />
+                      <Button
+                        variant="primary"
+                        size="md"
+                        className="w-full font-heading text-[13px]"
+                        onClick={handleJoinWaitlist}
+                        disabled={waitlistSubmitting || !waitlistEmail.trim()}
+                      >
+                        {waitlistSubmitting ? 'JOINING...' : 'JOIN THE WAITLIST'}
+                      </Button>
+                      {waitlistResult === 'error' && (
+                        <p className="text-[11px] font-inter text-center mt-2" style={{ color: '#FF6B6B' }}>
+                          Something went wrong. Please try again.
+                        </p>
+                      )}
+                    </>
+                  )}
+                </Panel>
+
+                {/* Vote as secondary signal */}
+                <Panel>
+                  <p className="text-[10px] font-inter tracking-[0.2em] uppercase text-fog mb-4">ADD YOUR SIGNAL</p>
+                  <div className="flex items-center justify-center">
+                    <VoteButton
+                      upvotes={upvotes}
+                      downvotes={project.downvotes}
+                      ideaId={project.id}
+                      size="lg"
+                    />
+                  </div>
+                </Panel>
+              </>
+            ) : (
+              <>
+                {/* Non-VOTING sidebar: original design */}
+                <Panel className="text-center">
+                  <div className="flex items-center justify-center gap-4 mb-5">
+                    <VoteButton
+                      upvotes={upvotes}
+                      downvotes={project.downvotes}
+                      ideaId={project.id}
+                      size="lg"
+                    />
+                  </div>
+
+                  {showFunding && (
+                    <FundingBar
+                      current={fundingCurrent}
+                      goal={project.fundingGoal}
+                      backerCount={backerCount}
+                      className="mb-5"
+                    />
+                  )}
+
+                  <MagneticButton>
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      className="w-full font-heading text-[15px] mb-3"
+                      onClick={handleCta}
+                    >
+                      {ctaLabel}
+                    </Button>
+                  </MagneticButton>
+                  <p className="text-fog text-[11px] font-inter">
+                    {backerCount.toLocaleString()} people already
+                    {project.status === 'LIVE' ? ' using this' : ' backing this'}
+                  </p>
+                </Panel>
+              </>
+            )}
 
             <Panel>
               <p className="text-[10px] font-inter tracking-[0.25em] text-fog uppercase mb-3">TAGS</p>
@@ -670,7 +786,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { label: 'UPVOTES', value: formatCount(upvotes) },
-                  { label: 'BACKERS', value: formatCount(backerCount) },
+                  { label: project.status === 'VOTING' ? 'WAITLIST' : 'BACKERS', value: project.status === 'VOTING' ? formatCount(waitlistCount) : formatCount(backerCount) },
                   { label: 'COMMENTS', value: String(comments.length) },
                   { label: 'SUBMITTED', value: timeAgo(project.createdAt) },
                 ].map((stat) => (

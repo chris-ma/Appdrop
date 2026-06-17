@@ -53,7 +53,7 @@ export default function HeroSection() {
           >
             <div className="w-1 h-4 bg-electric" />
             <span className="text-[11px] font-inter font-medium tracking-[0.25em] text-silver uppercase">
-              COMMUNITY-BUILT SOFTWARE
+              VALIDATE BEFORE YOU BUILD
             </span>
           </motion.div>
 
@@ -100,8 +100,8 @@ export default function HeroSection() {
             animate="visible"
             className="text-silver text-base font-inter max-w-md leading-relaxed mb-10"
           >
-            Got an app idea but can't build it? Post it here.
-            If the community backs it, a developer ships it for real.
+            Post your app idea. Collect real demand signals from potential users.
+            Know if it&apos;s worth building before you write a single line of code.
           </motion.p>
 
           {/* CTAs */}
@@ -113,19 +113,19 @@ export default function HeroSection() {
             className="flex flex-col sm:flex-row items-start gap-4"
           >
             <MagneticButton>
-              <Link href="/marketplace">
+              <Link href="/submit">
                 <Button variant="primary" size="lg" className="font-heading text-[16px]">
-                  BROWSE DROPS
-                  <ArrowRight size={18} />
+                  VALIDATE AN IDEA
+                  <ArrowUpRight size={18} />
                 </Button>
               </Link>
             </MagneticButton>
 
             <MagneticButton>
-              <Link href="/submit">
+              <Link href="/marketplace">
                 <Button variant="electric" size="lg" className="font-heading text-[16px]">
-                  SUBMIT YOUR IDEA
-                  <ArrowUpRight size={18} />
+                  SEE WHAT&apos;S TRENDING
+                  <ArrowRight size={18} />
                 </Button>
               </Link>
             </MagneticButton>

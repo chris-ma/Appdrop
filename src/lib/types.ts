@@ -79,6 +79,7 @@ export interface Project {
   videoUrl?: string
   images?: string[]
   pitchDeckUrl?: string
+  waitlistCount?: number
 }
 
 export interface Badge {

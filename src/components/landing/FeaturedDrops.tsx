@@ -28,7 +28,7 @@ export default function FeaturedDrops({ projects }: Props) {
             <div className="flex items-center gap-3 mb-3">
               <div className="w-4 h-px bg-electric" />
               <span className="text-[10px] font-inter tracking-[0.25em] text-electric uppercase">
-                TRENDING NOW
+                TRENDING VALIDATIONS
               </span>
             </div>
             <h2 className="font-heading text-6xl md:text-7xl text-white uppercase leading-none">

@@ -42,29 +42,29 @@ export default function CtaBanner() {
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="w-8 h-px bg-electric" />
             <span className="text-[10px] font-inter tracking-[0.3em] text-electric uppercase">
-              READY TO DROP?
+              STOP GUESSING
             </span>
             <div className="w-8 h-px bg-electric" />
           </div>
 
           <h2 className="font-heading text-6xl md:text-8xl text-white uppercase leading-none mb-4">
-            YOUR IDEA
+            VALIDATE YOUR
             <br />
-            <span className="electric-text">COULD BE</span>
+            <span className="electric-text">IDEA BEFORE</span>
             <br />
-            NEXT
+            YOU BUILD IT
           </h2>
 
           <p className="text-fog text-base font-inter max-w-lg mx-auto mb-10">
-            28,000+ community members are waiting to vote on the next big drop.
-            It costs nothing but 5 minutes.
+            Post your concept in 5 minutes. Real users tell you if it&apos;s worth building.
+            No code, no pitch deck, no risk.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <MagneticButton>
               <Link href="/submit">
                 <Button variant="primary" size="lg" className="font-heading text-[16px]">
-                  SUBMIT YOUR DROP
+                  START VALIDATING
                   <ArrowRight size={18} />
                 </Button>
               </Link>
@@ -72,7 +72,7 @@ export default function CtaBanner() {
             <MagneticButton>
               <Link href="/marketplace">
                 <Button variant="electric" size="lg" className="font-heading text-[16px]">
-                  BROWSE THE DROPS
+                  BROWSE DROPS
                 </Button>
               </Link>
             </MagneticButton>

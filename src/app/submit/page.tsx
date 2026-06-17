@@ -137,7 +137,7 @@ export default function SubmitPage() {
             <div className="w-6 h-px bg-cyber" />
           </div>
           <h1 className="font-heading text-6xl md:text-7xl uppercase text-white leading-none">
-            SUBMIT YOUR <span className="text-cyber">IDEA</span>
+            VALIDATE YOUR <span className="text-cyber">IDEA</span>
           </h1>
         </div>
 
@@ -189,7 +189,7 @@ export default function SubmitPage() {
                   <div className="space-y-5">
                     <div className="mb-5">
                       <h2 className="font-heading text-3xl text-white uppercase mb-1">Basic Info</h2>
-                      <p className="text-fog text-sm font-inter">What's your app idea?</p>
+                      <p className="text-fog text-sm font-inter">What problem are you testing?</p>
                     </div>
 
                     <div>

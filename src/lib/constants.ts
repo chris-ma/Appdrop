@@ -67,7 +67,7 @@ export const STATUS_CONFIG: Record<
   { label: string; bg: string; border: string; text: string }
 > = {
   VOTING: {
-    label: 'VOTING',
+    label: 'VALIDATING',
     bg: 'rgba(0,212,255,0.08)',
     border: 'rgba(0,212,255,0.35)',
     text: '#00D4FF',

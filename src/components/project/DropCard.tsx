@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
-import { formatCurrency, fundingPercent } from '@/lib/utils'
+import { formatCurrency, fundingPercent, validationScore, validationTier } from '@/lib/utils'
 import type { Project } from '@/lib/types'
 import { CATEGORY_CONFIG, STATUS_CONFIG } from '@/lib/constants'
 import VoteButton from './VoteButton'
@@ -18,6 +18,7 @@ export default function DropCard({ project, index = 0 }: DropCardProps) {
   const catConfig = CATEGORY_CONFIG[project.category]
   const statusConfig = STATUS_CONFIG[project.status]
   const showFunding = project.status !== 'VOTING' && project.fundingGoal > 0
+  const tier = validationTier(validationScore(project))
 
   return (
     <motion.div
@@ -67,9 +68,17 @@ export default function DropCard({ project, index = 0 }: DropCardProps) {
               </div>
 
               {/* Title */}
-              <h3 className="font-heading text-[38px] text-white leading-none uppercase mb-2">
+              <h3 className="font-heading text-[38px] text-white leading-none uppercase mb-1">
                 {project.title}
               </h3>
+              {project.status === 'VOTING' && (
+                <span
+                  className="text-[9px] font-inter tracking-widest uppercase block mb-2"
+                  style={{ color: tier.color }}
+                >
+                  ● {tier.label}
+                </span>
+              )}
               <p className="text-fog text-sm font-inter leading-relaxed line-clamp-2 mb-6">
                 {project.tagline}
               </p>

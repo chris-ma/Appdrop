@@ -107,7 +107,7 @@ export default function Navbar() {
               <MagneticButton>
                 <Link href="/submit">
                   <Button variant="primary" size="sm" className="font-heading text-[12px]">
-                    SUBMIT DROP
+                    VALIDATE AN IDEA
                     <ArrowUpRight size={13} />
                   </Button>
                 </Link>
@@ -169,7 +169,7 @@ export default function Navbar() {
               )}
               <Link href="/submit" onClick={() => setMobileOpen(false)}>
                 <Button variant="primary" size="md" className="w-full font-heading">
-                  SUBMIT DROP
+                  VALIDATE AN IDEA
                 </Button>
               </Link>
             </div>

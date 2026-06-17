@@ -31,6 +31,7 @@ function rowToProject(row: Row, milestones: Row[], comments: Row[]): Project {
     videoUrl: row.video_url ? String(row.video_url) : undefined,
     images: Array.isArray(row.images) ? (row.images as string[]) : [],
     pitchDeckUrl: row.pitch_deck_url ? String(row.pitch_deck_url) : undefined,
+    waitlistCount: Number(row.waitlist_count ?? 0),
     milestones: milestones.map((m) => ({
       id: String(m.id),
       title: String(m.title),
@@ -426,6 +427,21 @@ export async function requestBid(input: {
     idea_id: input.ideaId ?? null,
   })
   return !error
+}
+
+// ─── Waitlist ─────────────────────────────────────────────────────────────────
+
+export async function joinWaitlist(ideaId: string, email: string): Promise<'joined' | 'already' | 'error'> {
+  if (USE_MOCK) return 'joined'
+
+  const db = getSupabase()
+  const { error } = await db.from('waitlist_signups').insert({ idea_id: ideaId, email })
+  if (!error) {
+    await db.rpc('increment_waitlist', { idea_id: ideaId })
+    return 'joined'
+  }
+  if (error.code === '23505') return 'already'
+  return 'error'
 }
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────

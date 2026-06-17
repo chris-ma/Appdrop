@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import type { Project } from './types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -48,4 +49,20 @@ export function formatLargeNumber(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
   if (n >= 1000) return `${(n / 1000).toFixed(0)}K`
   return String(n)
+}
+
+export function validationScore(project: Project): number {
+  return (
+    project.upvotes * 5 +
+    project.comments.length * 10 +
+    (project.waitlistCount ?? 0) * 25 +
+    project.backerCount * 100
+  )
+}
+
+export function validationTier(score: number): { label: string; color: string } {
+  if (score >= 2000) return { label: 'PROVEN DEMAND', color: '#00FF88' }
+  if (score >= 500) return { label: 'STRONG SIGNAL', color: '#00D4FF' }
+  if (score >= 100) return { label: 'BUILDING', color: '#BF5AF2' }
+  return { label: 'EARLY SIGNAL', color: '#707070' }
 }

@@ -99,7 +99,7 @@ export default function SubmitPage() {
             VALIDATION LIVE!
           </h2>
           <p className="text-fog font-inter mb-8">
-            Your idea is now live on AppDrop. Real users will start sending demand signals.
+            Your idea is now live on SignalSeed. Real users will start sending demand signals.
           </p>
           <p className="text-fog/60 font-inter text-sm mb-6">Redirecting to your validation in a moment...</p>
           <div className="flex gap-3 justify-center">

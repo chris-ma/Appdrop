@@ -1,5 +1,5 @@
 -- ============================================================
--- AppDrop — Initial Schema
+-- SignalSeed — Initial Schema
 -- ============================================================
 
 create extension if not exists "pgcrypto";

@@ -20,8 +20,8 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `Back: ${ideaTitle ?? 'AppDrop Project'}`,
-              description: 'Your pledge helps fund this idea on AppDrop',
+              name: `Back: ${ideaTitle ?? 'SignalSeed Project'}`,
+              description: 'Your pledge helps fund this idea on SignalSeed',
             },
             unit_amount: Math.round(amount * 100),
           },

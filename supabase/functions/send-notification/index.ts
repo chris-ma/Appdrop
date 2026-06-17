@@ -5,7 +5,7 @@ const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 const APP_URL = 'https://appdrop-eight.vercel.app'
-const FROM = 'AppDrop <onboarding@resend.dev>'
+const FROM = 'SignalSeed <onboarding@resend.dev>'
 
 interface WebhookPayload {
   type: 'INSERT' | 'UPDATE' | 'DELETE'
@@ -132,34 +132,34 @@ async function handleProjectUpdate(db: ReturnType<typeof createClient>, r: Recor
 
 function projectUpdateHtml(ideaTitle: string, updateTitle: string, content: string, ideaId: string) {
   return `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;background:#0a0a0a;color:#fff;padding:32px;border-radius:12px;border:1px solid #222">
-  <p style="color:#BF5AF2;font-size:11px;font-weight:bold;letter-spacing:0.15em;margin:0 0 20px">APPDROP UPDATE</p>
+  <p style="color:#BF5AF2;font-size:11px;font-weight:bold;letter-spacing:0.15em;margin:0 0 20px">SIGNALSEED UPDATE</p>
   <h1 style="font-size:22px;margin:0 0 4px">New update on <span style="color:#BF5AF2">${ideaTitle}</span></h1>
   <h2 style="font-size:16px;color:#ccc;margin:0 0 16px;font-weight:normal">${updateTitle}</h2>
   <div style="background:#181818;border-left:3px solid #BF5AF2;border-radius:6px;padding:16px;margin-bottom:24px">
     <p style="margin:0;color:#ccc;font-size:14px;line-height:1.6">${content}</p>
   </div>
   <a href="${APP_URL}/projects/${ideaId}" style="display:inline-block;background:#BF5AF2;color:#fff;font-weight:bold;text-decoration:none;padding:12px 24px;border-radius:6px;font-size:13px">VIEW PROJECT →</a>
-  <p style="margin:24px 0 0;color:#444;font-size:12px">AppDrop · You received this because you backed this project</p>
+  <p style="margin:24px 0 0;color:#444;font-size:12px">SignalSeed · You received this because you backed this project</p>
 </div>`
 }
 
 function commentHtml(title: string, author: string, content: string, ideaId: string) {
   return `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;background:#0a0a0a;color:#fff;padding:32px;border-radius:12px;border:1px solid #222">
-  <p style="color:#00D4FF;font-size:11px;font-weight:bold;letter-spacing:0.15em;margin:0 0 20px">APPDROP NOTIFICATION</p>
+  <p style="color:#00D4FF;font-size:11px;font-weight:bold;letter-spacing:0.15em;margin:0 0 20px">SIGNALSEED NOTIFICATION</p>
   <h1 style="font-size:22px;margin:0 0 12px">New comment on <span style="color:#00D4FF">${title}</span></h1>
   <p style="color:#888;margin:0 0 16px"><strong style="color:#ccc">${author}</strong> said:</p>
   <div style="background:#181818;border-left:3px solid #00D4FF;border-radius:6px;padding:16px;margin-bottom:24px">
     <p style="margin:0;color:#ccc;font-size:15px;line-height:1.6">"${content}"</p>
   </div>
-  <a href="${APP_URL}/projects/${ideaId}" style="display:inline-block;background:#00D4FF;color:#000;font-weight:bold;text-decoration:none;padding:12px 24px;border-radius:6px;font-size:13px">VIEW YOUR DROP →</a>
-  <p style="margin:24px 0 0;color:#444;font-size:12px">AppDrop · You received this because you submitted this idea</p>
+  <a href="${APP_URL}/projects/${ideaId}" style="display:inline-block;background:#00D4FF;color:#000;font-weight:bold;text-decoration:none;padding:12px 24px;border-radius:6px;font-size:13px">VIEW YOUR IDEA →</a>
+  <p style="margin:24px 0 0;color:#444;font-size:12px">SignalSeed · You received this because you submitted this idea</p>
 </div>`
 }
 
 function newBackerHtml(title: string, amount: number, newTotal: number, goal: number, ideaId: string) {
   const pct = Math.min(100, Math.round((newTotal / goal) * 100))
   return `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;background:#0a0a0a;color:#fff;padding:32px;border-radius:12px;border:1px solid #222">
-  <p style="color:#00D4FF;font-size:11px;font-weight:bold;letter-spacing:0.15em;margin:0 0 20px">APPDROP NOTIFICATION</p>
+  <p style="color:#00D4FF;font-size:11px;font-weight:bold;letter-spacing:0.15em;margin:0 0 20px">SIGNALSEED NOTIFICATION</p>
   <h1 style="font-size:22px;margin:0 0 12px">New backer on <span style="color:#00D4FF">${title}</span></h1>
   <p style="color:#888;margin:0 0 20px">Someone pledged <strong style="color:#fff">$${amount.toLocaleString()}</strong> to your drop.</p>
   <div style="background:#181818;border:1px solid #333;border-radius:6px;padding:16px;margin-bottom:24px">
@@ -172,21 +172,21 @@ function newBackerHtml(title: string, amount: number, newTotal: number, goal: nu
     </div>
     <p style="margin:8px 0 0;color:#00D4FF;font-size:12px;font-weight:bold">${pct}% funded</p>
   </div>
-  <a href="${APP_URL}/projects/${ideaId}" style="display:inline-block;background:#00D4FF;color:#000;font-weight:bold;text-decoration:none;padding:12px 24px;border-radius:6px;font-size:13px">VIEW YOUR DROP →</a>
-  <p style="margin:24px 0 0;color:#444;font-size:12px">AppDrop · You received this because you submitted this idea</p>
+  <a href="${APP_URL}/projects/${ideaId}" style="display:inline-block;background:#00D4FF;color:#000;font-weight:bold;text-decoration:none;padding:12px 24px;border-radius:6px;font-size:13px">VIEW YOUR IDEA →</a>
+  <p style="margin:24px 0 0;color:#444;font-size:12px">SignalSeed · You received this because you submitted this idea</p>
 </div>`
 }
 
 function fundingGoalHtml(title: string, goal: number, ideaId: string) {
   return `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;background:#0a0a0a;color:#fff;padding:32px;border-radius:12px;border:1px solid #222">
-  <p style="color:#00FF88;font-size:11px;font-weight:bold;letter-spacing:0.15em;margin:0 0 20px">APPDROP NOTIFICATION</p>
+  <p style="color:#00FF88;font-size:11px;font-weight:bold;letter-spacing:0.15em;margin:0 0 20px">SIGNALSEED NOTIFICATION</p>
   <h1 style="font-size:28px;margin:0 0 8px;color:#00FF88">FULLY FUNDED! 🚀</h1>
   <p style="color:#888;margin:0 0 20px"><strong style="color:#fff">${title}</strong> just hit its goal of <strong style="color:#00FF88">$${goal.toLocaleString()}</strong>!</p>
   <div style="background:#0a1a0a;border:1px solid rgba(0,255,136,0.2);border-radius:6px;padding:16px;margin-bottom:24px">
     <p style="margin:0;color:#00FF88;font-weight:bold;font-size:14px">What's next?</p>
     <p style="margin:8px 0 0;color:#888;font-size:14px;line-height:1.5">Head to your admin panel and move the status to IN_DEV when you're ready to start building.</p>
   </div>
-  <a href="${APP_URL}/projects/${ideaId}" style="display:inline-block;background:#00FF88;color:#000;font-weight:bold;text-decoration:none;padding:12px 24px;border-radius:6px;font-size:13px">VIEW YOUR DROP →</a>
-  <p style="margin:24px 0 0;color:#444;font-size:12px">AppDrop · You received this because you submitted this idea</p>
+  <a href="${APP_URL}/projects/${ideaId}" style="display:inline-block;background:#00FF88;color:#000;font-weight:bold;text-decoration:none;padding:12px 24px;border-radius:6px;font-size:13px">VIEW YOUR IDEA →</a>
+  <p style="margin:24px 0 0;color:#444;font-size:12px">SignalSeed · You received this because you submitted this idea</p>
 </div>`
 }

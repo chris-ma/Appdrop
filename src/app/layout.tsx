@@ -19,12 +19,12 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'AppDrop — Demand-Driven App Culture',
+  title: 'SignalSeed — Validate Before You Build',
   description:
-    'The platform where communities decide which apps get built. Submit. Vote. Fund. Drop.',
+    'Post your idea. Collect real demand signals. Know if it\'s worth building before you write a single line of code.',
   openGraph: {
-    title: 'AppDrop',
-    description: 'The next generation app creation marketplace.',
+    title: 'SignalSeed',
+    description: 'Post your idea. Collect real demand signals. Know if it\'s worth building before you write a single line of code.',
     type: 'website',
   },
 }

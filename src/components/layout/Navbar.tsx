@@ -43,9 +43,9 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-1 group">
               <span className="font-heading text-2xl tracking-wide text-white leading-none">
-                APP
-                <span className="text-electric">▼</span>
-                DROP
+                SIGNAL
+                <span className="text-electric">▲</span>
+                SEED
               </span>
             </Link>
 

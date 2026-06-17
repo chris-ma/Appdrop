@@ -1,5 +1,5 @@
 -- ============================================================
--- AppDrop — Seed Data
+-- SignalSeed — Seed Data
 -- Reflects validation platform positioning.
 -- VOTING projects use founder-voice validation copy.
 -- FUNDING/IN_DEV/LIVE projects reference their validation signal.
@@ -10,38 +10,38 @@ insert into public.developers (id, name, tagline, bio, skills, hourly_rate, rati
   (
     'd1000000-0000-0000-0000-000000000001',
     'Alex Chen',
-    'Full-stack engineer — ex-Stripe, 12 AppDrop projects shipped',
-    'Ex-Stripe engineer. I specialise in consumer products with real-time requirements. I look for validated AppDrop ideas with strong waitlist numbers before taking a project.',
+    'Full-stack engineer — ex-Stripe, 12 SignalSeed projects shipped',
+    'Ex-Stripe engineer. I specialise in consumer products with real-time requirements. I look for validated SignalSeed ideas with strong waitlist numbers before taking a project.',
     array['TypeScript', 'React', 'Next.js', 'PostgreSQL', 'AWS'],
     180, 4.9, 87, 23, true, '#7C3AED', 'AC',
     'https://github.com', 'https://linkedin.com',
-    '[{"title":"PaySync","description":"Real-time payment reconciliation SaaS — $2M ARR. Validated on AppDrop with 3,400 upvotes before first line of code was written.","image_url":"https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&q=80","tech_stack":["Next.js","Stripe","PostgreSQL"],"role":"Lead Engineer"},{"title":"FlowBoard","description":"Kanban for solo devs — 50K MAU. Started as a validated AppDrop idea.","image_url":"https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&q=80","tech_stack":["React","Node.js","Redis"],"role":"Solo Developer"}]'
+    '[{"title":"PaySync","description":"Real-time payment reconciliation SaaS — $2M ARR. Validated on SignalSeed with 3,400 upvotes before first line of code was written.","image_url":"https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&q=80","tech_stack":["Next.js","Stripe","PostgreSQL"],"role":"Lead Engineer"},{"title":"FlowBoard","description":"Kanban for solo devs — 50K MAU. Started as a validated SignalSeed idea.","image_url":"https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&q=80","tech_stack":["React","Node.js","Redis"],"role":"Solo Developer"}]'
   ),
   (
     'd1000000-0000-0000-0000-000000000002',
     'Sarah Kim',
     'ML engineer — I only build things the market wants',
-    'Former Google Brain researcher. I only claim projects that have cleared STRONG SIGNAL or better on AppDrop — validation data tells me more than any brief.',
+    'Former Google Brain researcher. I only claim projects that have cleared STRONG SIGNAL or better on SignalSeed — validation data tells me more than any brief.',
     array['Python', 'PyTorch', 'FastAPI', 'LangChain', 'Docker'],
     220, 4.8, 64, 18, true, '#06B6D4', 'SK',
     'https://github.com', 'https://linkedin.com',
-    '[{"title":"DocuMind","description":"AI document analyzer, 1M docs/day. Claimed after the AppDrop idea hit 2,800 upvotes and 400+ waitlist.","image_url":"https://images.unsplash.com/photo-1568667256549-094345857637?w=800&q=80","tech_stack":["Python","PyTorch","FastAPI"],"role":"ML Engineer"},{"title":"PriceAI","description":"Dynamic pricing engine for e-commerce. Validated demand before a single API endpoint was written.","image_url":"https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80","tech_stack":["Python","LangChain","Docker"],"role":"Lead ML Engineer"}]'
+    '[{"title":"DocuMind","description":"AI document analyzer, 1M docs/day. Claimed after the SignalSeed idea hit 2,800 upvotes and 400+ waitlist.","image_url":"https://images.unsplash.com/photo-1568667256549-094345857637?w=800&q=80","tech_stack":["Python","PyTorch","FastAPI"],"role":"ML Engineer"},{"title":"PriceAI","description":"Dynamic pricing engine for e-commerce. Validated demand before a single API endpoint was written.","image_url":"https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80","tech_stack":["Python","LangChain","Docker"],"role":"Lead ML Engineer"}]'
   ),
   (
     'd1000000-0000-0000-0000-000000000003',
     'Marcus Rodriguez',
-    'Mobile-first builder — 500K+ downloads across AppDrop projects',
-    'Built apps with 500K+ downloads. I browse AppDrop weekly — a validated idea with a real waitlist is worth more than any design spec.',
+    'Mobile-first builder — 500K+ downloads across SignalSeed projects',
+    'Built apps with 500K+ downloads. I browse SignalSeed weekly — a validated idea with a real waitlist is worth more than any design spec.',
     array['React Native', 'Expo', 'Swift', 'Kotlin', 'Firebase'],
     160, 4.7, 52, 15, false, '#EC4899', 'MR',
     'https://github.com', null,
-    '[{"title":"RunTrack Pro","description":"#1 running app in AU App Store. Originated as an AppDrop validation with 1,900 upvotes.","image_url":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80","tech_stack":["React Native","Firebase","HealthKit"],"role":"Solo Developer"},{"title":"Mood.io","description":"Mental health app, 200K+ users. Built after community validation confirmed the need.","image_url":"https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&q=80","tech_stack":["React Native","Expo","Supabase"],"role":"Lead Mobile Engineer"}]'
+    '[{"title":"RunTrack Pro","description":"#1 running app in AU App Store. Originated as an SignalSeed validation with 1,900 upvotes.","image_url":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80","tech_stack":["React Native","Firebase","HealthKit"],"role":"Solo Developer"},{"title":"Mood.io","description":"Mental health app, 200K+ users. Built after community validation confirmed the need.","image_url":"https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&q=80","tech_stack":["React Native","Expo","Supabase"],"role":"Lead Mobile Engineer"}]'
   ),
   (
     'd1000000-0000-0000-0000-000000000004',
     'Emma Wilson',
     'Design-engineer hybrid — I make validated ideas beautiful',
-    'I blur the line between design and code. I use AppDrop validation scores to decide which ideas are worth the craft — PROVEN DEMAND gets my full attention.',
+    'I blur the line between design and code. I use SignalSeed validation scores to decide which ideas are worth the craft — PROVEN DEMAND gets my full attention.',
     array['Vue.js', 'Nuxt', 'Figma', 'CSS', 'Node.js'],
     140, 4.6, 41, 12, true, '#F97316', 'EW',
     'https://github.com', 'https://linkedin.com',
@@ -51,7 +51,7 @@ insert into public.developers (id, name, tagline, bio, skills, hourly_rate, rati
     'd1000000-0000-0000-0000-000000000005',
     'Kai Nakamura',
     'Systems engineer — Rust, Go, and validated product requirements',
-    'Performance is my baseline. I use AppDrop''s validation data as my product spec — real user demand signals save months of building the wrong thing.',
+    'Performance is my baseline. I use SignalSeed''s validation data as my product spec — real user demand signals save months of building the wrong thing.',
     array['Rust', 'Go', 'WebAssembly', 'C++', 'WASM'],
     200, 4.8, 29, 9, true, '#22C55E', 'KN',
     'https://github.com', null,
@@ -60,12 +60,12 @@ insert into public.developers (id, name, tagline, bio, skills, hourly_rate, rati
   (
     'd1000000-0000-0000-0000-000000000006',
     'Priya Sharma',
-    'Full-stack + DevOps — 5 AppDrop ideas shipped to LIVE',
-    'I''ve shipped 5 AppDrop projects from validated idea to production. The waitlist data on this platform tells you more about PMF than any user interview.',
+    'Full-stack + DevOps — 5 SignalSeed ideas shipped to LIVE',
+    'I''ve shipped 5 SignalSeed projects from validated idea to production. The waitlist data on this platform tells you more about PMF than any user interview.',
     array['React', 'Python', 'Kubernetes', 'Terraform', 'Supabase'],
     190, 4.9, 103, 27, true, '#EAB308', 'PS',
     'https://github.com', 'https://linkedin.com',
-    '[{"title":"LaunchKit","description":"Startup boilerplate used by 5K teams. Validated on AppDrop, built in 8 weeks.","image_url":"https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&q=80","tech_stack":["React","Supabase","Terraform"],"role":"Solo Developer"},{"title":"OpsView","description":"Infrastructure monitoring dashboard — claimed after 1,600 dev-tool upvotes confirmed the gap.","image_url":"https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80","tech_stack":["React","Python","Kubernetes","Grafana"],"role":"Lead Engineer"}]'
+    '[{"title":"LaunchKit","description":"Startup boilerplate used by 5K teams. Validated on SignalSeed, built in 8 weeks.","image_url":"https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&q=80","tech_stack":["React","Supabase","Terraform"],"role":"Solo Developer"},{"title":"OpsView","description":"Infrastructure monitoring dashboard — claimed after 1,600 dev-tool upvotes confirmed the gap.","image_url":"https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80","tech_stack":["React","Python","Kubernetes","Grafana"],"role":"Lead Engineer"}]'
   );
 
 
@@ -115,7 +115,7 @@ insert into public.ideas (
     '10000000-0000-0000-0000-000000000003',
     'DietDrop',
     'Snap a photo. Know your macros. Done.',
-    '2,891 upvotes made this AppDrop''s most-validated health idea. The community insight: generic diet advice fails because it ignores individual biology. DietDrop uses AI photo recognition and optional DNA data to generate nutrition guidance personalised to your metabolism.',
+    '2,891 upvotes made this SignalSeed''s most-validated health idea. The community insight: generic diet advice fails because it ignores individual biology. DietDrop uses AI photo recognition and optional DNA data to generate nutrition guidance personalised to your metabolism.',
     'Generic diet advice ignores individual biology.',
     'HEALTH', 'IN_DEV',
     2891, 67, 100000, 87300, 567, 0,

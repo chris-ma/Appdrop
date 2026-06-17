@@ -17,9 +17,9 @@ export default function Footer() {
           {/* Brand */}
           <div className="shrink-0">
             <div className="font-grotesk font-extrabold text-2xl tracking-tight mb-3">
-              <span className="text-white">APP</span>
-              <span className="text-electric">▼</span>
-              <span className="text-white">DROP</span>
+              <span className="text-white">SIGNAL</span>
+              <span className="text-electric">▲</span>
+              <span className="text-white">SEED</span>
             </div>
             <p className="text-white/40 text-sm leading-relaxed max-w-[220px]">
               Know if it&apos;s worth building before you write a single line of code.
@@ -50,7 +50,7 @@ export default function Footer() {
 
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/12 gap-4">
           <p className="text-white/30 text-xs font-grotesk">
-            © 2026 AppDrop. All rights reserved.
+            © 2026 SignalSeed. All rights reserved.
           </p>
           <p className="text-white/20 text-xs font-grotesk">
             Built on Supabase · Deployed on Vercel

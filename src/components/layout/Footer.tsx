@@ -22,7 +22,7 @@ export default function Footer() {
               <span className="text-white">DROP</span>
             </div>
             <p className="text-white/40 text-sm leading-relaxed max-w-[220px]">
-              The marketplace where communities decide which apps get built next.
+              Know if it&apos;s worth building before you write a single line of code.
             </p>
           </div>
 

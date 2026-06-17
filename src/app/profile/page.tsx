@@ -12,7 +12,7 @@ import ProjectCard from '@/components/project/ProjectCard'
 
 const USE_MOCK = !process.env.NEXT_PUBLIC_SUPABASE_URL
 
-const tabs = ['MY DROPS', 'BACKED', 'ACTIVITY']
+const tabs = ['MY IDEAS', 'BACKED', 'ACTIVITY']
 
 type ActivityItem = { type: 'vote' | 'comment'; ideaId: string; content: string; createdAt: string }
 
@@ -223,7 +223,7 @@ export default function ProfilePage() {
         ) : activeTab === 2 ? (
           activity.length === 0 ? (
             <div className="text-center py-12 text-fog font-inter text-sm">
-              No activity yet. Vote on ideas or leave comments to get started.
+              No activity yet. Validate ideas or leave comments to get started.
             </div>
           ) : (
             <div className="space-y-3">

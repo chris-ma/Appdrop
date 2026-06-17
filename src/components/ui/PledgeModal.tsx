@@ -72,7 +72,7 @@ export default function PledgeModal({ projectId, projectTitle, isOpen, onClose }
             >
               <div className="flex items-start justify-between mb-6">
                 <div>
-                  <p className="text-[10px] font-inter tracking-[0.25em] uppercase text-electric mb-1">BACK THIS DROP</p>
+                  <p className="text-[10px] font-inter tracking-[0.25em] uppercase text-electric mb-1">BACK THIS IDEA</p>
                   <h3 className="font-heading text-3xl text-white uppercase leading-none">{projectTitle}</h3>
                 </div>
                 <button onClick={onClose} className="text-fog hover:text-white transition-colors cursor-pointer p-1 mt-1">

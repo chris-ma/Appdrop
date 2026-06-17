@@ -96,16 +96,16 @@ export default function SubmitPage() {
             </div>
           </div>
           <h2 className="font-heading text-6xl uppercase text-white mb-3">
-            DROP SUBMITTED!
+            VALIDATION LIVE!
           </h2>
           <p className="text-fog font-inter mb-8">
-            Your idea is now live on AppDrop. The community will start voting shortly.
+            Your idea is now live on AppDrop. Real users will start sending demand signals.
           </p>
-          <p className="text-fog/60 font-inter text-sm mb-6">Redirecting to your drop in a moment...</p>
+          <p className="text-fog/60 font-inter text-sm mb-6">Redirecting to your validation in a moment...</p>
           <div className="flex gap-3 justify-center">
             <MagneticButton>
               <Link href={newProjectId ? `/projects/${newProjectId}` : '/marketplace'}>
-                <Button variant="primary" className="font-heading text-[15px]">VIEW YOUR DROP</Button>
+                <Button variant="primary" className="font-heading text-[15px]">VIEW YOUR IDEA</Button>
               </Link>
             </MagneticButton>
             <Button
@@ -118,7 +118,7 @@ export default function SubmitPage() {
                 setForm({ title: '', category: '', problem: '', audience: '', features: [], monetization: '', tags: '', videoUrl: '', images: [], pitchDeckUrl: '' })
               }}
             >
-              SUBMIT ANOTHER
+              VALIDATE ANOTHER IDEA
             </Button>
           </div>
         </motion.div>
@@ -133,7 +133,7 @@ export default function SubmitPage() {
         <div className="mb-10 text-center">
           <div className="flex items-center justify-center gap-3 mb-3">
             <div className="w-6 h-px bg-cyber" />
-            <span className="text-[10px] font-inter tracking-[0.25em] text-cyber uppercase">CREATE A DROP</span>
+            <span className="text-[10px] font-inter tracking-[0.25em] text-cyber uppercase">TEST YOUR CONCEPT</span>
             <div className="w-6 h-px bg-cyber" />
           </div>
           <h1 className="font-heading text-6xl md:text-7xl uppercase text-white leading-none">
@@ -557,7 +557,7 @@ export default function SubmitPage() {
                 className="font-heading text-[16px]"
               >
                 <Rocket size={18} />
-                {submitting ? 'LAUNCHING...' : 'LAUNCH DROP'}
+                {submitting ? 'POSTING...' : 'POST FOR VALIDATION'}
               </Button>
             </MagneticButton>
           )}

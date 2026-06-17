@@ -67,7 +67,7 @@ function MarketplaceInner({ initialProjects }: Props) {
         return results.sort(
           (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         )
-      case 'MOST FUNDED':
+      case 'MOST VALIDATED':
         return results.sort(
           (a, b) =>
             fundingPercent(b.fundingCurrent, b.fundingGoal) -
@@ -91,7 +91,7 @@ function MarketplaceInner({ initialProjects }: Props) {
             <span className="text-[10px] font-inter tracking-[0.25em] text-electric uppercase">THE MARKETPLACE</span>
           </div>
           <h1 className="font-heading text-6xl md:text-7xl text-white uppercase leading-none mb-2">
-            ALL THE <span className="electric-text">DROPS</span>
+            ALL THE <span className="electric-text">IDEAS</span>
           </h1>
           <p className="text-fog text-sm font-inter">
             {filtered.length} idea{filtered.length !== 1 ? 's' : ''} in the pipeline
@@ -108,7 +108,7 @@ function MarketplaceInner({ initialProjects }: Props) {
           <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-fog" />
           <input
             type="text"
-            placeholder="Search drops, ideas, tags..."
+            placeholder="Search ideas, tags..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="w-full pl-11 pr-4 py-3.5 text-sm text-white placeholder-fog outline-none font-inter transition-all duration-200 rounded-lg border border-white/12 focus:border-electric/40"
@@ -203,7 +203,7 @@ function MarketplaceInner({ initialProjects }: Props) {
         {/* Grid */}
         {filtered.length === 0 ? (
           <div className="text-center py-20 text-fog font-inter">
-            No drops found. Try a different search or filter.
+            No ideas found. Try a different search or filter.
           </div>
         ) : (
           <motion.div

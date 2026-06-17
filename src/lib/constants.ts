@@ -98,7 +98,7 @@ export const STATUS_CONFIG: Record<
   },
 }
 
-export const SORT_TABS: SortTab[] = ['TRENDING', 'NEW', 'MOST FUNDED', 'MOST WANTED']
+export const SORT_TABS: SortTab[] = ['TRENDING', 'NEW', 'MOST VALIDATED', 'MOST WANTED']
 
 export const CATEGORIES: Category[] = [
   'AI',
@@ -113,7 +113,7 @@ export const CATEGORIES: Category[] = [
 
 export const PLATFORM_STATS = [
   { value: 28400, label: 'COMMUNITY MEMBERS', format: (n: number) => `${Math.round(n / 1000)}K` },
-  { value: 4892, label: 'IDEAS SUBMITTED', format: (n: number) => `${Math.round(n).toLocaleString()}` },
+  { value: 4892, label: 'IDEAS VALIDATED', format: (n: number) => `${Math.round(n).toLocaleString()}` },
   { value: 1200000, label: 'TOTAL FUNDED', format: (n: number) => `$${(n / 1000000).toFixed(1)}M` },
-  { value: 143, label: 'APPS SHIPPED', format: (n: number) => `${Math.round(n)}` },
+  { value: 143, label: 'VALIDATED & BUILT', format: (n: number) => `${Math.round(n)}` },
 ]

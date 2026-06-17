@@ -110,7 +110,7 @@ export interface UserProfile {
   stats: UserStats
 }
 
-export type SortTab = 'TRENDING' | 'NEW' | 'MOST FUNDED' | 'MOST WANTED'
+export type SortTab = 'TRENDING' | 'NEW' | 'MOST VALIDATED' | 'MOST WANTED'
 
 export interface Update {
   id: string

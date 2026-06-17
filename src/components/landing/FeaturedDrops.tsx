@@ -32,7 +32,7 @@ export default function FeaturedDrops({ projects }: Props) {
               </span>
             </div>
             <h2 className="font-heading text-6xl md:text-7xl text-white uppercase leading-none">
-              HOT <span className="text-electric">DROPS</span>
+              TOP <span className="text-electric">VALIDATIONS</span>
             </h2>
           </div>
 

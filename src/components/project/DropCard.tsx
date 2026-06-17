@@ -113,7 +113,7 @@ export default function DropCard({ project, index = 0 }: DropCardProps) {
               <div className="flex items-center justify-between">
                 <VoteButton upvotes={project.upvotes} size="sm" />
                 <span className="flex items-center gap-1.5 text-[11px] font-inter font-medium tracking-wider uppercase text-fog opacity-0 group-hover:opacity-100 group-hover:text-electric transition-all duration-200">
-                  VIEW DROP
+                  VIEW IDEA
                   <ArrowUpRight size={12} />
                 </span>
               </div>

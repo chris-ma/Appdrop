@@ -222,8 +222,8 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
   }
 
   const ctaLabel =
-    project.status === 'VOTING' ? 'VOTE FOR THIS DROP' :
-    project.status === 'FUNDING' ? 'BACK THIS DROP' :
+    project.status === 'VOTING' ? 'JOIN THE WAITLIST' :
+    project.status === 'FUNDING' ? 'BACK THIS IDEA' :
     project.status === 'LIVE' ? 'GET ACCESS' : 'JOIN WAITLIST'
 
   const handleCta = () => {
@@ -253,7 +253,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
             className="inline-flex items-center gap-2 text-fog hover:text-white text-[11px] font-inter tracking-[0.2em] uppercase mb-8 transition-colors"
           >
             <ArrowLeft size={14} />
-            ALL DROPS
+            ALL IDEAS
           </Link>
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -510,7 +510,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                     {user ? (
                       <>
                         <textarea
-                          placeholder="Join the discussion..."
+                          placeholder="Share your thoughts or questions..."
                           value={commentText}
                           onChange={(e) => setCommentText(e.target.value)}
                           className="w-full px-4 py-3 text-sm text-white placeholder-fog outline-none resize-none h-20 rounded-lg border border-white/12 focus:border-electric/30 transition-all font-inter"

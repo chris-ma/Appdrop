@@ -85,7 +85,7 @@ export default function AdminPage() {
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <p className="text-[10px] font-inter font-medium uppercase tracking-[0.2em] text-electric mb-1">Admin Panel</p>
-              <h1 className="font-heading text-5xl text-white">MANAGE DROPS</h1>
+              <h1 className="font-heading text-5xl text-white">MANAGE IDEAS</h1>
               <p className="text-fog font-inter text-sm mt-1">{projects.length} total ideas</p>
             </div>
             <button

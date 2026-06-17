@@ -64,9 +64,9 @@ export default function HeroSection() {
               variants={textVariants}
               initial="hidden"
               animate="visible"
-              className="font-heading text-[clamp(72px,12vw,160px)] leading-[0.88] text-white uppercase"
+              className="font-heading text-[clamp(72px,12vw,160px)] leading-[0.88] uppercase electric-text"
             >
-              THE
+              VALIDATE
             </motion.h1>
           </div>
           <div className="overflow-hidden mb-2">
@@ -75,9 +75,9 @@ export default function HeroSection() {
               variants={textVariants}
               initial="hidden"
               animate="visible"
-              className="font-heading text-[clamp(72px,12vw,160px)] leading-[0.88] uppercase electric-text"
+              className="font-heading text-[clamp(72px,12vw,160px)] leading-[0.88] text-white uppercase"
             >
-              DROP
+              THE
             </motion.h1>
           </div>
           <div className="overflow-hidden mb-8">
@@ -88,7 +88,7 @@ export default function HeroSection() {
               animate="visible"
               className="font-heading text-[clamp(72px,12vw,160px)] leading-[0.88] text-white uppercase"
             >
-              IS LIVE
+              MARKET
             </motion.h1>
           </div>
 
